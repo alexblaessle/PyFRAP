@@ -912,7 +912,7 @@ def getPubParms(fontSize=10,labelFontSize=10,tickFontSize=10,legendFontSize=10):
 		
 	return params
 
-def turnAxesForPub(ax,adjustFigSize=True,figWidthPt=180.4,figHeightPt=None,ptPerInches=72.27,fontSize=10,labelFontSize=10,tickFontSize=10,legendFontSize=10):
+def turnAxesForPub(ax,adjustFigSize=True,figWidthPt=180.4,figHeightPt=None,ptPerInches=72.27,fontSize=10,labelFontSize=10,tickFontSize=10,legendFontSize=10,is3D=False):
 	
 	"""Turns axes nice for publication.
 	
@@ -930,6 +930,7 @@ def turnAxesForPub(ax,adjustFigSize=True,figWidthPt=180.4,figHeightPt=None,ptPer
 		labelFontSize (int): Font size.
 		tickFontSize (int): Font size.
 		legendFontSize (int): Font size.
+		is3D (bool): Flag indicating if 3D figure.
 		
 	Returns:
 		matplotlib.axes: Modified matplotlib axes.
@@ -939,7 +940,8 @@ def turnAxesForPub(ax,adjustFigSize=True,figWidthPt=180.4,figHeightPt=None,ptPer
 	params=getPubParms(fontSize=fontSize,labelFontSize=labelFontSize,tickFontSize=tickFontSize,legendFontSize=legendFontSize)
 	plt.rcParams.update(params)
 	
-	ax=setPubAxis(ax)
+	if not is3D:
+		ax=setPubAxis(ax)
 	
 	setPubFigSize(ax.get_figure(),figWidthPt=figWidthPt,figHeightPt=figHeightPt,ptPerInches=ptPerInches)
 	

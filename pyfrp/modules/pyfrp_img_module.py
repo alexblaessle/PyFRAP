@@ -115,7 +115,7 @@ def analyzeDataset(analysis,signal=None,embCount=None,debug=False,debugAll=False
 		if debug:
 			print 'Anaylsis options:'
 			printDict(analysis.process)
-		print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+		print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	
 	#Set back all timeseries vectors
 	for r in analysis.embryo.ROIs:

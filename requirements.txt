@@ -2,7 +2,7 @@ pyopenssl
 ndg-httpsclient
 pyasn1
 ez_setup>=0.9
-numpy>=1.8.2
+numpy>=1.14
 scipy>=0.13.3
 matplotlib>=1.4.3
 scikit-image>=0.11.3

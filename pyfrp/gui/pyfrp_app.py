@@ -1112,9 +1112,18 @@ class pyfrp(QtGui.QMainWindow):
 		for item in vars(obj):
 			
 			###NOTE: Creates deprecation warning on Windows
+			
+			# First check if numpy array or list
+			if isinstance(vars(obj)[str(item)],(np.ndarray,list)):
+				
+				# Check if array is not too long
+				if len(np.shape(vars(obj)[str(item)]))>0 and np.shape(vars(obj)[str(item)])[0]<maxArraySize:
+					pass
+				else:
+					continue
+				
+			# All other variables, check if type is OK
 			if isinstance(vars(obj)[str(item)],(int,float,str)) or vars(obj)[str(item)]==None:
-				pass
-			elif len(np.shape(vars(obj)[str(item)]))>0 and np.shape(vars(obj)[str(item)])[0]<maxArraySize:
 				pass
 			else:
 				continue
