@@ -52,11 +52,11 @@ import time
 import sys
 
 #PyFRAP Modules
-import pyfrp_plot_module 
-import pyfrp_integration_module
-import pyfrp_misc_module
-from pyfrp_term_module import *
-import pyfrp_idx_module
+from . import pyfrp_plot_module 
+from . import pyfrp_integration_module
+from . import pyfrp_misc_module
+from .pyfrp_term_module import *
+from . import pyfrp_idx_module
 
 #===========================================================================================================================================================================
 #Module Functions
@@ -104,9 +104,9 @@ def simulateReactDiff(simulation,signal=None,embCount=None,showProgress=True,deb
 	#Empty list to put simulation values in
 	vals=[]
 	
-	print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-	print "Starting simulation"
-	print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+	print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	print("Starting simulation")
+	print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	
 	startTimeTotal=time.clock()
 	
@@ -118,17 +118,17 @@ def simulateReactDiff(simulation,signal=None,embCount=None,showProgress=True,deb
 	
 	if simulation.mesh.mesh==None:
 		printWarning('No mesh has been generated yet!')
-		a=raw_input('Do you want to generate a mesh now?[Y/N]')
+		a=input('Do you want to generate a mesh now?[Y/N]')
 		if a=='Y':
 			simulation.mesh.genMesh()
-			print "Mesh created in", time.clock()-startTimeMesh
+			print("Mesh created in", time.clock()-startTimeMesh)
 		else:
-			print 'Cannot run simulation without mesh, will abort.'
+			print('Cannot run simulation without mesh, will abort.')
 			return simulation
 		
 		timeMesh=time.clock()-startTimeMesh
 		
-	print "Mesh created after", time.clock()-startTimeTotal
+	print("Mesh created after", time.clock()-startTimeTotal)
 
 	#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	#Initialization of PDE
@@ -226,9 +226,9 @@ def simulateReactDiff(simulation,signal=None,embCount=None,showProgress=True,deb
 					signal.emit(currPerc,embCount)
 			
 
-	print "Step time: ", stepTime, " in %:", stepTime/(time.clock()-startTimeSim)*100
-	print "Avg time: ", avgTime, " in %:", avgTime/(time.clock()-startTimeSim)*100
-	print "Simulation done after", time.clock()-startTimeTotal
+	print("Step time: ", stepTime, " in %:", stepTime/(time.clock()-startTimeSim)*100)
+	print("Avg time: ", avgTime, " in %:", avgTime/(time.clock()-startTimeSim)*100)
+	print("Simulation done after", time.clock()-startTimeTotal)
 	
 	#Save to simulation object only
 	if simulation.saveSim:
@@ -387,7 +387,7 @@ def applyRadialICs(phi,simulation,radSteps=15,debug=False):
 	"""
 	
 	#Adjust center so histogram works for 'quad'
-	if 'quad' in simulation.embryo.analysis.process.keys():
+	if 'quad' in list(simulation.embryo.analysis.process.keys()):
 		center=[0,0]
 	else:
 		center=simulation.ICimg,simulation.embryo.geometry.getCenter()
@@ -410,7 +410,7 @@ def applyRadialICs(phi,simulation,radSteps=15,debug=False):
 		phi.setValue(binY[i], where=(x-center[0])**2+(y-center[1])**2 < bins[i]**2)
 			
 		if debug:
-			print "Applied concentration", binY[i], " to all nodes with radius <", bins[i] 
+			print("Applied concentration", binY[i], " to all nodes with radius <", bins[i]) 
 	
 	return phi
 		
@@ -447,7 +447,7 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 	center=simulation.embryo.geometry.getCenter()
 	
 	#Define x/y coordinates of interpolation
-	if 'quad' in simulation.embryo.analysis.process.keys():
+	if 'quad' in list(simulation.embryo.analysis.process.keys()):
 		#Shift everything by center to fit with the mesh
 		xInt = np.arange(center[0]+1, center[0]+res+1, 1)
 		yInt = np.arange(center[1]+1, center[1]+res+1, 1)		
@@ -474,14 +474,14 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 		indX=pyfrp_misc_module.complValsSimple(masterROI.imgIdxX,indXSqu)
 		indY=pyfrp_misc_module.complValsSimple(masterROI.imgIdxX,indYSqu)
 		
-		if 'quad' in simulation.embryo.analysis.process.keys():
+		if 'quad' in list(simulation.embryo.analysis.process.keys()):
 			img=pyfrp_img_module.unflipQuad(np.flipud(simulation.ICimg))
 		else:
 			img=simulation.ICimg
 		
 		concRim=pyfrp_img_module.meanConc(img[indX,indY])
 		
-		print 'Approximate concRim = ', concRim
+		print('Approximate concRim = ', concRim)
 		
 	else:	
 		concRim=simulation.embryo.analysis.concRim
@@ -500,7 +500,7 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 	phi.setValue(concRim)
 	
 	#Get Offset of image and check which nodes are inside image
-	if 'quad' in simulation.embryo.analysis.process.keys():
+	if 'quad' in list(simulation.embryo.analysis.process.keys()):
 		offset=[simulation.embryo.dataResPx/2,simulation.embryo.dataResPx/2]
 		ins=pyfrp_idx_module.checkInsideImg(x,y,simulation.embryo.dataResPx/2,offset=offset)
 	else:

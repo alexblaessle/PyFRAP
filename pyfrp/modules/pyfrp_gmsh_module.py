@@ -52,9 +52,9 @@ import shlex
 import platform
 
 #PyFRAP
-import pyfrp_gmsh_IO_module
-import pyfrp_misc_module
-from pyfrp_term_module import *
+from . import pyfrp_gmsh_IO_module
+from . import pyfrp_misc_module
+from .pyfrp_term_module import *
            
 #===========================================================================================================================================================================
 #Module Functions
@@ -365,8 +365,8 @@ def runGmsh(fn,fnOut=None,debug=False,redirect=False,fnStout=None,fnSterr=None,v
 	
 	#Print out what will be done
 	if debug:
-		print "Will execute:"
-		print cmd
+		print("Will execute:")
+		print(cmd)
 	
 	#Split command in list for subprocess
 	args = shlex.split(cmd)

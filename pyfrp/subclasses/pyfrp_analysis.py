@@ -574,7 +574,7 @@ class analysis:
 		
 		"""
 		
-		return 'norm' in self.process.keys()
+		return 'norm' in list(self.process.keys())
 	
 	def bkgdOn(self):
 		
@@ -585,7 +585,7 @@ class analysis:
 		
 		"""
 		
-		return 'bkgd' in self.process.keys()
+		return 'bkgd' in list(self.process.keys())
 	
 	def flattenOn(self):
 		
@@ -596,7 +596,7 @@ class analysis:
 		
 		"""
 		
-		return 'flatten' in self.process.keys()
+		return 'flatten' in list(self.process.keys())
 	
 	def gaussianOn(self):
 		
@@ -607,7 +607,7 @@ class analysis:
 		
 		"""
 		
-		return 'gaussian' in self.process.keys()
+		return 'gaussian' in list(self.process.keys())
 	
 	def medianOn(self):
 		
@@ -618,7 +618,7 @@ class analysis:
 		
 		"""
 		
-		return 'median' in self.process.keys()
+		return 'median' in list(self.process.keys())
 	
 	def quadOn(self):
 		
@@ -629,7 +629,7 @@ class analysis:
 		
 		"""
 		
-		return 'quad' in self.process.keys()
+		return 'quad' in list(self.process.keys())
 	
 	def flipBeforeProcessOn(self):
 		
@@ -640,22 +640,22 @@ class analysis:
 		
 		"""
 		
-		return 'flipBeforeProcess' in self.process.keys()
+		return 'flipBeforeProcess' in list(self.process.keys())
 	
 	def updateProcess(self):
 		
 		"""Updates all values in process dictionary with
 		the ones saved in attributes of analysis object."""
 		
-		if 'flatten' in self.process.keys():
+		if 'flatten' in list(self.process.keys()):
 			self.process['flatten']=self.fnFlatten
-		if 'norm' in self.process.keys():
+		if 'norm' in list(self.process.keys()):
 			self.process['norm']=self.fnPreimage
-		if 'bkgd' in self.process.keys():
+		if 'bkgd' in list(self.process.keys()):
 			self.process['bkgd']=self.fnBkgd	
-		if 'gaussian' in self.process.keys():
+		if 'gaussian' in list(self.process.keys()):
 			self.process['gaussian']=self.gaussianSigma
-		if 'median' in self.process.keys():
+		if 'median' in list(self.process.keys()):
 			self.process['median']=self.medianRadius	
 			
 		return
@@ -671,7 +671,7 @@ class analysis:
 		
 		"""Prints out all attributes of analysis object.""" 
 		
-		print "Analysis of embryo ", self.embryo.name, " Details."
+		print("Analysis of embryo ", self.embryo.name, " Details.")
 		printAllObjAttr(self)
 	
 	def parm2Process(self,b,key,val):

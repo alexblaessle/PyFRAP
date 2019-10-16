@@ -66,8 +66,8 @@ if os.environ.get('READTHEDOCS', None) != 'True':
 	from scipy.spatial import Delaunay
 	
 #PyFRAP modules
-import pyfrp_misc_module as pyfrp_misc
-import pyfrp_plot_module as pyfrp_plt
+from . import pyfrp_misc_module as pyfrp_misc
+from . import pyfrp_plot_module as pyfrp_plt
 
 #===========================================================================================================================================================================
 #Module Functions
@@ -1057,8 +1057,8 @@ def getCommonXYExtend(ROIs,debug=False):
 	yExtend=[yExtends[:,0].min(),yExtends[:,1].max()]
 	
 	if debug:
-		print "xExtend = ", xExtend
-		print "yExtend = ", yExtend
+		print("xExtend = ", xExtend)
+		print("yExtend = ", yExtend)
 	
 	return xExtend, yExtend
 
@@ -1081,7 +1081,7 @@ def remRepeatedImgIdxs(idxX,idxY,debug=False):
 	
 	"""
 	
-	idx=zip(idxX,idxY)
+	idx=list(zip(idxX,idxY))
 	idx=pyfrp_misc.remRepeatsList(idx)
 	idxX,idxY=pyfrp_misc.unzipLists(idx)
 	return idxX,idxY
@@ -1222,7 +1222,7 @@ def triangulatePoly(coords,addPoints=False,iterations=2,debug=False):
 	coordsOrg=list(coords)
 	
 	if debug:
-		print "Found ", len(tri.simplices.copy()), "triangles in initial call."
+		print("Found ", len(tri.simplices.copy()), "triangles in initial call.")
 
 	#Incrementally refine triangulation
 	if addPoints:
@@ -1237,7 +1237,7 @@ def triangulatePoly(coords,addPoints=False,iterations=2,debug=False):
 			tri.add_points(mids,restart=True)
 				
 		if debug:
-			print "Found ", len(tri.simplices.copy()), "triangles after iterations."
+			print("Found ", len(tri.simplices.copy()), "triangles after iterations.")
 		
 			
 	#Remember assigment of points by traingulation function
@@ -1263,8 +1263,8 @@ def triangulatePoly(coords,addPoints=False,iterations=2,debug=False):
 			midsOut.append(mid)
 	
 	if debug:
-		print "Removed ", len(tri.simplices.copy())-len(triFinal), "triangles through COM criteria."	
-		print "Returning ", len(triFinal), "triangles."	
+		print("Removed ", len(tri.simplices.copy())-len(triFinal), "triangles through COM criteria.")	
+		print("Returning ", len(triFinal), "triangles.")	
 		
 		
 	return triFinal,coordsTri

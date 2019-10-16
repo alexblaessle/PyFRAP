@@ -44,11 +44,11 @@ from pyfrp.modules import pyfrp_plot_module
 from pyfrp.modules.pyfrp_term_module import *
 
 #PyFRAP Objects
-import pyfrp_geometry
-import pyfrp_simulation
-import pyfrp_analysis
-import pyfrp_ROI
-import pyfrp_fit
+from . import pyfrp_geometry
+from . import pyfrp_simulation
+from . import pyfrp_analysis
+from . import pyfrp_ROI
+from . import pyfrp_fit
 
 #matplotlib
 import matplotlib.pyplot as plt
@@ -218,8 +218,8 @@ class embryo:
 		
 		if copyMeshFiles:
 			
-			print "before copyMeshFiles:", fn
-			print "fnGeo", self.geometry.fnGeo
+			print("before copyMeshFiles:", fn)
+			print("fnGeo", self.geometry.fnGeo)
 			
 			fnGeo,fnMesh=pyfrp_IO_module.copyMeshFiles(fn,self.geometry.fnGeo,self.simulation.mesh.fnMesh,debug=debug)
 			self.geometry.setFnGeo(fnGeo)
@@ -230,7 +230,7 @@ class embryo:
 		
 		pyfrp_IO_module.saveToPickle(self,fn=fn)
 		
-		print "Saved "+  self.name+ " to " + fn
+		print("Saved "+  self.name+ " to " + fn)
 		return fn
 	
 	def renameMeshFiles(self,fn=None,debug=False):
@@ -496,7 +496,7 @@ class embryo:
 	
 	def getDataResMu(self):
 		
-		"""Returns resolution of data in :math:`\um m` ."""
+		"""Returns resolution of data in :math:`\\um m` ."""
 		
 		return self.dataResMu
 	
@@ -1046,7 +1046,7 @@ class embryo:
 		"""Prints out all ROIs and their respective type."""
 		
 		for r in self.ROIs:
-			print r.name , type(r)
+			print(r.name , type(r))
 		return True
 	
 	def genDefaultROIs(self,center,radius,rimFactor=0.66,masterROI=None,bleachedROI=None,rimROI=None,sliceHeightPx=None,clean=True):
@@ -1544,7 +1544,7 @@ class embryo:
 			r.computeIdxs()
 			
 			if debug:
-				print r.name, time.clock()-startInit
+				print(r.name, time.clock()-startInit)
 			if signal:
 				signal.emit(int(100.*i)/float(len(self.ROIs)))
 			
@@ -1763,7 +1763,7 @@ class embryo:
 			fig,axes = pyfrp_plot_module.makeSubplot([3,len(self.ROIs)],sup=["Embryo" + self.name + " ROI Indices"],tight=True,proj=proj)
 			
 		for i,r in enumerate(self.ROIs):
-			print r.name
+			print(r.name)
 			currAxes=[axes[0+i],axes[len(self.ROIs)+i],axes[2*len(self.ROIs)+i]]
 			r.showIdxs(axes=currAxes)
 		
@@ -2134,15 +2134,15 @@ class embryo:
 				normValSim=normNsim
 				normVal=normNdata
 			
-			print "in switch"
+			print("in switch")
 			
 			if debug:
 				printNote('Switched to region ' +  normName + ' for computation of normalization value.' )
 		else:	
 			
-			print normBdata+bkgdBdata, normBsim+bkgdBsim
+			print(normBdata+bkgdBdata, normBsim+bkgdBsim)
 			
-			print "not in switch"
+			print("not in switch")
 			normVal=max([normBdata,normBsim])
 			if sepSim:
 				normValSim=normBsim
@@ -2242,7 +2242,7 @@ class embryo:
 		"""
 		
 		for r in self.ROIs:
-			print r.name, r.getInterpolationError()
+			print(r.name, r.getInterpolationError())
 	
 	def checkROIIdxs(self,debug=False):
 		
@@ -2434,9 +2434,9 @@ class embryo:
 			fitNames = pyfrp_misc_module.objAttrToList(self.fits,'name')
 			printNote("Acceptable fits under threshold "+ str(thresh) +":")
 			for fit in acc:
-				print fit.name
+				print(fit.name)
 			
-			print "Details of AIC analysis can be found in the following table:"
+			print("Details of AIC analysis can be found in the following table:")
 			printTable([fitNames,AICs,deltaAICs,weights,ks,ns],["fitNames","AICs","deltaAICs","weights","k","n"],col=True)
 			
 		return AICs, deltaAICs,weights, acc,ks,ns
@@ -2478,9 +2478,9 @@ class embryo:
 			fitNames = pyfrp_misc_module.objAttrToList(self.fits,'name')
 			printNote("Acceptable fits under threshold "+ str(thresh) +":")
 			for fit in acc:
-				print fit.name
+				print(fit.name)
 			
-			print "Details of AIC analysis can be found in the following table:"
+			print("Details of AIC analysis can be found in the following table:")
 			printTable([fitNames,AICs,deltaAICs,weights,ks,ns],["fitNames","AICcs","deltaAICs","weights","k","n"],col=True)
 		
 		return AICs, deltaAICs,weights, acc,ks,ns	

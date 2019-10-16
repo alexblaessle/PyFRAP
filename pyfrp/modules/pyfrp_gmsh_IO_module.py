@@ -46,11 +46,11 @@ If you want to know more about gmsh, go to http://gmsh.info/doc/texinfo/gmsh.htm
 from numpy import *
 
 #PyFRAP Modules
-import pyfrp_gmsh_geometry
-import pyfrp_misc_module
-import pyfrp_gmsh_module
+from . import pyfrp_gmsh_geometry
+from . import pyfrp_misc_module
+from . import pyfrp_gmsh_module
 
-from pyfrp_term_module import *
+from .pyfrp_term_module import *
 
 #Misc
 import shutil
@@ -238,10 +238,10 @@ def sortKeysByLength(dic):
 	"""
 	
 	lengths=[]
-	for key in dic.keys():
+	for key in list(dic.keys()):
 		lengths.append(len(key))
 	
-	keys,lengths=pyfrp_misc_module.sortListsWithKey(dic.keys(),lengths)
+	keys,lengths=pyfrp_misc_module.sortListsWithKey(list(dic.keys()),lengths)
 	return keys,lengths
 		
 def readParameter(line,parmDic):
@@ -1170,7 +1170,7 @@ def writeFieldPropByDict(f,fieldID,dic):
 	
 	"""
 	
-	for key, value in dic.iteritems():
+	for key, value in dic.items():
 		f=writeFieldProp(f,fieldID,key,value)
 		
 	return f
@@ -1212,8 +1212,8 @@ def repairDefaultGeoFiles(debug=False):
 	
 	if debug:
 		cmd = "cp -v " + fnBackup + "*.geo " + pyfrp_misc_module.getMeshfilesDir()
-		print "Executing command:"
-		print cmd
+		print("Executing command:")
+		print(cmd)
 	else:
 		cmd = "cp " + fnBackup + "*.geo " + pyfrp_misc_module.getMeshfilesDir()
 	

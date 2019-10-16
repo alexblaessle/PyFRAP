@@ -35,7 +35,7 @@
 from PyQt4 import QtGui, QtCore
 
 #PyFRAP GUI classes
-import pyfrp_gui_basics
+from . import pyfrp_gui_basics
 
 #PyFRAP modules
 from pyfrp.modules.pyfrp_term_module import *

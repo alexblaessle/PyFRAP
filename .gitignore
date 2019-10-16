@@ -1,6 +1,7 @@
 # Don't push data
 Benchmarking/
 TestDataset/
+packages/
 
 # Don't push older versions
 oldversions/
@@ -71,7 +72,7 @@ PyFRAP.wiki/
 
 # Don't push .zip files
 *zip
-
+*.bak
 
 
 

@@ -35,7 +35,7 @@
 from PyQt4 import QtGui, QtCore
 
 #PyFRAP GUI classes
-import pyfrp_gui_basics
+from . import pyfrp_gui_basics
 
 #PyFRAP modules
 from pyfrp.modules.pyfrp_term_module import *
@@ -279,7 +279,7 @@ class crucialParameterSelector(pyfrp_gui_basics.listSelectorDialog):
 			printError("No suitable fit found to select fitting parameters from, will not be able to iniate widget.")
 			self.done(1)
 		
-		return vars(fit).keys()
+		return list(vars(fit).keys())
 	
 	def donePressed(self):
 		self.molecule.crucialParameters=self.itemsRight

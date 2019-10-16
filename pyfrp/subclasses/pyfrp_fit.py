@@ -454,7 +454,7 @@ class fit:
 		for x0D in x0Ds:
 			
 			if debug:
-				print "Trying x0(D) = ", x0D
+				print("Trying x0(D) = ", x0D)
 			
 			self.setX0D(x0D)
 			self=pyfrp_fit_module.FRAPFitting(self,debug=debug,ax=ax)
@@ -464,7 +464,7 @@ class fit:
 		idxOpt=SSDs.index(min(SSDs))
 		
 		if debug:
-			print "x0(D) yielding best result = ", x0Ds[idxOpt] 
+			print("x0(D) yielding best result = ", x0Ds[idxOpt]) 
 		
 		self.setX0D(x0Ds[idxOpt])
 		self=pyfrp_fit_module.FRAPFitting(self,debug=debug,ax=ax)
@@ -1291,7 +1291,7 @@ class fit:
 		"""Prints out Rsq value per ROI.
 		"""
 		
-		print "Rsq Values by ROI for fit ", self.name
+		print("Rsq Values by ROI for fit ", self.name)
 		printDict(self.RsqByROI)
 		
 	def getNParmsFitted(self,inclEqu=True):

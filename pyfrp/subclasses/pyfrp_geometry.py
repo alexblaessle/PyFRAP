@@ -234,7 +234,7 @@ class geometry(object):
 		
 		oldCenter=self.getCenter()
 		self.centerMid()
-		a=raw_input("Change center of geometry from " + oldCenter + ' to ' + self.getCenter() + ' ? [Y/N]')
+		a=input("Change center of geometry from " + oldCenter + ' to ' + self.getCenter() + ' ? [Y/N]')
 		if a=='Y':
 			self.updateGeoFile()
 			if None!=self.embryo.simulation:
@@ -419,9 +419,9 @@ class geometry(object):
 		"""Prints out all details of geometry object.
 		"""
 		
-		print "Geometry of embryo ", self.embryo.name, " Details."
+		print("Geometry of embryo ", self.embryo.name, " Details.")
 		printAllObjAttr(self)
-		print 
+		print() 
 	
 	def moveGeoFile(self,fn):
 		

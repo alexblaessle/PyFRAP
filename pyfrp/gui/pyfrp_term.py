@@ -60,7 +60,7 @@ class PyInterp(QtGui.QTextEdit):
 		
 		if redirect:
 			sys.stdout              = self
-			sys.stderr              = self
+			#sys.stderr              = self
 			
 		self.refreshMarker      = False # to change back to >>> from ...
 		self.multiLine          = False # code spans more than one line
@@ -149,13 +149,15 @@ class PyInterp(QtGui.QTextEdit):
 		self.interpreterLocals[className] = newLocals
 
 	def write(self, line):
+		
+		# Find out if we need to color things
 		colors,strings=self.findColors(line,self.colorKeys)
-	
+
+		# Write
 		if len(colors)==0:
 			self.insertPlainText(line)
 		else:
 			txt=""
-		
 			for i in range(len(colors)):
 				txt=txt+self.makeColoredText(strings[i],colors[i])
 			self.insertHtml(txt)	
@@ -166,43 +168,117 @@ class PyInterp(QtGui.QTextEdit):
 		coloredText=redText = "<span style=\" color:"+color+"; \" >" + txt + "</span>" 
 		return coloredText
 	
+	
+	
+	#def findColors(self,line,colorDic):
+		#ind=-1
+		#for key in list(colorDic.keys()): 
+			#ind=line.find(key,ind)
+			##print(key,ind)
+			
+			#if ind>=0:
+				#break
+			
+		
+		
+		#return [colorDic[key]],line[ind]
+	
+	#def findColors_old(self,line,colorDic):
+	
+		#found=0
+		
+		#colors=[]
+		#strings=[]
+		
+		#i=0
+		#while found!=-1:
+			
+			#i+=1
+			
+			#fs=[]
+			#cs=[]
+			#for key in list(colorDic.keys()): 
+				#ind=line.find(key,found)
+				#if ind!=-1:
+					#fs.append(ind)
+				#else: 
+					#fs.append(str(ind))
+			
+			##if i>3:
+				##break
+			
+			#foundOld=found
+			##print(fs)
+			##print(colorDic)
+			##print(line)
+			
+			#found=min(fs)
+			#offset=len(list(colorDic.keys())[fs.index(found)])-1
+			
+			
+			#if len(colors)==0 and found!=-1:
+				#colors.append(list(colorDic.values())[fs.index(found)])
+				#strings.append(line[foundOld+offset:])
+			#elif len(colors)>0:
+				#offset=len(list(colorDic.keys())[fs.index(found)])-1
+				#if found==-1:
+					#strings.append(line[foundOld+offset:])
+				#else:
+					#strings.append(line[foundOld+offset:found].strip('\x1b'))
+					#colors.append(list(colorDic.values())[fs.index(found)])
+				
+			#found=int(found)
+			#if found!=-1:
+				#found=found+1
+		
+		#return colors,strings
+	
 	def findColors(self,line,colorDic):
 	
-		found=0
-		
-		colors=[]
 		strings=[]
+		colors=[]
+		curr_index=0
 		
-		while found!=-1:
+		while curr_index<=len(line):
 			
+			# Search for remaining 
 			fs=[]
-			cs=[]
-			for key in colorDic.keys(): 
-				ind=line.find(key,found)
-				if ind!=-1:
+			curr_color_keys=[]
+			for key in list(colorDic.keys()): 
+				
+				ind=line.find(key,curr_index)
+				if ind>=0:
 					fs.append(ind)
-				else: 
-					fs.append(str(ind))
+					curr_color_keys.append(key)
 			
-			foundOld=found
-			found=min(fs)
-				
-			if len(colors)==0 and found!='-1':
-				colors.append(colorDic.values()[fs.index(found)])
-			elif len(colors)>0:
-				offset=len(colorDic.keys()[fs.index(found)])-1
-				if found=='-1':
-					strings.append(line[foundOld+offset:])
-				else:
-					strings.append(line[foundOld+offset:found].strip('\x1b'))
-					colors.append(colorDic.values()[fs.index(found)])
-				
-			found=int(found)
-			if found!=-1:
-				found=found+1
-		
+			# If nothing is found, break
+			if len(fs)==0:
+				break
+			
+			# Update indices
+			curr_index=min(fs)
+			col_index=fs.index(min(fs))
+			
+			# Find out end of string that should be colored
+			tmp=list(fs)
+			tmp.remove(curr_index)
+			if len(tmp)>0:
+				next_index=min(tmp)-1
+			else:
+				next_index=len(line)+1
+			
+			# Compute length of color string
+			offset=len(curr_color_keys[col_index])
+			
+			# Extract string and color and append
+			strings.append(line[curr_index+offset:next_index].strip('\x1b'))
+			colors.append(colorDic[curr_color_keys[fs.index(curr_index)]])
+			
+			# Increment index to move up in string
+			curr_index=curr_index+1
+			
 		return colors,strings
-					
+	
 	def clearCurrentBlock(self):
 		# block being current row
 		length = len(self.document().lastBlock().text()[4:])
@@ -210,14 +286,14 @@ class PyInterp(QtGui.QTextEdit):
 			return None
 		else:
 			# should have a better way of doing this but I can't find it
-			[self.textCursor().deletePreviousChar() for x in xrange(length)]
+			[self.textCursor().deletePreviousChar() for x in range(length)]
 		return True
 		
     
 	def recallHistory(self):
 		# used when using the arrow keys to scroll through history
 		self.clearCurrentBlock()
-		if self.historyIndex <> -1:
+		if self.historyIndex != -1:
 			self.insertPlainText(self.history[self.historyIndex])
 		return True
 

@@ -46,11 +46,11 @@ from scipy import interpolate
 import scipy.optimize as sciopt
 
 #PyFRAP
-import pyfrp_stats_module
-import pyfrp_plot_module 
-import pyfrp_optimization_module 
+from . import pyfrp_stats_module
+from . import pyfrp_plot_module 
+from . import pyfrp_optimization_module 
 
-from pyfrp_term_module import *
+from .pyfrp_term_module import *
 
 
 #matplotlib
@@ -233,10 +233,10 @@ def checkInput(x,iteration,fit):
 	if min(x)<0:
 		if iteration==0:
 			#If initial guess is out of bounds, just do nothing
-			print printWarning("Check your initial guess, some value is negative.")
+			print(printWarning("Check your initial guess, some value is negative."))
 			return False
 		else:
-			print printWarning("One of the values of x is negative")
+			print(printWarning("One of the values of x is negative"))
 			return False
 	return True
 	
@@ -582,8 +582,8 @@ def FRAPObjFunc(x,fit,debug,ax,returnFit):
 	prod,degr = downscaleKinetics(prod,degr,fit.kineticTimeScale)
 	
 	if debug:
-		print "------------------------------------------"
-		print "Dnew=",Dnew, "prod=", prod, "degr=", degr, "equFacts", equFacts
+		print("------------------------------------------")
+		print("Dnew=",Dnew, "prod=", prod, "degr=", degr, "equFacts", equFacts)
 	
 	#Scale simulation vectors
 	try:

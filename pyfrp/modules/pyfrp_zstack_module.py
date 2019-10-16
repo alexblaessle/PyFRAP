@@ -50,7 +50,7 @@ import matplotlib.pyplot as plt
 import sys
 
 #PyFRAP
-import pyfrp_integration_module as pyfrp_integr
+from . import pyfrp_integration_module as pyfrp_integr
 
 #===========================================================================================================================================================================
 #Module Functions
@@ -107,7 +107,7 @@ def fillEndStacks(n,debug=False):
 					x=mpolys[i][:,1].min()+rx*(mpolys[i][:,1].max()-mpolys[i][:,1].min())
 					y=mpolys[i][:,0].min()+ry*(mpolys[i][:,0].max()-mpolys[i][:,0].min())
 					
-					poly=zip(list(mpolys[i][:,1]),list(mpolys[i][:,0]))
+					poly=list(zip(list(mpolys[i][:,1]),list(mpolys[i][:,0])))
 					
 					if point_inside_polygon(x,y,poly):
 						
@@ -123,7 +123,7 @@ def fillEndStacks(n,debug=False):
 				xvec=arange(mpolys[i][:,1].min(),mpolys[i][:,1].max(),d)
 				yvec=arange(mpolys[i][:,0].min(),mpolys[i][:,0].max(),d)
 				
-				poly=zip(list(mpolys[i][:,1]),list(mpolys[i][:,0]))
+				poly=list(zip(list(mpolys[i][:,1]),list(mpolys[i][:,0])))
 					
 				for x in xvec:
 					for y in yvec:
@@ -144,7 +144,7 @@ def fillEndStacks(n,debug=False):
 		
 	if debug==1:
 		plt.draw()
-		raw_input("Done filling first and last zstack, press ENTER to continue")
+		input("Done filling first and last zstack, press ENTER to continue")
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------

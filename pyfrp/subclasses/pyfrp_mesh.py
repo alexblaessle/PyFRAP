@@ -252,9 +252,16 @@ class mesh(object):
 			dim=3 
 			
 		if dim==3:
-			self.mesh=fipy.GmshImporter3D(fn)
+			try:
+				self.mesh=fipy.GmshImporter3D(fn)
+			except AttributeError:
+				self.mesh=fipy.Gmsh3D(fn)
 		elif dim==2:
-			self.mesh=fipy.GmshImporter2D(fn)
+			try:
+				self.mesh=fipy.GmshImporter2D(fn)
+			except AttributeError:
+				self.mesh=fipy.Gmsh2D(fn)
+		
 		else:
 			printError("Unknown dimensionality dim = "+str(dim))
 		self.fnMesh=fn
@@ -408,13 +415,13 @@ class mesh(object):
 			#Debugging output
 			if debug:
 				if method=='volSize':
-					print "Tried volSizePx ", self.getVolSizePx()
+					print("Tried volSizePx ", self.getVolSizePx())
 				elif method=='refine':
-					print "Refinement step, ", j
+					print("Refinement step, ", j)
 				
-				print "Current density ", ROI.getMeshDensity(), " desired density ", density
-				print "Current number of nodes in ROI ", len(ROI.meshIdx)
-				print " Mesh now has ", np.shape(self.mesh.x)[0], "cells." 
+				print("Current density ", ROI.getMeshDensity(), " desired density ", density)
+				print("Current number of nodes in ROI ", len(ROI.meshIdx))
+				print(" Mesh now has ", np.shape(self.mesh.x)[0], "cells.") 
 			
 			#Check if we reached maxCells
 			if np.shape(self.mesh.x)[0]>maxCells:
@@ -428,7 +435,7 @@ class mesh(object):
 			j=j+1
 			
 		if debug:
-			print "volSizePx = ", self.getVolSizePx(), "is sufficient."
+			print("volSizePx = ", self.getVolSizePx(), "is sufficient.")
 		
 		#Recompute idxs for all ROIs
 		if findIdxs:
@@ -450,7 +457,9 @@ class mesh(object):
 		if self.mesh==None:
 			return 0
 		else:
-			return len(self.mesh.getCellCenters()[0])
+			return len(self.getCellCenters()[0])
+	
+
 		
 	def writeVTKFile(self,fn="",sub=False):
 		
@@ -703,29 +712,29 @@ class mesh(object):
 		
 		x,y,z = self.getCellCenters()
 		
-		print "-------------------------------------------"
-		print "Mesh Statistics:"
-		print "-------------------------------------------"
-		print "Mesh has ", np.shape(x)[0] , " cells"
-		print "Mesh has ", self.mesh._numberOfVertices, " vertices"
-		print "Mesh has ", self.mesh.numberOfFaces, " faces"
-		print "min x=", min(x), "max x=", max(x)
-		print "min y=", min(y), "max y=", max(y)
-		print "min z=", min(z), "max z=", max(z)
-		print "Maximum cell volume= ", max(self.mesh.getCellVolumes())
-		print "Minimum cell volume= ", min(self.mesh.getCellVolumes())
+		print("-------------------------------------------")
+		print("Mesh Statistics:")
+		print("-------------------------------------------")
+		print("Mesh has ", np.shape(x)[0] , " cells")
+		print("Mesh has ", self.mesh._numberOfVertices, " vertices")
+		print("Mesh has ", self.mesh.numberOfFaces, " faces")
+		print("min x=", min(x), "max x=", max(x))
+		print("min y=", min(y), "max y=", max(y))
+		print("min z=", min(z), "max z=", max(z))
+		print("Maximum cell volume= ", max(self.getCellVolumes()))
+		print("Minimum cell volume= ", min(self.getCellVolumes()))
 			
-		print "Maximum cell volume is", max(self.mesh.getCellVolumes()), "in cell number=", np.argmax(self.mesh.getCellVolumes())
-		print "Minimum cell volume is", min(self.mesh.getCellVolumes()), "in cell number=", np.argmin(self.mesh.getCellVolumes())
-		print "Average cell volume is", np.mean(self.mesh.getCellVolumes())
+		print("Maximum cell volume is", max(self.getCellVolumes()), "in cell number=", np.argmax(self.getCellVolumes()))
+		print("Minimum cell volume is", min(self.getCellVolumes()), "in cell number=", np.argmin(self.getCellVolumes()))
+		print("Average cell volume is", np.mean(self.getCellVolumes()))
 
 		if tetLenghts:
 			slsVec=self.calcAllTetSidelenghts()
-			print "Average sidelength of tetrahedron in self.mesh:", np.mean(slsVec)
-			print "Maximum sidelength of tetrahedron in self.mesh:", max(slsVec)
-			print "Minimum sidelength of tetrahedron in self.mesh:", min(slsVec)	
+			print("Average sidelength of tetrahedron in self.mesh:", np.mean(slsVec))
+			print("Maximum sidelength of tetrahedron in self.mesh:", max(slsVec))
+			print("Minimum sidelength of tetrahedron in self.mesh:", min(slsVec))	
 		
-		print
+		print()
 		
 		return
 	
@@ -782,9 +791,9 @@ class mesh(object):
 		
 		x,y,z=self.getCellCenters()
 		
-		volSortedByX,xSorted=pyfrp_misc_module.sortListsWithKey(self.mesh.getCellVolumes(),x)
-		volSortedByY,ySorted=pyfrp_misc_module.sortListsWithKey(self.mesh.getCellVolumes(),y)
-		volSortedByZ,zSorted=pyfrp_misc_module.sortListsWithKey(self.mesh.getCellVolumes(),z)
+		volSortedByX,xSorted=pyfrp_misc_module.sortListsWithKey(self.getCellVolumes(),x)
+		volSortedByY,ySorted=pyfrp_misc_module.sortListsWithKey(self.getCellVolumes(),y)
+		volSortedByZ,zSorted=pyfrp_misc_module.sortListsWithKey(self.getCellVolumes(),z)
 		
 		if axes==None:
 			fig,axes = pyfrp_plot_module.makeSubplot([1,3],titles=["Density(x)","Density(y)","Density(z)"])
@@ -877,7 +886,7 @@ class mesh(object):
 		
 		"""Prints out all attributes of mesh object.""" 
 		
-		print "Mesh of embryo ", self.simulation.embryo.name, " Details."
+		print("Mesh of embryo ", self.simulation.embryo.name, " Details.")
 		printAllObjAttr(self)
 	
 	def addBoxField(self,volSizeIn,rangeX,rangeY,rangeZ,newFile=True,fnAppendix="_box",comment="newField",run=False,fnOut=None):
@@ -1097,10 +1106,32 @@ class mesh(object):
 		if self.mesh==None:
 			return [],[],[]
 		
-		if len(self.mesh.getCellCenters())==3:
-			return self.mesh.getCellCenters()
+		try:
+			cellCenters=self.mesh.getCellCenters()
+		except AttributeError:
+			cellCenters=self.mesh.cellCenters
+		
+		if len(cellCenters)==3:
+			return cellCenters
 		else:
-			z=self.simulation.embryo.sliceHeightPx*np.ones((len(self.mesh.getCellCenters()[0]),))
-			return self.mesh.getCellCenters()[0],self.mesh.getCellCenters()[1],z
+			z=self.simulation.embryo.sliceHeightPx*np.ones((len(cellCenters[0]),))
+			return cellCenters[0],cellCenters[1],z
 		
+	
+	def getCellVolumes(self):
 		
+		try:
+			cellVolumes=self.mesh.getCellVolumes()
+		except AttributeError:
+			cellVolumes=self.mesh.cellVolumes
+		return 	cellVolumes
+			
+		
+	
+	#def getCellCenters():
+		
+		#try:
+			#cellCenters=self.mesh.getCellCenters()
+		#except AttributeError:
+			#cellCenters=self.mesh.cellCenters
+		#return cellCenters	

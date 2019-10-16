@@ -59,15 +59,16 @@ import platform
 import bioformats
 
 #PyFRAP modules
-import pyfrp_misc_module
-import pyfrp_plot_module
-import pyfrp_idx_module
-from pyfrp_term_module import *
+from . import pyfrp_misc_module
+from . import pyfrp_plot_module
+from . import pyfrp_idx_module
+from .pyfrp_term_module import *
 
 #Image processing
 import skimage
 import skimage.morphology
 import skimage.io
+import imp
 #skimageVersion=skimage.__version__
 try:
 	if int(skimage.__version__.split('.')[1])<11:
@@ -110,31 +111,31 @@ def analyzeDataset(analysis,signal=None,embCount=None,debug=False,debugAll=False
 	"""
 	
 	if debug or signal==None:
-		print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-		print "Starting analyzing dataset " + analysis.embryo.name
+		print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+		print("Starting analyzing dataset " + analysis.embryo.name)
 		if debug:
-			print 'Anaylsis options:'
+			print('Anaylsis options:')
 			printDict(analysis.process)
-		print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+		print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	
 	#Set back all timeseries vectors
 	for r in analysis.embryo.ROIs:
 		r.resetDataVec()
 	
 	#Compute flattening mask if needed
-	if 'flatten' in analysis.process.keys():
+	if 'flatten' in list(analysis.process.keys()):
 		flatteningMask=analysis.computeFlatteningMask()
 	else:
 		flatteningMask=None
 	
 	#Compute background mask if needed
-	if 'bkgd' in analysis.process.keys():
+	if 'bkgd' in list(analysis.process.keys()):
 		bkgdMask = analysis.computeBkgdMask(flatteningMask)
 	else:
 		bkgdMask = None
 	
 	#Load preimage if needed
-	if 'norm' in analysis.process.keys():
+	if 'norm' in list(analysis.process.keys()):
 		preMask = analysis.computePreMask(flatteningMask,bkgdMask)
 	else:
 		preMask = None
@@ -180,7 +181,7 @@ def analyzeDataset(analysis,signal=None,embCount=None,debug=False,debugAll=False
 		if i==0:
 			
 			if analysis.embryo.simulation!=None:
-				if 'quad' in analysis.process.keys():
+				if 'quad' in list(analysis.process.keys()):
 					analysis.embryo.simulation.ICimg=np.flipud(convSkio2NP(flipQuad(img)))
 				else:
 					analysis.embryo.simulation.ICimg=convSkio2NP(img)
@@ -202,7 +203,7 @@ def analyzeDataset(analysis,signal=None,embCount=None,debug=False,debugAll=False
 					signal.emit(currPerc)
 				else:
 					signal.emit(currPerc,embCount)
-	print
+	print()
 	#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	#Final debugging plots
 	#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -359,10 +360,10 @@ def meanConc(idxX,idxY,vals,debug=False):
 	"""
 	
 	if debug:
-		print "======= mean_conc debugging output ======="
-		print "len(idxX)", len(idxX)
-		print "vals.min(), vals.max(), mean(vals)",vals.min(), vals.max(), mean(vals)
-		print "vals[idxX,idxY].min(), vals[idxX,idxY].max(), mean(vals[idxX,idxY]) ",vals[idxX,idxY].min(), vals[idxX,idxY].max(), mean(vals[idxX,idxY])
+		print("======= mean_conc debugging output =======")
+		print("len(idxX)", len(idxX))
+		print("vals.min(), vals.max(), mean(vals)",vals.min(), vals.max(), mean(vals))
+		print("vals[idxX,idxY].min(), vals[idxX,idxY].max(), mean(vals[idxX,idxY]) ",vals[idxX,idxY].min(), vals[idxX,idxY].max(), mean(vals[idxX,idxY]))
 		
 	return np.mean(vals[idxX,idxY])
 
@@ -457,7 +458,7 @@ def flipQuad(img,debug=False,testimg=False):
 			
 			#Check symmetry
 			if not symmetryTest(img,debug=debug):
-				raw_input()
+				input()
 				
 		#Grab max/min values of original image	
 		orgMax=img.max()
@@ -495,21 +496,21 @@ def flipQuad(img,debug=False,testimg=False):
 		plt.colorbar(a)
 		
 		
-		print "======= flipQuad debugging output ======="
-		print "Corner check: "
-		print "Original Image corners: ",  orgImg[0,0],orgImg[0,-1],orgImg[-1,0],orgImg[-1,-1]
-		print "Original Image average: ", (orgImg[0,0]+orgImg[0,-1]+orgImg[-1,0]+orgImg[-1,-1])/4.
-		print "Flipped Image corners: ", img[0,0],img[0,-1],img[-1,0],img[-1,-1]
-		print "Flipped image: ", img[-1,-1]
+		print("======= flipQuad debugging output =======")
+		print("Corner check: ")
+		print("Original Image corners: ",  orgImg[0,0],orgImg[0,-1],orgImg[-1,0],orgImg[-1,-1])
+		print("Original Image average: ", (orgImg[0,0]+orgImg[0,-1]+orgImg[-1,0]+orgImg[-1,-1])/4.)
+		print("Flipped Image corners: ", img[0,0],img[0,-1],img[-1,0],img[-1,-1])
+		print("Flipped image: ", img[-1,-1])
 		
-		print
+		print()
 		
-		print "Unique check: "
-		print "Original Image #values ", unique(orgImg)
-		print "Flipped Image #values ", unique(img)
+		print("Unique check: ")
+		print("Original Image #values ", unique(orgImg))
+		print("Flipped Image #values ", unique(img))
 		
 		
-		raw_input()
+		input()
 		
 	return img
 
@@ -630,8 +631,8 @@ def symmetryTest(img,debug=False):
 		if (lr.sum()+ud.sum())==0:
 			pass
 		else:
-			print "======= symmetry_test debugging output ======="
-			print "Image is not symmetric"
+			print("======= symmetry_test debugging output =======")
+			print("Image is not symmetric")
 	
 	#Return 1 if symmetric for both UD and LR
 	
@@ -667,7 +668,7 @@ def getMaxRangeChannel(img,debug=False):
 	img=img[:,:,ind_max]
 	
 	if debug:
-		print "Warning, images are not monochromatic, going to choose channel number", ind_max+1,"!" 
+		print("Warning, images are not monochromatic, going to choose channel number", ind_max+1,"!") 
 	
 	return img,ind_max
 
@@ -973,33 +974,33 @@ def processImg(img,processDic,flatteningMask,bkgdMask,preMask,dataOffset=1.,axes
 	
 	
 	#Flip image in case of quad_red and flip_before_process
-	if 'quad' in processDic.keys():
-		if 'flipBeforeProcess' in processDic.keys():
+	if 'quad' in list(processDic.keys()):
+		if 'flipBeforeProcess' in list(processDic.keys()):
 			img=flipQuad(img,debug=debug)
 	
 	#Apply median filter for denoising
-	if 'median' in processDic.keys():
+	if 'median' in list(processDic.keys()):
 		img = medianFilter(img,radius=processDic['median'],debug=debug)
 	
 	#Apply gaussian blur to smooth out image
-	if 'gaussian' in processDic.keys() and 'norm' not in processDic.keys():
+	if 'gaussian' in list(processDic.keys()) and 'norm' not in list(processDic.keys()):
 		img = gaussianFilter(img,sigma=processDic['gaussian'],debug=debug)
 	
 	#Flatten img
-	if 'flatten' in processDic.keys():
+	if 'flatten' in list(processDic.keys()):
 		img = flattenImg(img,flatteningMask)
 	
 	#Background Substraction
-	if 'bkgd' in processDic.keys():
+	if 'bkgd' in list(processDic.keys()):
 		img = substractBkgd(img,bkgdMask,substractMean=False)
 	
 	#Normalize by pre image
-	if 'norm' in processDic.keys():
+	if 'norm' in list(processDic.keys()):
 		img = normImg(img,preMask,dataOffset=dataOffset,debug=debug)
 	
 	#Quad reduction
-	if 'quad' in processDic.keys():
-		if 'flipBeforeProcess' in processDic.keys():
+	if 'quad' in list(processDic.keys()):
+		if 'flipBeforeProcess' in list(processDic.keys()):
 			#Flip image back in case of quad_red and flip_before_process (Need to unflip so that indices found by get_ind_regions still fit with image size)
 			img=unflipQuad(img,debug=debug)
 		else:	
@@ -1675,15 +1676,15 @@ def findMinOffset(fnFolder,fileList,dataEnc,oldOffset=None,defaultAdd=1.,debug=F
 	
 	#Some debugging output
 	if debug:
-		print "Minimum value over all images in ", fnFolder ," = ", minVal
-		print "Proposed offset is hence = ", abs(minVal)+defaultAdd
+		print("Minimum value over all images in ", fnFolder ," = ", minVal)
+		print("Proposed offset is hence = ", abs(minVal)+defaultAdd)
 		
 		if oldOffset!=None:
-			print "Old offset was ", oldOffset
+			print("Old offset was ", oldOffset)
 			if oldOffset>abs(minVal)+defaultAdd:
-				print "Going to return ", oldOffset
+				print("Going to return ", oldOffset)
 			else:
-				print "Going to return ", abs(minVal)+defaultAdd
+				print("Going to return ", abs(minVal)+defaultAdd)
 	
 	if oldOffset!=None:
 		if oldOffset>abs(minVal)+defaultAdd:
@@ -1782,14 +1783,14 @@ def otsuImageJ(img,maxVal,minVal,debug=False):
 				binImg[i,j]=maxVal
 	
 	if debug:
-		print "Optimal threshold = ", kStar
-		print "#Pixels above threshold = ", sum(binImg)/float(maxVal)
-		print "#Pixels below threshold = ", np.shape(img)[0]**2-sum(binImg)/float(maxVal)
+		print("Optimal threshold = ", kStar)
+		print("#Pixels above threshold = ", sum(binImg)/float(maxVal))
+		print("#Pixels below threshold = ", np.shape(img)[0]**2-sum(binImg)/float(maxVal))
 		
 		ax2=fig.add_subplot(122)
 		ax2.contourf(binImg)
 		plt.draw()
-		raw_input()
+		input()
 			
 	return kStar,binImg	
 
@@ -1883,7 +1884,7 @@ def readBioFormatsMeta(fn):
 	"""
 	
 	#Change system encoding to UTF 8
-	reload(sys)  
+	imp.reload(sys)  
 	sys.setdefaultencoding('UTF8')
 
 	#Load and convert to utf8
@@ -2004,9 +2005,9 @@ def checkProblematicStacks(reader,meta,imageIdx,debug=True):
 			except:
 				if debug:
 					printWarning("Loading failed.")
-					print "Cannot load Image ", imageIdx,"/",meta.image_count
-					print "channel = ",j, "/",meta.image(imageIdx).Pixels.SizeC
-					print "zStack = ",k,"/",meta.image(imageIdx).Pixels.SizeZ
+					print("Cannot load Image ", imageIdx,"/",meta.image_count)
+					print("channel = ",j, "/",meta.image(imageIdx).Pixels.SizeC)
+					print("zStack = ",k,"/",meta.image(imageIdx).Pixels.SizeZ)
 				problematicStacks.append(k)
 	
 	return list(np.unique(problematicStacks)) 
@@ -2060,7 +2061,7 @@ def extractBioFormats(fn,fnOut,debug=True,series=0,channel='all',enc="uint16",sc
 			saveImg(img,fnImg,enc=enc,scale=scale,maxVal=maxVal)
 			
 			if debug:
-				print "Saved ",fnImg
+				print("Saved ",fnImg)
 	except:
 		printError("Was not able to save images to " + fnOut)
 		return -1
@@ -2095,8 +2096,8 @@ def runFijiMacro(macroPath,macroArgs,fijiBin=None,debug=False,batch=True):
 		cmd=fijiBin+" -macro "+ macroPath + " '"+macroArgs +"'"+ batch*" -batch " +debug*" -debug"
 	
 	if debug:
-		print "Executing command:"
-		print cmd
+		print("Executing command:")
+		print(cmd)
 	
 	#Run
 	try:
@@ -2104,7 +2105,7 @@ def runFijiMacro(macroPath,macroArgs,fijiBin=None,debug=False,batch=True):
 		return 0
 	except:
 		printError("Something went wrong executing:" )
-		print cmd
+		print(cmd)
 		return -1	
 	
 def getImgSmoothness(arr):

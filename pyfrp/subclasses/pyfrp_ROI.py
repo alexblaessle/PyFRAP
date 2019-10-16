@@ -105,7 +105,7 @@ class ROI(object):
 		self.extMask=None
 		
 		#Number of extended pixels
-		self.numExt=None
+		self.numExt=0 # None
 		
 		#Result Dataseries
 		self.dataVec=[]
@@ -871,7 +871,7 @@ class ROI(object):
 					self.matchMeshIdx(masterROI)
 		
 		if debug:
-			print 'Compute Idxs: ', startIdx-time.clock()
+			print('Compute Idxs: ', startIdx-time.clock())
 		
 		return self.getAllIdxs()
 	
@@ -1373,7 +1373,7 @@ class ROI(object):
 		
 		"""
 		
-		cvs=self.embryo.simulation.mesh.mesh.getCellVolumes()
+		cvs=self.embryo.simulation.mesh.getCellVolumes()
 		
 		c=pyfrp_integration_module.getAvgConc(phi,cvs,self.meshIdx)
 		
@@ -1652,8 +1652,8 @@ class ROI(object):
 		zExtend=[zExtend[0]-addZ,zExtend[1]+addZ]
 		
 		if debug:
-			print "Adding Box Field for ROI " + self.name
-			print "Mesh Nodes in ROI before: ", len(self.meshIdx)
+			print("Adding Box Field for ROI " + self.name)
+			print("Mesh Nodes in ROI before: ", len(self.meshIdx))
 			
 		fnOut=self.embryo.simulation.mesh.addBoxField(self.embryo.simulation.mesh.volSizePx/factor,xExtend,yExtend,zExtend,comment=self.name+" field",run=run,fnOut=fnOut)
 	
@@ -1661,7 +1661,7 @@ class ROI(object):
 			self.computeMeshIdx(self.embryo.simulation.mesh)
 		
 		if debug and findIdxs:
-			print "Mesh Nodes in ROI after: ", len(self.meshIdx)
+			print("Mesh Nodes in ROI after: ", len(self.meshIdx))
 			
 		return fnOut
 	
@@ -1737,40 +1737,40 @@ class ROI(object):
 			
 			#Print out current status
 			if debug:
-				print "Iteration ", i, ". "
-				print "Current parameters: addZ = ", addZ, " factor = ", factor 
-				print "Total mesh nodes: ", nNodesAllNew
-				print "Mesh Nodes in ROI before refinement: " , nNodesROI, " and after ", nNodesROINew, "."
+				print("Iteration ", i, ". ")
+				print("Current parameters: addZ = ", addZ, " factor = ", factor) 
+				print("Total mesh nodes: ", nNodesAllNew)
+				print("Mesh Nodes in ROI before refinement: " , nNodesROI, " and after ", nNodesROINew, ".")
 				if ROIReq!=None:
-					print "Mesh Nodes in ROIReq before refinement: " , nNodesROIReq, " and after ", nNodesROIReqNew, "."
+					print("Mesh Nodes in ROIReq before refinement: " , nNodesROIReq, " and after ", nNodesROIReqNew, ".")
 			
 			#Check if nNodes requirement is met
 			if nNodesNew<nNodesReq:
 				if nNodesAllNew==nNodesAll:
 					if debug: 
-						print "nNodesAll did not change, will increase addZ by ",zIncrement,". \n"
+						print("nNodesAll did not change, will increase addZ by ",zIncrement,". \n")
 					addZ=addZ+zIncrement
 					mode=0
 				else:
 					if debug:
-						print "nNodes not large enough yet, will increase factor by ",fIncrement,". \n"
+						print("nNodes not large enough yet, will increase factor by ",fIncrement,". \n")
 					factor=factor+fIncrement
 					mode=1
 			
 			#Check if maximum number of nodes was exceeded
 			elif nNodesNew>nNodesMax:
 				if debug:
-					print "Number of nodes exceeded maximum allowed number", nNodesMax, "."
+					print("Number of nodes exceeded maximum allowed number", nNodesMax, ".")
 				
 				if mode==0:
 					if debug:
-						print "Previously tried to increase addZ. Will try old addZ, but increase factor by " ,fIncrement,". \n"
+						print("Previously tried to increase addZ. Will try old addZ, but increase factor by " ,fIncrement,". \n")
 					addZ=addZ-zIncrement
 					factor=factor+fIncrement
 					mode=1
 				elif mode==1:
 					if debug:
-						print "Previously tried to increase factor. Will try old factor, but increase addZ by " ,zIncrement,". \n"
+						print("Previously tried to increase factor. Will try old factor, but increase addZ by " ,zIncrement,". \n")
 					addZ=addZ+zIncrement
 					factor=factor-fIncrement
 					mode=0
@@ -1790,9 +1790,9 @@ class ROI(object):
 		
 		"""Prints out all attributes of ROI object."""
 		
-		print "ROI ", self.name, " details:"
+		print("ROI ", self.name, " details:")
 		printAllObjAttr(self)
-		print 
+		print() 
 	
 	def plotSimConcProfile(self,phi,ax=None,direction='x',mode='normal',nbins=20,color=None,label=None,legend=False):
 		
@@ -2396,7 +2396,7 @@ class radialROI(ROI):
 		self.center2Mid()
 		
 		if not auto:
-			a=raw_input("Change center of region "+ self.name + " from " + str(oldCenter) + ' to ' + str(self.getCenter()) + ' ? [Y/N]')
+			a=input("Change center of region "+ self.name + " from " + str(oldCenter) + ' to ' + str(self.getCenter()) + ' ? [Y/N]')
 		
 			if a=='N':
 				self.setCenter(oldCenter)
@@ -2907,7 +2907,7 @@ class squareROI(ROI):
 		self.centerOffset()
 		
 		if not auto:
-			a=raw_input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
+			a=input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
 			
 			if a=='N':
 				self.setOffset(oldOffset)
@@ -3294,7 +3294,7 @@ class rectangleROI(ROI):
 		self.centerOffset()
 		
 		if not auto:
-			a=raw_input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
+			a=input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
 			
 			if a=='N':
 				self.setOffset(oldOffset)

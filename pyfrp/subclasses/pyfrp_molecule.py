@@ -39,7 +39,7 @@ from pyfrp.modules import pyfrp_IO_module
 from pyfrp.modules import pyfrp_stats_module
 
 #PyFRAP Classes
-import pyfrp_embryo
+from . import pyfrp_embryo
 
 #Standard packages
 import os
@@ -262,7 +262,7 @@ class molecule:
 				printError("Could not create " + fn+ ". Will not extract." )
 				return False
 		
-		print "in mol.extract:", fn
+		print("in mol.extract:", fn)
 		
 		for embryo in self.embryos:
 			embryo.save(fn=fn+embryo.getName()+".emb",copyMeshFiles=copyMeshFiles,debug=debug)
@@ -401,7 +401,7 @@ class molecule:
 				same,different,notInBoth=pyfrp_misc_module.compareObjAttr(lastFit,fit)
 				
 				for item in self.crucialParameters:   
-					if item in different.keys():
+					if item in list(different.keys()):
 						printError("Cannot average fits, since fits " + lastFit.name + " and " + fit.name + "do not have the same value for " + item +". However, this parameter is marked as crucial.")
 						return False
 					elif item in notInBoth:

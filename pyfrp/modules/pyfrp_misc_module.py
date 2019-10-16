@@ -41,7 +41,7 @@
 #===========================================================================================================================================================================
 
 #PyFRAP modules
-from pyfrp_term_module import *
+from .pyfrp_term_module import *
 from pyfrp.modules import pyfrp_img_module
 
 #PyFRAP subclasses
@@ -400,7 +400,7 @@ def vars2dict(var,loc,filt=[]):
 	for name in var:
 		dic[name]=loc[name]
 		
-	return {name: loc[name] for name, val in var.iteritems()}
+	return {name: loc[name] for name, val in var.items()}
 
 def objAttr2Dict(obj,attr=[]):
 	
@@ -471,7 +471,7 @@ def findIntString(s,idxvec=[],debug=False):
 	"""
 	
 	if idxvec==[]:
-		idxvec=range(len(s))
+		idxvec=list(range(len(s)))
 	
 	idxs=[]
 	found=False
@@ -625,9 +625,9 @@ def findFn(fn,base,lvlsUp=3,folder=False,debug=False):
 	os.chdir(cwd)
 	
 	if debug:
-		print "======= find_folder debugging output ======="
-		print "Could not find file ", fn ," . Going to return False"
-		print "Closest path found:", fnFound
+		print("======= find_folder debugging output =======")
+		print("Could not find file ", fn ," . Going to return False")
+		print("Closest path found:", fnFound)
 		
 	return OSError
 	
@@ -654,20 +654,20 @@ def findPreimage(key,base,lvlsUp=1,fType='tif',debug=False):
 	folderPre=find_fn('pre',base,lvlsUp=lvlsUp,folder=True,debug=debug)
 
 	if debug:
-		print "======= find_preimage debugging output ======="
+		print("======= find_preimage debugging output =======")
 	
 	if not folderPre:
 		if debug:
-			print "Could not find prefolder with key = ", key ," . Going to return False"
+			print("Could not find prefolder with key = ", key ," . Going to return False")
 		return folderPre
 	else:
 		files=get_sorted_folder_list(folderPre,fType)
 		if len(files)==0:
 			if debug:
-				print "Prefolder with key = ", key ," seems to be empty. Going to return False"
+				print("Prefolder with key = ", key ," seems to be empty. Going to return False")
 			raise OSError("Cannot find preimage")
 		else:
-			print "Found preimage = ", folderPre+"/"+files[0],  " ."
+			print("Found preimage = ", folderPre+"/"+files[0],  " .")
 			return folderPre+"/"+files[0]
 		
 def updateObj(objBlank,obj,debug=False):
@@ -690,7 +690,7 @@ def updateObj(objBlank,obj,debug=False):
 	"""
 	
 	if debug:
-		print "======update_obj: updated properties======"
+		print("======update_obj: updated properties======")
 	
 	#Going through all attributes blank object
 	for item in vars(objBlank):
@@ -699,7 +699,7 @@ def updateObj(objBlank,obj,debug=False):
 			setattr(obj, str(item), vars(objBlank)[str(item)])
 			
 			if debug:
-				print item, " = ", vars(self)[str(item)]
+				print(item, " = ", vars(self)[str(item)])
 	
 	return obj	
 	
@@ -734,7 +734,7 @@ def unzipLists(l):
 		
 	"""
 	
-	l1,l2=zip(*l)
+	l1,l2=list(zip(*l))
 	return list(l1),list(l2)
 		
 def assignIfVal(var,val,valCheck):
@@ -1214,7 +1214,7 @@ def getPath(identifier,fnPath=None,defaultOutput=""):
 		
 	path=None
 	
-	with  open (fnPath,'rb') as f:
+	with  open (fnPath,'r') as f:
 		for line in f:
 			if line.strip().startswith(identifier):
 				ident,path=line.split('=')
@@ -1271,7 +1271,7 @@ def printPaths(fnPath=None):
 	with open(fnPath,'rb') as f:
 		
 		for line in f:
-			print line
+			print(line)
 	
 def checkPaths(fnPath=None):
 
@@ -1292,7 +1292,7 @@ def checkPaths(fnPath=None):
 		for line in f:
 			try:
 				ident,val=line.split("=")
-				print ident, val.strip(), os.path.isfile(val.strip())
+				print(ident, val.strip(), os.path.isfile(val.strip()))
 			except ValueError:
 				pass
 			

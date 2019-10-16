@@ -35,7 +35,7 @@
 from PyQt4 import QtGui, QtCore
 
 #PyFRAP GUI classes
-import pyfrp_gui_basics
+from . import pyfrp_gui_basics
 
 #PyFRAP modules
 from pyfrp.modules.pyfrp_term_module import *
@@ -197,7 +197,7 @@ class analysisDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.cbNorm.setCheckState(2*int(self.inProcess('norm')))
 		
 	def inProcess(self,key):
-		return key in self.analysis.process.keys()
+		return key in list(self.analysis.process.keys())
 	
 	def checkMedian(self,val):
 		self.analysis.setMedian(bool(2*val))

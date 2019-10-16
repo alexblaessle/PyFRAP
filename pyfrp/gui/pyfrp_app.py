@@ -45,7 +45,7 @@ import code
 import numpy as np
 
 #PyFRAP Modules
-from pyfrp_term import *
+from .pyfrp_term import *
 from pyfrp.modules.pyfrp_term_module import *
 from pyfrp.modules import pyfrp_misc_module
 from pyfrp.modules import pyfrp_IO_module
@@ -110,7 +110,7 @@ import bioformats
 class pyfrp(QtGui.QMainWindow):
 	
 	#Initializes main GUI window
-	def __init__(self, parent=None,redirect=False):
+	def __init__(self, parent=None,redirect=False,overwrite_conf=False):
 		QtGui.QWidget.__init__(self, parent)
 		
 		#-------------------------------------------
@@ -189,10 +189,10 @@ class pyfrp(QtGui.QMainWindow):
 		#-------------------------------------------
 		#Console
 		#-------------------------------------------
-			
+
 		self.console = PyInterp(self,redirect=redirect)
 		self.console.initInterpreter(locals())
-		
+	
 		#-------------------------------------------
 		#Splitter
 		#-------------------------------------------
@@ -247,7 +247,7 @@ class pyfrp(QtGui.QMainWindow):
 		self.createDummpyTab()
 		
 		#Load config file
-		self.initConfiguration()
+		self.initConfiguration(overwrite=overwrite_conf)
 		
 		self.setCentralWidget(self.verticalSplitter)
 		QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
@@ -738,7 +738,7 @@ class pyfrp(QtGui.QMainWindow):
 	#SecConfig: Configuration handling
 	#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	def initConfiguration(self):
+	def initConfiguration(self,overwrite=False):
 		
 		"""Initialize Configuration from file.
 		
@@ -752,7 +752,7 @@ class pyfrp(QtGui.QMainWindow):
 		
 		fn=pyfrp_misc_module.getConfDir()+"lastConfiguration.conf"
 		
-		if os.path.isfile(fn):
+		if os.path.isfile(fn) and not overwrite:
 			self.config=pyfrp_IO_module.loadFromPickle(fn)
 		else:
 			self.config=pyfrp_conf.configuration()
@@ -930,7 +930,13 @@ class pyfrp(QtGui.QMainWindow):
 	
 	def getChildByName(self,node,name):
 		for i in range(node.childCount()):
-			if name==str(node.child(i).data(0,0).toString()):
+			try:
+				curr_name=str(node.child(i).data(0,0).toString())
+			except AttributeError:
+				curr_name=str(node.child(i).data(0,0))
+			
+				 
+			if name==str(curr_name):
 				return node.child(i)
 		return None
 	
@@ -1075,7 +1081,10 @@ class pyfrp(QtGui.QMainWindow):
 	
 	def getCurrentMolecule(self):	
 		molNames=pyfrp_misc_module.objAttrToList(self.molecules,"name")
-		self.currMolecule=self.molecules[molNames.index(self.currMoleculeNode.data(0,0).toString())]
+		try:
+			self.currMolecule=self.molecules[molNames.index(self.currMoleculeNode.data(0,0).toString())]
+		except AttributeError:
+			self.currMolecule=self.molecules[molNames.index(self.currMoleculeNode.data(0,0))]
 		return self.currMolecule
 	
 	#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1087,7 +1096,11 @@ class pyfrp(QtGui.QMainWindow):
 			return None
 		
 		embryoNames=pyfrp_misc_module.objAttrToList(self.currMolecule.embryos,"name")
-		currEmbryo=self.currMolecule.embryos[embryoNames.index(currEmbryoNode.data(0,0).toString())]
+		try:
+			currEmbryo=self.currMolecule.embryos[embryoNames.index(currEmbryoNode.data(0,0).toString())]
+		except AttributeError:
+			currEmbryo=self.currMolecule.embryos[embryoNames.index(currEmbryoNode.data(0,0))]
+		
 		return currEmbryo
 	
 	#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1686,7 +1699,7 @@ class pyfrp(QtGui.QMainWindow):
 		if selectWizard.exec_():
 			mode = selectWizard.getMode()
 			
-			print "mode is", mode
+			print("mode is", mode)
 			
 			if mode==None:
 				return 0
@@ -2975,7 +2988,7 @@ class pyfrp(QtGui.QMainWindow):
 		
 		"""Prints out path file."""
 		
-		print pyfrp_misc_module.getPathFile()
+		print(pyfrp_misc_module.getPathFile())
 		
 		return 1
 	
@@ -3015,6 +3028,8 @@ class pyfrp(QtGui.QMainWindow):
 			
 def main():
 	
+	
+	
 	#Creating application
 	#font=QtGui.QFont()
 	app = QtGui.QApplication(sys.argv)
@@ -3024,16 +3039,23 @@ def main():
 	
 	#Check if stout/sterr should be redirected
 	try:
-		print sys.argv[1]
+		print("redirect = %s"%sys.argv[1])
 		redirect=bool(int(sys.argv[1]))
-		print redirect
-	except:
+		#print(redirect)
+	except IndexError:
 		redirect=True
+		
+	try:
+		print("overwrite_conf = %s"%sys.argv[2])
+		overwrite_conf=bool(int(sys.argv[2]))
+		#print(redirect)
+	except IndexError:
+		overwrite_conf=False
 	
-	# Start javabridge
+	#Start javabridge
 	javabridge.start_vm(class_path=bioformats.JARS)
 	
-	mainWin = pyfrp(redirect=redirect)
+	mainWin = pyfrp(redirect=redirect,overwrite_conf=overwrite_conf)
 	mainWin.show()
 	
 	sys.exit(app.exec_())

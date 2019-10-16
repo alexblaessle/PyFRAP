@@ -56,14 +56,14 @@ import numpy as np
 import string
 
 #PyFRAP modules
-import pyfrp_plot_module
-from pyfrp_term_module import *
-import pyfrp_misc_module
-import pyfrp_gmsh_IO_module
-import pyfrp_idx_module
-import pyfrp_geometry_module
-import pyfrp_IO_module
-import pyfrp_vtk_module
+from . import pyfrp_plot_module
+from .pyfrp_term_module import *
+from . import pyfrp_misc_module
+from . import pyfrp_gmsh_IO_module
+from . import pyfrp_idx_module
+from . import pyfrp_geometry_module
+from . import pyfrp_IO_module
+from . import pyfrp_vtk_module
 
 #Matplotlib
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -1769,7 +1769,7 @@ class domain:
 			
 		"""
 		
-		with open(fn,'wb') as f:
+		with open(fn,'w') as f:
 			
 			self.writeElements("vertices",f)
 			self.writeElements("lines",f)
@@ -2097,16 +2097,16 @@ class domain:
 					#Fuse
 					if surface.fuse(sN,debug=debug):
 						if debug:
-							print "Successfully fused ", surface.Id, sN.Id
+							print("Successfully fused ", surface.Id, sN.Id)
 							
 			#Clean up edges
 			self.cleanUpUnusedEdges(debug=debug)
 			
 		#Print some final statistics
 		if debug:
-			print "Surfaces: Before =" , x , " After:" , len(self.ruledSurfaces) 
-			print "lineLoops: Before =" , y , " After:" , len(self.lineLoops) 
-			print "Edges: Before =" , z , " After:" , len(self.edges) 
+			print("Surfaces: Before =" , x , " After:" , len(self.ruledSurfaces)) 
+			print("lineLoops: Before =" , y , " After:" , len(self.lineLoops)) 
+			print("Edges: Before =" , z , " After:" , len(self.edges)) 
 		
 		#raw_input()
 		
@@ -2250,15 +2250,15 @@ class domain:
 		"""
 		
 		edgeIDs=pyfrp_misc_module.objAttrToList(self.edges,'Id')
-		print edgeIDs
+		print(edgeIDs)
 		# Loop through edges
 		for i,e in enumerate(self.edges):
 			for j in range(i+1,len(self.edges)):
-				print i,j,self.edges[i].Id,self.edges[j].Id
+				print(i,j,self.edges[i].Id,self.edges[j].Id)
 				# Check if same ID
 				if self.edges[j].Id==self.edges[i].Id:
 					
-					print "same id",self.edges[j].Id 
+					print("same id",self.edges[j].Id) 
 					
 					# Check if same start/end vertex
 					if (self.edges[j].getFirstVertex()==self.edges[i].getFirstVertex()) and (self.edges[j].getLastVertex()==self.edges[i].getLastVertex()):			
@@ -3900,7 +3900,7 @@ class lineLoop(gmshElement):
 		ids=np.array(pyfrp_misc_module.objAttrToList(self.edges,"Id"))
 		orients=np.array(self.orientations)
 		
-		print "Line Loop with ID = "+ str(self.Id)+": "+str(ids*orients)
+		print("Line Loop with ID = "+ str(self.Id)+": "+str(ids*orients))
 	
 	def fix(self):
 		
@@ -3935,7 +3935,7 @@ class lineLoop(gmshElement):
 					
 				if j==len(self.edges)-1:
 					printWarning("Could not fix loop with ID" + str(self.Id))
-					print "Edge with ID " +str(lastEdge.Id) + " is not matching with any other edge."
+					print("Edge with ID " +str(lastEdge.Id) + " is not matching with any other edge.")
 					return False
 				
 		self.edges=edgesNew
@@ -3981,12 +3981,12 @@ class lineLoop(gmshElement):
 					b=True
 			
 					if debug:
-						print "Edge with ID " +str(edge1Temp.Id) + " was not matching edge with ID " + str(edge2Temp.Id) + ". \n Fixed this."
+						print("Edge with ID " +str(edge1Temp.Id) + " was not matching edge with ID " + str(edge2Temp.Id) + ". \n Fixed this.")
 				
 					
 				if debug:
 					printWarning("lineLoop with ID " + str(self.Id) + " does not close." )
-					print "Edge with ID " +str(edge1Temp.Id) + " is not matching edge with ID " + str(edge2Temp.Id)
+					print("Edge with ID " +str(edge1Temp.Id) + " is not matching edge with ID " + str(edge2Temp.Id))
 						
 		return b
 	
@@ -4211,7 +4211,7 @@ class lineLoop(gmshElement):
 						if j>0:
 							if loops.sort()!=oldLoops.sort():
 								noSpline=True
-								print "cannot turn into spline because ", edgesSubst[j-1].Id , " and ",edgesSubst[j].Id 
+								print("cannot turn into spline because ", edgesSubst[j-1].Id , " and ",edgesSubst[j].Id) 
 							
 						oldLoops=list(loops)
 						
@@ -4262,7 +4262,7 @@ class lineLoop(gmshElement):
 				loop.edges.insert(idxInsert,sub[1])
 				
 				if debug:
-					print "Substituted edges ", sub[0][0].Id , "-", sub[0][-1].Id, " with spline ", sub[1].Id
+					print("Substituted edges ", sub[0][0].Id , "-", sub[0][-1].Id, " with spline ", sub[1].Id)
 				
 				
 		# Remove edges from domain.
@@ -4573,12 +4573,12 @@ class ruledSurface(gmshElement):
 				break
 		if idx==None:
 			printError("All points in surface "+str(self.Id) + " seem to be colinear. Will not be able to compute normal.")
-			print self.Id
+			print(self.Id)
 			self.draw(ann=True)
 			
-			print pyfrp_misc_module.objAttrToList(self.lineLoop.getVertices(),'Id')
+			print(pyfrp_misc_module.objAttrToList(self.lineLoop.getVertices(),'Id'))
 			
-			raw_input()
+			input()
 			
 			return np.zeros((3,))
 		
@@ -4804,7 +4804,7 @@ class ruledSurface(gmshElement):
 		vertices=self.lineLoop.getVertices()
 		coords=pyfrp_misc_module.objAttrToList(vertices,'x')
 		coords=np.asarray(coords)
-		coords = zip(coords[:,0], coords[:,1], coords[:,2])
+		coords = list(zip(coords[:,0], coords[:,1], coords[:,2]))
 		coordsNew=[]
 		coordsNew.append(list(coords))	
 		
@@ -5143,7 +5143,7 @@ class field(gmshElement):
 		"""Sets multiple field attributes.
 		"""
 		
-		for key, value in kwargs.iteritems():
+		for key, value in kwargs.items():
 			self.setFieldAttributes(key,value)
 	
 	def getSubElements(self):

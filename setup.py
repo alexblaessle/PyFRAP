@@ -190,7 +190,7 @@ class OverrideInstall(install):
 				gid=os.getgid()
 				
 			#Mode for files (everyone can read/write/execute. This is somewhat an overkill, but 0666 seems somehow not to work.)
-			mode=0777
+			mode="0777"
 			
 			return uid,gid,mode
 			
@@ -724,7 +724,7 @@ class OverrideInstall(install):
 
 		try:
 			if not self.silent:
-				log.info("Changing permissions of %s to %s" %(filepath, oct(mode)))
+				log.info("Changing permissions of %s to %s" %(filepath, mode))
 			os.chmod(filepath, mode)
 		except:	
 			if not self.silent:
@@ -767,7 +767,7 @@ class OverrideInstall(install):
 #Check if setup.py is used to build RTD, then don't overwrite install command
 if os.environ.get('READTHEDOCS', None) == 'True':
 	
-	print "Installing on RTD, will not overwrite install command."
+	print("Installing on RTD, will not overwrite install command.")
 	
 	setup(name='pyfrp',
 		version=version,

@@ -46,7 +46,7 @@
 from PyQt4 import QtGui, QtCore
 
 #PyFRAP GUI classes
-import pyfrp_gui_basics
+from . import pyfrp_gui_basics
 
 #PyFRAP modules
 from pyfrp.modules.pyfrp_term_module import *
@@ -1210,7 +1210,7 @@ class polygonROIDialog(ROIDialog):
 		if len(self.artists)>0 and self.highlighted!=None:
 			
 			self.ROI.moveCorner(self.currInd,self.currCorner[0]-1,self.currCorner[1])
-			print self.ROI.getCorners()
+			print(self.ROI.getCorners())
 			
 			self.updateCornerList()
 			self.drawPolygon()
@@ -1723,13 +1723,13 @@ class ROISelector(QtGui.QDialog):
 		self.embryo=embryo
 		
 		#Grab ROI name
-		if "name" in kwargs.keys():
+		if "name" in list(kwargs.keys()):
 			self.name=str(kwargs["name"])
 		else:
 			self.name="newROI"
 		
 		#Grab center
-		if "center" in kwargs.keys():
+		if "center" in list(kwargs.keys()):
 			self.center=kwargs["center"]
 		else:
 			if self.embryo.geometry!=None:
@@ -1738,55 +1738,55 @@ class ROISelector(QtGui.QDialog):
 				self.center=[self.embryo.dataResPx/2.]*2
 		
 		#Grab sidelength
-		if "sidelength" in kwargs.keys():
+		if "sidelength" in list(kwargs.keys()):
 			self.sidelength=kwargs["sidelength"]
 		else:
 			self.sidelength=100
 		
 		#Grab offset
-		if "offset" in kwargs.keys():
+		if "offset" in list(kwargs.keys()):
 			self.offset=kwargs["offset"]
 		else:
 			self.offset=np.asarray(self.center)-self.sidelength/2.
 			
 		#Grab radius
-		if "radius" in kwargs.keys():
+		if "radius" in list(kwargs.keys()):
 			self.radius=kwargs["radius"]
 		else:
 			self.radius=200.
 		
 		#Grab color
-		if "color" in kwargs.keys():
+		if "color" in list(kwargs.keys()):
 			self.color=kwargs["color"]
 		else:
 			self.color='r'
 	
 		#Grab slice height
-		if "sliceHeight" in kwargs.keys():
+		if "sliceHeight" in list(kwargs.keys()):
 			self.sliceHeight=kwargs["sliceHeight"]
 		else:
 			self.sliceHeight=self.embryo.sliceHeightPx
 		
 		#Grab slice width
-		if "sliceWidth" in kwargs.keys():
+		if "sliceWidth" in list(kwargs.keys()):
 			self.sliceWidth=kwargs["sliceWidth"]
 		else:
 			self.sliceWidth=self.embryo.sliceWidthPx
 		
 		#Grab title
-		if "title" in kwargs.keys():
+		if "title" in list(kwargs.keys()):
 			self.title=kwargs["title"]
 		else:
 			self.title="ROI Selector"
 		
 		#Grab Message
-		if "msg" in kwargs.keys():
+		if "msg" in list(kwargs.keys()):
 			self.msg=kwargs["msg"]
 		else:
 			self.msg="Select ROI type"
 			
 		#Grab asMaster
-		if "asMaster" in kwargs.keys():
+		if "asMaster" in list(kwargs.keys()):
 			self.asMaster=kwargs["asMaster"]
 		else:
 			self.asMaster=False

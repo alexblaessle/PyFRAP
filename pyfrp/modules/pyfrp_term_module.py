@@ -56,7 +56,7 @@ def printWarning(txt,showCall=True,idx=2):
 	
 	"""
 
-	print(colorama.Fore.YELLOW + "WARNING "+showCall*("("+getFunctionCall(idx)+")")+": ") + colorama.Fore.RESET + txt
+	print((colorama.Fore.YELLOW + "WARNING "+showCall*("("+getFunctionCall(idx)+")")+": ") + colorama.Fore.RESET + txt)
 
 def printError(txt,showCall=True,idx=2):
 	
@@ -72,7 +72,7 @@ def printError(txt,showCall=True,idx=2):
 	
 	"""
 	
-	print(colorama.Fore.RED + "ERROR "+showCall*("("+getFunctionCall(idx)+")")+": ") + colorama.Fore.RESET + txt
+	print((colorama.Fore.RED + "ERROR "+showCall*("("+getFunctionCall(idx)+")")+": ") + colorama.Fore.RESET + txt)
 
 def printNote(txt,showCall=True,idx=2):
 	
@@ -88,7 +88,7 @@ def printNote(txt,showCall=True,idx=2):
 	
 	"""
 
-	print(colorama.Fore.GREEN + "NOTE "+showCall*("("+getFunctionCall(idx)+")")+": ") + colorama.Fore.RESET + txt
+	print((colorama.Fore.GREEN + "NOTE "+showCall*("("+getFunctionCall(idx)+")")+": ") + colorama.Fore.RESET + txt)
 	
 def printDict(dic,maxL=5):
 	
@@ -105,7 +105,7 @@ def printDict(dic,maxL=5):
 	
 	"""
 	
-	for k in dic.keys():
+	for k in list(dic.keys()):
 		printAttr(k,dic[k],maxL=maxL)
 		
 	return True	
@@ -123,8 +123,8 @@ def printObjAttr(var,obj):
 	"""
 	
 	
-        print var, " = ", vars(obj)[str(var)]
-        return var
+	print(var, " = ", vars(obj)[str(var)])
+	return var
 
 def printAllObjAttr(obj,maxL=5):
 	
@@ -143,7 +143,7 @@ def printAllObjAttr(obj,maxL=5):
 	
 	for item in vars(obj):
 		printAttr(item,vars(obj)[str(item)],maxL=maxL)
-	print	
+	print()	
 	return True
 
 def printAttr(name,attr,maxL=5):
@@ -164,14 +164,14 @@ def printAttr(name,attr,maxL=5):
 
 	if isinstance(attr,(list)):
 		if len(attr)>maxL:
-			print name, " = ", getListDetailsString(attr)
+			print(name, " = ", getListDetailsString(attr))
 			return True
 	elif isinstance(attr,(np.ndarray)):
 		if min(attr.shape)>maxL:
-			print name, " = ", getArrayDetailsString(attr)
+			print(name, " = ", getArrayDetailsString(attr))
 			return True
 		
-	print name, " = ", attr
+	print(name, " = ", attr)
 		
 	return True	
 
@@ -233,7 +233,7 @@ def printTable(l,header,col=False):
 		
 	from tabulate import tabulate
 			
-	print tabulate(table,headers=header)
+	print(tabulate(table,headers=header))
 		
 	return header, table	
 
