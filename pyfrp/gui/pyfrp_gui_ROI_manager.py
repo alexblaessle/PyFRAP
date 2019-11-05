@@ -43,7 +43,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -65,7 +65,7 @@ import matplotlib.patches as ptc
 #Main ROI Manager
 #===================================================================================================================================
 
-class ROImanager(QtGui.QDialog):
+class ROImanager(QtWidgets.QDialog):
 	
 	def __init__(self,embryo,parent):
 		super(ROImanager,self).__init__(parent)
@@ -79,7 +79,7 @@ class ROImanager(QtGui.QDialog):
 		#TreeWidget
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.ROIList=QtGui.QTreeWidget()
+		self.ROIList=QtWidgets.QTreeWidget()
 		self.ROIList.setHeaderLabels(["Name","Typ"])
 		self.ROIList.setColumnWidth(0,200)
 		self.ROIList.itemClicked.connect(self.roiSelected)
@@ -88,32 +88,32 @@ class ROImanager(QtGui.QDialog):
 		#Buttons
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.btnDone=QtGui.QPushButton('Done')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')
+		self.btnDone.clicked.connect(self.donePressed)
 		
-		self.btnNewROI=QtGui.QPushButton('New')
-		self.btnNewROI.connect(self.btnNewROI, QtCore.SIGNAL('clicked()'), self.newROI)
+		self.btnNewROI=QtWidgets.QPushButton('New')
+		self.btnNewROI.clicked.connect(self.newROI)
 		
-		self.btnRemoveROI=QtGui.QPushButton('Remove')
-		self.btnRemoveROI.connect(self.btnRemoveROI, QtCore.SIGNAL('clicked()'), self.removeROI)
+		self.btnRemoveROI=QtWidgets.QPushButton('Remove')
+		self.btnRemoveROI.clicked.connect(self.removeROI)
 		
-		self.btnEditROI=QtGui.QPushButton('Edit')
-		self.btnEditROI.connect(self.btnEditROI, QtCore.SIGNAL('clicked()'), self.editROI)
+		self.btnEditROI=QtWidgets.QPushButton('Edit')
+		self.btnEditROI.clicked.connect(self.editROI)
 		
-		self.btnComputeIdxs=QtGui.QPushButton('Compute Idxs')
-		self.btnComputeIdxs.connect(self.btnComputeIdxs, QtCore.SIGNAL('clicked()'), self.computeIdxs)
+		self.btnComputeIdxs=QtWidgets.QPushButton('Compute Idxs')
+		self.btnComputeIdxs.clicked.connect(self.computeIdxs)
 		
-		self.btnComputeAllIdxs=QtGui.QPushButton('Compute Idxs')
-		self.btnComputeAllIdxs.connect(self.btnComputeAllIdxs, QtCore.SIGNAL('clicked()'), self.computeAllIdxs)
+		self.btnComputeAllIdxs=QtWidgets.QPushButton('Compute Idxs')
+		self.btnComputeAllIdxs.clicked.connect(self.computeAllIdxs)
 		
-		self.btnShowIdxs=QtGui.QPushButton('Show Idxs')
-		#self.btnShowIdxs.connect(self.btnShowIdxs, QtCore.SIGNAL('clicked()'), self.showIdxs)
+		self.btnShowIdxs=QtWidgets.QPushButton('Show Idxs')
+		self.btnShowIdxs.clicked.connect(self.showIdxs)
 		
 		#-------------------------------------------------------------------------------------------------------------------
 		#Combo Box
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.comboType = QtGui.QComboBox(self)
+		self.comboType = QtWidgets.QComboBox(self)
 		self.comboType.addItem("radial")
 		self.comboType.addItem("slice")
 		self.comboType.addItem("radialSlice")
@@ -129,7 +129,7 @@ class ROImanager(QtGui.QDialog):
 		#Layout
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.grid = QtGui.QGridLayout()
+		self.grid = QtWidgets.QGridLayout()
 		
 		self.grid.addWidget(self.btnNewROI,1,1)
 		self.grid.addWidget(self.btnEditROI,2,1)
@@ -141,11 +141,11 @@ class ROImanager(QtGui.QDialog):
 		self.grid.addWidget(self.comboType,2,2)
 		
 		
-		self.hbox = QtGui.QHBoxLayout()
+		self.hbox = QtWidgets.QHBoxLayout()
 		self.hbox.addLayout(self.grid)
 		self.hbox.addWidget(self.ROIList)
 		
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addLayout(self.hbox)
 		self.vbox.addWidget(self.btnDone)
 		
@@ -164,7 +164,7 @@ class ROImanager(QtGui.QDialog):
 		
 		self.ROIList.clear()
 		for r in self.embryo.ROIs:
-			QtGui.QTreeWidgetItem(self.ROIList,[r.name,r.getType()])
+			QtWidgets.QTreeWidgetItem(self.ROIList,[r.name,r.getType()])
 		return self.ROIList
 	
 	def newROI(self):
@@ -276,15 +276,15 @@ class ROIDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.ROI=ROI
 		
 		#Labels
-		self.lblName = QtGui.QLabel("Name:", self)
-		self.lblZmin = QtGui.QLabel("zmin:", self)
-		self.lblZmax = QtGui.QLabel("zmax:", self)
-		self.lblColor = QtGui.QLabel("Color:", self)
+		self.lblName = QtWidgets.QLabel("Name:", self)
+		self.lblZmin = QtWidgets.QLabel("zmin:", self)
+		self.lblZmax = QtWidgets.QLabel("zmax:", self)
+		self.lblColor = QtWidgets.QLabel("Color:", self)
 	
 		#LineEdits
-		self.qleName = QtGui.QLineEdit(self.ROI.name)
-		self.qleZmin = QtGui.QLineEdit(str(self.ROI.zmin))
-		self.qleZmax = QtGui.QLineEdit(str(self.ROI.zmax))
+		self.qleName = QtWidgets.QLineEdit(self.ROI.name)
+		self.qleZmin = QtWidgets.QLineEdit(str(self.ROI.zmin))
+		self.qleZmax = QtWidgets.QLineEdit(str(self.ROI.zmax))
 		
 		self.doubleValid=QtGui.QDoubleValidator()
 		
@@ -296,14 +296,14 @@ class ROIDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.qleZmax.editingFinished.connect(self.setZmax)
 		
 		#Checkboxes
-		self.cbUseForRim = QtGui.QCheckBox('Use for rim?', self)
+		self.cbUseForRim = QtWidgets.QCheckBox('Use for rim?', self)
 		self.cbUseForRim.setCheckState(2*int(self.ROI.useForRim))
 		
-		self.connect(self.cbUseForRim, QtCore.SIGNAL('stateChanged(int)'), self.checkUseForRim)
+		self.cbUseForRim.stateChanged.connect(self.checkUseForRim)
 		
 		#Buttons
 		self.initColorButton()
-		self.btnColor.connect(self.btnColor, QtCore.SIGNAL('clicked()'), self.setColor)
+		self.btnColor.clicked.connect(self.setColor)
 		
 		#Layout
 		self.grid.addWidget(self.lblName,1,1)
@@ -348,7 +348,7 @@ class ROIDialog(pyfrp_gui_basics.basicCanvasDialog):
 		return self.ROI.getUseForRim()
 	
 	def initColorButton(self):
-		self.btnColor=QtGui.QPushButton('         ')
+		self.btnColor=QtWidgets.QPushButton('         ')
 		self.updateColorButton()
 		return
 	
@@ -410,12 +410,12 @@ class sliceROIDialog(ROIDialog):
 		super(sliceROIDialog,self).__init__(ROI,parent)
 		
 		#Labels
-		self.lblHeight = QtGui.QLabel("Height:", self)
-		self.lblWidth = QtGui.QLabel("Width:", self)
+		self.lblHeight = QtWidgets.QLabel("Height:", self)
+		self.lblWidth = QtWidgets.QLabel("Width:", self)
 		
 		#LineEdits
-		self.qleHeight = QtGui.QLineEdit(str(self.ROI.height))
-		self.qleWidth = QtGui.QLineEdit(str(self.ROI.width))
+		self.qleHeight = QtWidgets.QLineEdit(str(self.ROI.height))
+		self.qleWidth = QtWidgets.QLineEdit(str(self.ROI.width))
 		
 		self.qleHeight.setValidator(self.doubleValid)
 		self.qleWidth.setValidator(self.doubleValid)
@@ -424,10 +424,10 @@ class sliceROIDialog(ROIDialog):
 		self.qleWidth.editingFinished.connect(self.setWidth)
 		
 		#Checkboxes
-		self.cbSliceBottom = QtGui.QCheckBox('SliceBottom?', self)
+		self.cbSliceBottom = QtWidgets.QCheckBox('SliceBottom?', self)
 		self.cbSliceBottom.setCheckState(2*int(self.ROI.sliceBottom))
 		
-		self.connect(self.cbSliceBottom, QtCore.SIGNAL('stateChanged(int)'), self.checkSliceBottom)
+		self.cbSliceBottom.stateChanged.connect(self.checkSliceBottom)
 		
 		#Layout
 		nRows=self.grid.rowCount()
@@ -465,19 +465,19 @@ class radialROIDialog(ROIDialog):
 		super(radialROIDialog,self).__init__(ROI,parent)	
 		
 		#Labels
-		self.lblRadius = QtGui.QLabel("Radius:", self)
-		self.lblCenter = QtGui.QLabel("Center:", self)
+		self.lblRadius = QtWidgets.QLabel("Radius:", self)
+		self.lblCenter = QtWidgets.QLabel("Center:", self)
 		
 		#LineEdits
-		self.qleRadius = QtGui.QLineEdit(str(self.ROI.radius))
-		self.qleCenterX = QtGui.QLineEdit(str(self.ROI.center[0]))
-		self.qleCenterY = QtGui.QLineEdit(str(self.ROI.center[1]))
+		self.qleRadius = QtWidgets.QLineEdit(str(self.ROI.radius))
+		self.qleCenterX = QtWidgets.QLineEdit(str(self.ROI.center[0]))
+		self.qleCenterY = QtWidgets.QLineEdit(str(self.ROI.center[1]))
 		
 		self.qleRadius.setValidator(self.doubleValid)
 		self.qleCenterX.setValidator(self.doubleValid)
 		self.qleCenterY.setValidator(self.doubleValid)
 		
-		self.centerGrid = QtGui.QGridLayout()
+		self.centerGrid = QtWidgets.QGridLayout()
 		
 		self.centerGrid.addWidget(self.qleCenterX)
 		self.centerGrid.addWidget(self.qleCenterY)
@@ -656,19 +656,19 @@ class squareROIDialog(ROIDialog):
 		super(squareROIDialog,self).__init__(ROI,parent)	
 		
 		#Labels
-		self.lblSidelength = QtGui.QLabel("Sidelength:", self)
-		self.lblOffset = QtGui.QLabel("Offset:", self)
+		self.lblSidelength = QtWidgets.QLabel("Sidelength:", self)
+		self.lblOffset = QtWidgets.QLabel("Offset:", self)
 		
 		#LineEdits
-		self.qleSidelength = QtGui.QLineEdit(str(self.ROI.sidelength))
-		self.qleOffsetX = QtGui.QLineEdit(str(self.ROI.offset[0]))
-		self.qleOffsetY = QtGui.QLineEdit(str(self.ROI.offset[1]))
+		self.qleSidelength = QtWidgets.QLineEdit(str(self.ROI.sidelength))
+		self.qleOffsetX = QtWidgets.QLineEdit(str(self.ROI.offset[0]))
+		self.qleOffsetY = QtWidgets.QLineEdit(str(self.ROI.offset[1]))
 		
 		self.qleSidelength.setValidator(self.doubleValid)
 		self.qleOffsetX.setValidator(self.doubleValid)
 		self.qleOffsetY.setValidator(self.doubleValid)
 		
-		self.offsetGrid = QtGui.QGridLayout()
+		self.offsetGrid = QtWidgets.QGridLayout()
 		
 		self.offsetGrid.addWidget(self.qleOffsetX)
 		self.offsetGrid.addWidget(self.qleOffsetY)
@@ -828,22 +828,22 @@ class rectangleROIDialog(ROIDialog):
 		super(rectangleROIDialog,self).__init__(ROI,parent)	
 		
 		#Labels
-		self.lblSidelengthX = QtGui.QLabel("SidelengthX:", self)
-		self.lblSidelengthY = QtGui.QLabel("SidelengthY:", self)
-		self.lblOffset = QtGui.QLabel("Offset:", self)
+		self.lblSidelengthX = QtWidgets.QLabel("SidelengthX:", self)
+		self.lblSidelengthY = QtWidgets.QLabel("SidelengthY:", self)
+		self.lblOffset = QtWidgets.QLabel("Offset:", self)
 		
 		#LineEdits
-		self.qleSidelengthX = QtGui.QLineEdit(str(self.ROI.sidelengthX))
-		self.qleSidelengthY = QtGui.QLineEdit(str(self.ROI.sidelengthY))
-		self.qleOffsetX = QtGui.QLineEdit(str(self.ROI.offset[0]))
-		self.qleOffsetY = QtGui.QLineEdit(str(self.ROI.offset[1]))
+		self.qleSidelengthX = QtWidgets.QLineEdit(str(self.ROI.sidelengthX))
+		self.qleSidelengthY = QtWidgets.QLineEdit(str(self.ROI.sidelengthY))
+		self.qleOffsetX = QtWidgets.QLineEdit(str(self.ROI.offset[0]))
+		self.qleOffsetY = QtWidgets.QLineEdit(str(self.ROI.offset[1]))
 		
 		self.qleSidelengthX.setValidator(self.doubleValid)
 		self.qleSidelengthY.setValidator(self.doubleValid)
 		self.qleOffsetX.setValidator(self.doubleValid)
 		self.qleOffsetY.setValidator(self.doubleValid)
 		
-		self.offsetGrid = QtGui.QGridLayout()
+		self.offsetGrid = QtWidgets.QGridLayout()
 		
 		self.offsetGrid.addWidget(self.qleOffsetX)
 		self.offsetGrid.addWidget(self.qleOffsetY)
@@ -1044,16 +1044,16 @@ class polygonROIDialog(ROIDialog):
 		self.currInd=None
 		
 		#Labels
-		self.lblCorners = QtGui.QLabel("Corners:", self)
+		self.lblCorners = QtWidgets.QLabel("Corners:", self)
 		
 		#TreeWidget
-		self.cornerList=QtGui.QTreeWidget()
+		self.cornerList=QtWidgets.QTreeWidget()
 		self.cornerList.setHeaderLabels(["x","y"])
 		self.cornerList.itemClicked.connect(self.cornerSelected)
 		
 		#Buttons
-		self.btnRemoveCorner=QtGui.QPushButton('Remove')
-		self.btnRemoveCorner.connect(self.btnRemoveCorner, QtCore.SIGNAL('clicked()'), self.removeCornerPressed)
+		self.btnRemoveCorner=QtWidgets.QPushButton('Remove')
+		self.btnRemoveCorner.clicked.connect(self.removeCornerPressed)
 		
 		#Layout
 		nRows=self.grid.rowCount()
@@ -1072,7 +1072,7 @@ class polygonROIDialog(ROIDialog):
 	def updateCornerList(self):
 		self.cornerList.clear()
 		for corner in self.ROI.corners:
-			QtGui.QTreeWidgetItem(self.cornerList,[str(corner[0]),str(corner[1])])
+			QtWidgets.QTreeWidgetItem(self.cornerList,[str(corner[0]),str(corner[1])])
 		return self.cornerList
 	
 	def cornerSelected(self):
@@ -1258,33 +1258,33 @@ class customROIDialog(ROIDialog):
 		super(customROIDialog,self).__init__(ROI,parent)	
 		
 		#Labels
-		self.lblAvailable = QtGui.QLabel("Available ROIs:", self)
-		self.lblIncluded = QtGui.QLabel("Included ROIs:", self)
+		self.lblAvailable = QtWidgets.QLabel("Available ROIs:", self)
+		self.lblIncluded = QtWidgets.QLabel("Included ROIs:", self)
 		
 		#TreeWidget
-		self.includedList=QtGui.QTreeWidget()
+		self.includedList=QtWidgets.QTreeWidget()
 		self.includedList.setHeaderLabels(["name","operation"])
 		self.includedList.itemClicked.connect(self.includedSelected)
 		
-		self.availableList=QtGui.QTreeWidget()
+		self.availableList=QtWidgets.QTreeWidget()
 		self.availableList.setHeaderLabels(["name"])
 		self.availableList.itemClicked.connect(self.availableSelected)
 			
 		#Buttons
-		self.btnRemoveROI=QtGui.QPushButton('Remove')
-		self.btnRemoveROI.connect(self.btnRemoveROI, QtCore.SIGNAL('clicked()'), self.removeROI)
+		self.btnRemoveROI=QtWidgets.QPushButton('Remove')
+		self.btnRemoveROI.clicked.connect(self.removeROI)
 		
-		self.btnAddROI=QtGui.QPushButton('Add')
-		self.btnAddROI.connect(self.btnAddROI, QtCore.SIGNAL('clicked()'), self.addROI)
+		self.btnAddROI=QtWidgets.QPushButton('Add')
+		self.btnAddROI.clicked.connect(self.addROI)
 		
-		self.btnSubsctractROI=QtGui.QPushButton('Substract')
-		self.btnSubsctractROI.connect(self.btnSubsctractROI, QtCore.SIGNAL('clicked()'), self.substractROI)
+		self.btnSubsctractROI=QtWidgets.QPushButton('Substract')
+		self.btnSubsctractROI.clicked.connect(self.substractROI)
 		
-		self.btnMoveUp=QtGui.QPushButton('Move Up')
-		self.btnMoveUp.connect(self.btnMoveUp, QtCore.SIGNAL('clicked()'), self.moveROIUp)
+		self.btnMoveUp=QtWidgets.QPushButton('Move Up')
+		self.btnMoveUp.clicked.connect(self.moveROIUp)
 		
-		self.btnMoveDown=QtGui.QPushButton('Move Down')
-		self.btnMoveDown.connect(self.btnMoveDown, QtCore.SIGNAL('clicked()'), self.moveROIDown)
+		self.btnMoveDown=QtWidgets.QPushButton('Move Down')
+		self.btnMoveDown.clicked.connect(self.moveROIDown)
 		
 		#Layout
 		nRows=self.grid.rowCount()
@@ -1311,7 +1311,7 @@ class customROIDialog(ROIDialog):
 		self.availableList.clear()
 		for roi in self.ROI.embryo.ROIs:
 			if roi not in self.ROI.ROIsIncluded and roi!=self:
-				item=QtGui.QTreeWidgetItem(self.availableList,[roi.name])
+				item=QtWidgets.QTreeWidgetItem(self.availableList,[roi.name])
 				item.setBackgroundColor(0,self.getQColor(roi.color))
 				a=self.getQColor(roi.color)
 				
@@ -1329,7 +1329,7 @@ class customROIDialog(ROIDialog):
 				op=' '
 				printWarning('Unknown procedure ' + str(roi.procedures[i]))
 				
-			item=QtGui.QTreeWidgetItem(self.includedList,[roi.name,op])
+			item=QtWidgets.QTreeWidgetItem(self.includedList,[roi.name,op])
 			item.setBackgroundColor(0,self.getQColor(roi.color))
 			item.setBackgroundColor(1,self.getQColor(roi.color))
 			
@@ -1430,11 +1430,11 @@ class defaultROIsDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.radius=300
 		
 		#Labels
-		self.lblRadius = QtGui.QLabel("Radius of ROIs:", self)
-		self.lblCenter = QtGui.QLabel("Center of ROIs:", self)
+		self.lblRadius = QtWidgets.QLabel("Radius of ROIs:", self)
+		self.lblCenter = QtWidgets.QLabel("Center of ROIs:", self)
 		
 		#LineEdits
-		self.qleRadius = QtGui.QLineEdit(str(self.radius))
+		self.qleRadius = QtWidgets.QLineEdit(str(self.radius))
 		
 		self.initCenterQle()
 		
@@ -1453,7 +1453,7 @@ class defaultROIsDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.grid.addWidget(self.lblRadius,nRows+1,1)
 		self.grid.addWidget(self.lblCenter,nRows+2,1)
 		
-		self.centerGrid = QtGui.QGridLayout()
+		self.centerGrid = QtWidgets.QGridLayout()
 		
 		self.centerGrid.addWidget(self.qleCenterX)
 		self.centerGrid.addWidget(self.qleCenterY)
@@ -1477,8 +1477,8 @@ class defaultROIsDialog(pyfrp_gui_basics.basicCanvasDialog):
 			self.center=[256,256]	
 		else:
 			self.center=list(self.embryo.geometry.center)
-		self.qleCenterX = QtGui.QLineEdit(str(self.center[0]))
-		self.qleCenterY = QtGui.QLineEdit(str(self.center[1]))
+		self.qleCenterX = QtWidgets.QLineEdit(str(self.center[0]))
+		self.qleCenterY = QtWidgets.QLineEdit(str(self.center[1]))
 	
 	def setCenter(self):
 		self.center=[float(self.qleCenterX.text()),float(self.qleCenterY.text())]
@@ -1650,7 +1650,7 @@ class defaultROIsDialog(pyfrp_gui_basics.basicCanvasDialog):
 #Default ROI Dialog
 #===================================================================================================================================		
 		
-class ROISelector(QtGui.QDialog):
+class ROISelector(QtWidgets.QDialog):
 	
 	"""Simple dialog allowing to select between different ROI types.
 	
@@ -1665,17 +1665,17 @@ class ROISelector(QtGui.QDialog):
 		self.ROI=None	
 		
 		#Labels
-		self.lblMsg=QtGui.QLabel(self.msg, self)
+		self.lblMsg=QtWidgets.QLabel(self.msg, self)
 		
 		#Buttons	
-		self.btnDefault=QtGui.QPushButton('Use Default')
-		self.btnDefault.connect(self.btnDefault, QtCore.SIGNAL('clicked()'), self.defaultPressed)
+		self.btnDefault=QtWidgets.QPushButton('Use Default')
+		self.btnDefault.clicked.connect(self.defaultPressed)
 		
-		self.btnDone=QtGui.QPushButton('Create ROI')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Create ROI')
+		self.btnDone.clicked.connect(self.donePressed)
 		
 		#Combo box
-		self.comboType = QtGui.QComboBox(self)
+		self.comboType = QtWidgets.QComboBox(self)
 		self.comboType.addItem("radial")
 		self.comboType.addItem("slice")
 		self.comboType.addItem("radialSlice")
@@ -1690,7 +1690,7 @@ class ROISelector(QtGui.QDialog):
 		self.initComboType(initType)
 		
 		#Layout
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.lblMsg)
 		self.vbox.addWidget(self.comboType)
 		self.vbox.addWidget(self.btnDefault)
@@ -1894,7 +1894,7 @@ class indexThread(pyfrp_gui_basics.pyfrpThread):
 #Dialogs for wizard selection
 #===================================================================================================================================
 	
-class wizardSelector(QtGui.QDialog):
+class wizardSelector(QtWidgets.QDialog):
 	
 	"""Dialog to select if either use default ROIs, Wizard, or ROI manager."""
 	
@@ -1908,16 +1908,16 @@ class wizardSelector(QtGui.QDialog):
 		self.mode=None
 		
 		#Buttons
-		self.btnUseDefault=QtGui.QPushButton('Create default ROIs')
-		self.btnUseDefault.connect(self.btnUseDefault, QtCore.SIGNAL('clicked()'), self.setUseDefault)
+		self.btnUseDefault=QtWidgets.QPushButton('Create default ROIs')
+		self.btnUseDefault.clicked.connect(self.setUseDefault)
 		
-		self.btnUseWizard=QtGui.QPushButton('Use ROI Wizard')
-		self.btnUseWizard.connect(self.btnUseWizard, QtCore.SIGNAL('clicked()'), self.setUseWizard)
+		self.btnUseWizard=QtWidgets.QPushButton('Use ROI Wizard')
+		self.btnUseWizard.clicked.connect(self.setUseWizard)
 		
-		self.btnUseManager=QtGui.QPushButton('Use ROI Manager')
-		self.btnUseManager.connect(self.btnUseManager, QtCore.SIGNAL('clicked()'), self.setUseManager)
+		self.btnUseManager=QtWidgets.QPushButton('Use ROI Manager')
+		self.btnUseManager.clicked.connect(self.setUseManager)
 			
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.btnUseDefault)
 		self.vbox.addWidget(self.btnUseWizard)
 		self.vbox.addWidget(self.btnUseManager)

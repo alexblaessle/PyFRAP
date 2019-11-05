@@ -1,4 +1,4 @@
-"""Script to search for a specific string in the PyFRAP code and replace all occurences.
+"""Script to search for PyQt4 specific strings and replace it with PyQt5 version.
 
 """
 
@@ -70,7 +70,7 @@ def findAllOccurences(fn,s):
 	N=0
 	
 	try:
-		with open(fn,'rb') as f:
+		with open(fn,'r') as f:
 			
 			for i,line in enumerate(f):
 				if s in line:
@@ -79,7 +79,7 @@ def findAllOccurences(fn,s):
 					lines.append(line)
 					N=N+line.count(s)
 	except IOError:
-		print "Skipped file ", fn
+		print("Skipped file ", fn)
 	return fnFound,lines,lineNo,N
 	
 def filterStrList(l,s,endswith=True):
@@ -96,47 +96,57 @@ def filterStrList(l,s,endswith=True):
 				lnew.append(x)
 				
 	return lnew		
+
+def replace_signal(lines,signal,val=""):
 	
-# Parse in 
-oldString=sys.argv[1]
-
-try:
-	newString=sys.argv[2]
-except IndexError:
-	newString=""
-
-try:
-	replace=sys.argv[3]
-except IndexError:
-	replace=False
-
-print 
-print "========================================================================================="
+	"""Replaces signal with new one."""
 	
-# Get all important files
+	signal_str=", QtCore.SIGNAL('%s(%s)'), "%(signal,val)
+	
+	lines_new=[]
+	for line in lines:
+		if signal_str in line:
+			
+			
+			s,line=line.split('.connect(')
+			line=line.replace(signal_str,'.%s.connect('%signal)
+			
+			n_tab=s.count('\t')
+			line=n_tab*'\t'+line
+			
+			lines_new.append(line)
+		else:
+			lines_new.append(line)
+			
+	return lines_new
+	
+
+def read_file(fn):
+	
+	lines=[]
+	with open(fn,'r') as f:
+		for line in f:
+			lines.append(line)
+			
+	return lines		
+
+def write_file(fn,lines):
+	
+	with open(fn,'w') as f:
+		for line in lines:
+			f.write(line)
+
+
 files=getAllImportantFiles(os.getcwd())
 
-# Find all things to replace
-found=[]
-Ntotal=0
 for fn in files:
-	fnFound,lines,lineNo,N=findAllOccurences(fn,oldString)
-	if N>0:
-		print("Found string in ", fn, " ", N, " times.")
-		found.append(fn)
-		Ntotal=Ntotal+N
-		
-if replace and len(newString)>0:
-	
-	a=raw_input("Are you sure you want to replace " + str(Ntotal) + " occurences of " + oldString + " with " + newString +"? [y/n]")
-	
-	if a=="y":
-		for fn in found:
-			try:
-				txtLineReplace(fn,oldString,newString)
-			except OSError:
-				print "Was not able to replace in file " , fn
+	lines=read_file(fn)
 	
 	
+	lines=replace_signal(lines,'clicked')
+	lines=replace_signal(lines,'stateChanged',val='int')
+	
+	
+	write_file(fn,lines)
 	
 

@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -65,20 +65,20 @@ class defaultPinningDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.debug=False
 		
 		#Labels
-		self.lblUseMin = QtGui.QLabel("Use Min. Value for Background:", self)
-		self.lblUseMax = QtGui.QLabel("Use Max. Value for Norming:", self)
-		self.lblDebug = QtGui.QLabel("Show Debugging Output:", self)
+		self.lblUseMin = QtWidgets.QLabel("Use Min. Value for Background:", self)
+		self.lblUseMax = QtWidgets.QLabel("Use Max. Value for Norming:", self)
+		self.lblDebug = QtWidgets.QLabel("Show Debugging Output:", self)
 		
 		#Checkboxes
-		self.cbUseMax = QtGui.QCheckBox('', self)
-		self.cbUseMin = QtGui.QCheckBox('', self)
-		self.cbDebug = QtGui.QCheckBox('', self)
+		self.cbUseMax = QtWidgets.QCheckBox('', self)
+		self.cbUseMin = QtWidgets.QCheckBox('', self)
+		self.cbDebug = QtWidgets.QCheckBox('', self)
 		
 		self.updateCBs()
 		
-		self.connect(self.cbUseMax, QtCore.SIGNAL('stateChanged(int)'), self.checkUseMax)
-		self.connect(self.cbUseMin, QtCore.SIGNAL('stateChanged(int)'), self.checkUseMin)
-		self.connect(self.cbDebug, QtCore.SIGNAL('stateChanged(int)'), self.checkDebug)
+		self.cbUseMax.stateChanged.connect(self.checkUseMax)
+		self.cbUseMin.stateChanged.connect(self.checkUseMin)
+		self.cbDebug.stateChanged.connect(self.checkDebug)
 		
 		#layout
 		self.grid.addWidget(self.lblUseMin,1,1)
@@ -129,37 +129,37 @@ class idealPinningDialog(defaultPinningDialog):
 		self.sepSim=True
 		
 		#Labels
-		self.lblBkgd = QtGui.QLabel("ROI for Background Calculation:", self)
-		self.lblNorm = QtGui.QLabel("ROI for Norm Calculation:", self)
+		self.lblBkgd = QtWidgets.QLabel("ROI for Background Calculation:", self)
+		self.lblNorm = QtWidgets.QLabel("ROI for Norm Calculation:", self)
 		
-		self.lblBkgdVal = QtGui.QLabel("", self)
-		self.lblNormVal = QtGui.QLabel("", self)
+		self.lblBkgdVal = QtWidgets.QLabel("", self)
+		self.lblNormVal = QtWidgets.QLabel("", self)
 		
-		self.lblSepSim = QtGui.QLabel("Pin simulation seperately:", self)
-		self.lblSwitchThresh = QtGui.QLabel("Switch Threshold:", self)
+		self.lblSepSim = QtWidgets.QLabel("Pin simulation seperately:", self)
+		self.lblSwitchThresh = QtWidgets.QLabel("Switch Threshold:", self)
 		
 		self.updateBkgdROILbl()
 		self.updateNormROILbl()
 
 		#LineEdits
 		self.doubleValid=QtGui.QDoubleValidator()
-		self.qleSwitchThresh = QtGui.QLineEdit(str(self.switchThresh))
+		self.qleSwitchThresh = QtWidgets.QLineEdit(str(self.switchThresh))
 		self.qleSwitchThresh.setValidator(self.doubleValid)
 		self.qleSwitchThresh.editingFinished.connect(self.setSwitchThresh)
 		
 		#Buttons
-		self.btnSetBkgdROI=QtGui.QPushButton('Change')
-		self.btnSetBkgdROI.connect(self.btnSetBkgdROI, QtCore.SIGNAL('clicked()'), self.setBkgdROI)
+		self.btnSetBkgdROI=QtWidgets.QPushButton('Change')
+		self.btnSetBkgdROI.clicked.connect(self.setBkgdROI)
 		
-		self.btnSetNormROI=QtGui.QPushButton('Change')
-		self.btnSetNormROI.connect(self.btnSetNormROI, QtCore.SIGNAL('clicked()'), self.setNormROI)
+		self.btnSetNormROI=QtWidgets.QPushButton('Change')
+		self.btnSetNormROI.clicked.connect(self.setNormROI)
 		
 		
 		#Checkboxes
-		self.cbSepSim = QtGui.QCheckBox('', self)
+		self.cbSepSim = QtWidgets.QCheckBox('', self)
 		self.cbSepSim.setCheckState(2*int(self.sepSim))
 	
-		self.connect(self.cbSepSim, QtCore.SIGNAL('stateChanged(int)'), self.checkSepSim)
+		self.cbSepSim.stateChanged.connect(self.checkSepSim)
 		
 		#Layout
 		nRows=self.grid.rowCount()

@@ -100,7 +100,7 @@ def analyzeDataset(analysis,signal=None,embCount=None,debug=False,debugAll=False
 		analysis (pyfrp.subclasses.pyfrp_analysis):  Object containing all necessary information for analysis.
 		
 	Keyword Args:
-		signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+		signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 		embCount (int): Counter of counter process if multiple datasets are analyzed. 
 		debug (bool): Print final debugging messages and show debugging plots.
 		debugAll (bool): Print debugging messages and show debugging plots of each step.

@@ -277,7 +277,7 @@ class simulation(object):
 		object to :py:func:`pyfrp.modules.pyfrp_sim_module.simulateReactDiff`.
 		
 		Keyword Args:
-			signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+			signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 			embCount (int): Counter of counter process if multiple datasets are simulated. 
 			debug (bool): Print debugging messages and show debugging plots.
 			showProgress (bool): Print out progress.
@@ -1157,7 +1157,7 @@ class simulation(object):
 		See also :py:func:`pyfrp.modules.pyfrp_sim_module.rerunReactDiff`.
 		
 		Keyword Args:
-			signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+			signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 			embCount (int): Counter of counter process if multiple datasets are simulated. 
 			debug (bool): Print debugging messages and show debugging plots.
 			showProgress (bool): Print out progress.
@@ -1274,7 +1274,7 @@ class simulation(object):
 		add a cutter that allows to cut through the 3D simulation and display single slices, see also
 		:py:class:`pyfrp.gui.pyfrp_gui_vtk.vtkSimVisualizerCutter`. Cutter only works for 3D simulations.
 		
-		If no application is specified, will launch a new ``QtGui.QApplication``. 
+		If no application is specified, will launch a new ``QtWidgets.QApplication``. 
 		
 		.. note:: Simulation results must be saved in ``simulation`` object via ``saveSim=True``.
 		
@@ -1292,7 +1292,7 @@ class simulation(object):
 	
 		Keyword Args:
 			cut (bool): Visualize with cutter.
-			app (QtGui.QApplication): Some application.
+			app (QtWidgets.QApplication): Some application.
 		
 		"""
 		
@@ -1310,7 +1310,7 @@ class simulation(object):
 		
 		# Create QApplication
 		if app==None:
-			app = QtGui.QApplication([])
+			app = QtWidgets.QApplication([])
 		
 		if cut:
 			widget=pyfrp_gui_vtk.vtkSimVisualizerCutter(self.embryo)

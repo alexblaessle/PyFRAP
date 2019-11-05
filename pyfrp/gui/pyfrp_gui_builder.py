@@ -39,7 +39,7 @@ import os, os.path
 from pyfrp.modules.pyfrp_term_module import *
 
 #PyQT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #===========================================================================================================================================================================
 #Module function
@@ -53,24 +53,24 @@ def genSettingQLE(parent,lblText,qleText,callback=None,validator=None):
 	.. note:: ``QLineEdit`` is conncect with ``editingFinished`` slot.
 	
 	Args:
-		parent (QtGui.QWidget): Some parenting widget.
+		parent (QtWidgets.QWidget): Some parenting widget.
 		lblText (str): Text displayed in label.
 		qleText (str): Text displayed initially in qle.
 	
 	Keyword Args:
 		callback (function): Some callback function.
-		validator (QtGui.QValidator): Some validator.
+		validator (QtWidgets.QValidator): Some validator.
 		
 	Returns:
 		tuple: Tuple containing:
 		
-			* lbl (QtGui.QLabel): Label.
-			* qle (QtGui.QLineEdit): Lineedit.
+			* lbl (QtWidgets.QLabel): Label.
+			* qle (QtWidgets.QLineEdit): Lineedit.
 			
 	"""
 	
-	lbl = QtGui.QLabel(lblText, parent)
-	qle = QtGui.QLineEdit(str(qleText),parent=parent)
+	lbl = QtWidgets.QLabel(lblText, parent)
+	qle = QtWidgets.QLineEdit(str(qleText),parent=parent)
 	
 	if validator!=None:
 		qle.setValidator(validator)
@@ -88,7 +88,7 @@ def genSettingCB(parent,lblText,cbVal,callback=None):
 	.. note:: ``QCheckBox`` is conncect with ``stateChanged`` slot.
 	
 	Args:
-		parent (QtGui.QWidget): Some parenting widget.
+		parent (QtWidgets.QWidget): Some parenting widget.
 		lblText (str): Text displayed in label.
 		cbVal (bool): Checked or not.
 	
@@ -98,17 +98,17 @@ def genSettingCB(parent,lblText,cbVal,callback=None):
 	Returns:
 		tuple: Tuple containing:
 		
-			* lbl (QtGui.QLabel): Label.
-			* cb (QtGui.QCheckBox): Checkbox.
+			* lbl (QtWidgets.QLabel): Label.
+			* cb (QtWidgets.QCheckBox): Checkbox.
 			
 	"""
 	
-	lbl = QtGui.QLabel(lblText, parent)
-	cb = QtGui.QCheckBox('', parent)
+	lbl = QtWidgets.QLabel(lblText, parent)
+	cb = QtWidgets.QCheckBox('', parent)
 	cb.setCheckState(2*int(cbVal))
 	
 	if callback!=None:
-		parent.connect(cb, QtCore.SIGNAL('stateChanged(int)'), callback)
+		cb.stateChanged.connect(callback)
 	
 	return lbl,cb
 
@@ -120,7 +120,7 @@ def genSettingBtn(parent,lblText,btnText,callback=None):
 	.. note:: ``QPushButton`` is conncect with ``clicked`` slot.
 	
 	Args:
-		parent (QtGui.QWidget): Some parenting widget.
+		parent (QtWidgets.QWidget): Some parenting widget.
 		lblText (str): Text displayed in label.
 		btnText (str): Text displayed on button.
 	
@@ -130,16 +130,16 @@ def genSettingBtn(parent,lblText,btnText,callback=None):
 	Returns:
 		tuple: Tuple containing:
 		
-			* lbl (QtGui.QLabel): Label.
-			* btn (QtGui.QPushButton): Push button.
+			* lbl (QtWidgets.QLabel): Label.
+			* btn (QtWidgets.QPushButton): Push button.
 			
 	"""
 	
-	lbl = QtGui.QLabel(lblText, parent)
-	btn=QtGui.QPushButton(btnText)
+	lbl = QtWidgets.QLabel(lblText, parent)
+	btn=QtWidgets.QPushButton(btnText)
 		
 	if callback!=None:
-		btn.connect(btn, QtCore.SIGNAL('clicked()'), callback)
+		btn.clicked.connect(callback)
 	
 	return lbl,btn
 
@@ -151,7 +151,7 @@ def genSettingCombo(parent,lblText,comboList,callback=None,idx=0):
 	.. note:: ``QPushButton`` is conncect with ``clicked`` slot.
 	
 	Args:
-		parent (QtGui.QWidget): Some parenting widget.
+		parent (QtWidgets.QWidget): Some parenting widget.
 		lblText (str): Text displayed in label.
 		comboList (list): List of strings that are added to QComboBox.
 	
@@ -162,13 +162,13 @@ def genSettingCombo(parent,lblText,comboList,callback=None,idx=0):
 	Returns:
 		tuple: Tuple containing:
 		
-			* lbl (QtGui.QLabel): Label.
-			* combo (QtGui.QComboBox): Combobox.
+			* lbl (QtWidgets.QLabel): Label.
+			* combo (QtWidgets.QComboBox): Combobox.
 			
 	"""
 	
-	lbl = QtGui.QLabel(lblText, parent)
-	combo=QtGui.QComboBox(parent)
+	lbl = QtWidgets.QLabel(lblText, parent)
+	combo=QtWidgets.QComboBox(parent)
 	
 	for x in comboList:
 		combo.addItem(x)

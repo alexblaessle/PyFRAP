@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -64,39 +64,39 @@ class embryoDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.nCharDisplayed=50
 		
 		#Labels
-		self.lblName = QtGui.QLabel("Name:", self)
+		self.lblName = QtWidgets.QLabel("Name:", self)
 		
-		self.lblDataFT = QtGui.QLabel("Data Filetype:", self)
-		self.lblDataEnc = QtGui.QLabel("Data Encoding:", self)
+		self.lblDataFT = QtWidgets.QLabel("Data Filetype:", self)
+		self.lblDataEnc = QtWidgets.QLabel("Data Encoding:", self)
 		
-		self.lblFnDataFolder = QtGui.QLabel("Data Folder:", self)
+		self.lblFnDataFolder = QtWidgets.QLabel("Data Folder:", self)
 	
 		
-		self.lblDataResPx = QtGui.QLabel("Resolution (px):", self)
-		self.lblDataResMu = QtGui.QLabel("Resulution (um):", self)
+		self.lblDataResPx = QtWidgets.QLabel("Resolution (px):", self)
+		self.lblDataResMu = QtWidgets.QLabel("Resulution (um):", self)
 		
-		self.lblSliceDepth = QtGui.QLabel("Imaging Depth (um):", self)
+		self.lblSliceDepth = QtWidgets.QLabel("Imaging Depth (um):", self)
 		
-		self.lblFrameInterval = QtGui.QLabel("Frame Interval (s):", self)
-		self.lblnFrames = QtGui.QLabel("number of frames:", self)
-		self.lbltStart = QtGui.QLabel("tStart (s):", self)
-		self.lbltEnd = QtGui.QLabel("tEnd (s):", self)
+		self.lblFrameInterval = QtWidgets.QLabel("Frame Interval (s):", self)
+		self.lblnFrames = QtWidgets.QLabel("number of frames:", self)
+		self.lbltStart = QtWidgets.QLabel("tStart (s):", self)
+		self.lbltEnd = QtWidgets.QLabel("tEnd (s):", self)
 		
-		self.lblFnDataFolderValue = QtGui.QLabel("", self)
+		self.lblFnDataFolderValue = QtWidgets.QLabel("", self)
 		
 		self.updateDataFolderLbl()
 		
 		#LineEdits
-		self.qleName = QtGui.QLineEdit(self.embryo.name)
-		self.qleDataResPx = QtGui.QLineEdit(str(self.embryo.dataResPx))
-		self.qleDataResMu = QtGui.QLineEdit(str(self.embryo.dataResMu))
+		self.qleName = QtWidgets.QLineEdit(self.embryo.name)
+		self.qleDataResPx = QtWidgets.QLineEdit(str(self.embryo.dataResPx))
+		self.qleDataResMu = QtWidgets.QLineEdit(str(self.embryo.dataResMu))
 		
-		self.qleSliceDepth = QtGui.QLineEdit(str(self.embryo.sliceDepthMu))
+		self.qleSliceDepth = QtWidgets.QLineEdit(str(self.embryo.sliceDepthMu))
 		
-		self.qleFrameInterval = QtGui.QLineEdit(str(self.embryo.frameInterval))
-		self.qlenFrames = QtGui.QLineEdit(str(self.embryo.nFrames))
-		self.qletStart = QtGui.QLineEdit(str(self.embryo.tStart))
-		self.qletEnd = QtGui.QLineEdit(str(self.embryo.tEnd))
+		self.qleFrameInterval = QtWidgets.QLineEdit(str(self.embryo.frameInterval))
+		self.qlenFrames = QtWidgets.QLineEdit(str(self.embryo.nFrames))
+		self.qletStart = QtWidgets.QLineEdit(str(self.embryo.tStart))
+		self.qletEnd = QtWidgets.QLineEdit(str(self.embryo.tEnd))
 		
 		self.doubleValid=QtGui.QDoubleValidator()
 		
@@ -119,11 +119,11 @@ class embryoDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.qlenFrames.setReadOnly(True)
 		
 		#Combo
-		self.comboDataFt = QtGui.QComboBox(self)
+		self.comboDataFt = QtWidgets.QComboBox(self)
 		self.comboDataFt.addItem("tif")
 		self.comboDataFt.setCurrentIndex(self.comboDataFt.findText(self.embryo.getDataFT()))
 		
-		self.comboDataEnc = QtGui.QComboBox(self)
+		self.comboDataEnc = QtWidgets.QComboBox(self)
 		self.comboDataEnc.addItem("uint8")
 		self.comboDataEnc.addItem("uint16")
 		self.comboDataEnc.setCurrentIndex(self.comboDataEnc.findText(self.embryo.getDataEnc())) 
@@ -132,12 +132,12 @@ class embryoDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.comboDataEnc.activated[str].connect(self.setDataEnc)   
 	
 		#Buttons
-		self.btnFnDatafolder=QtGui.QPushButton('Change')
+		self.btnFnDatafolder=QtWidgets.QPushButton('Change')
 		
-		self.btnFnDatafolder.connect(self.btnFnDatafolder, QtCore.SIGNAL('clicked()'), self.setFnDatafolder)
+		self.btnFnDatafolder.clicked.connect(self.setFnDatafolder)
 			
 		#Layout
-		self.dataFolderGrid = QtGui.QGridLayout()
+		self.dataFolderGrid = QtWidgets.QGridLayout()
 		self.dataFolderGrid.addWidget(self.lblFnDataFolderValue,1,1)
 		self.dataFolderGrid.addWidget(self.btnFnDatafolder,1,2)
 		
@@ -179,7 +179,7 @@ class embryoDialog(pyfrp_gui_basics.basicCanvasDialog):
 		
 	def setFnDatafolder(self):
 		
-		folder = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Data Directory",  self.parent.lastopen,))
+		folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Data Directory",  self.parent.lastopen,))
 		if folder=='':
 			return
 		
@@ -198,7 +198,7 @@ class embryoDialog(pyfrp_gui_basics.basicCanvasDialog):
 		
 	def setFnPreImage(self):
 		
-		fn = str(QtGui.QFileDialog.getOpenFileName(self, 'Open file', self.parent.lastopen,))
+		fn = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', self.parent.lastopen,))
 		if fn=='':
 			return
 		
@@ -308,36 +308,36 @@ class lsmWizard(pyfrp_gui_basics.basicSettingsDialog):
 		self.cleanUp=True
 		
 		#Labels
-		self.lblName = QtGui.QLabel("Name:", self)
+		self.lblName = QtWidgets.QLabel("Name:", self)
 		
-		self.lblDataFT = QtGui.QLabel("Data Filetype:", self)
+		self.lblDataFT = QtWidgets.QLabel("Data Filetype:", self)
 		
-		self.lblFnDataFolder = QtGui.QLabel("Data Folder:", self)
+		self.lblFnDataFolder = QtWidgets.QLabel("Data Folder:", self)
 	
-		self.lblFnDestFolder = QtGui.QLabel("Destination Folder:", self)
+		self.lblFnDestFolder = QtWidgets.QLabel("Destination Folder:", self)
 
-		self.lblNChannel = QtGui.QLabel("nChannel:", self)
-		self.lblCreate = QtGui.QLabel("Create Embryo:", self)
+		self.lblNChannel = QtWidgets.QLabel("nChannel:", self)
+		self.lblCreate = QtWidgets.QLabel("Create Embryo:", self)
 		
-		self.lblFnDataFolderValue = QtGui.QLabel("", self)
-		self.lblFnDestFolderValue = QtGui.QLabel("", self)
+		self.lblFnDataFolderValue = QtWidgets.QLabel("", self)
+		self.lblFnDestFolderValue = QtWidgets.QLabel("", self)
 		
-		self.lblRecoverIdent= QtGui.QLabel("Recover Identifiers", self)
-		self.lblPreIdent= QtGui.QLabel("Pre Identifiers", self)
-		self.lblBleachIdent= QtGui.QLabel("Bleach Identifiers", self)
+		self.lblRecoverIdent= QtWidgets.QLabel("Recover Identifiers", self)
+		self.lblPreIdent= QtWidgets.QLabel("Pre Identifiers", self)
+		self.lblBleachIdent= QtWidgets.QLabel("Bleach Identifiers", self)
 		
-		self.lblColorPrefix = QtGui.QLabel("Color Prefix", self)
-		self.lblCleanUp = QtGui.QLabel("Clean Up Afterwards?", self)	
+		self.lblColorPrefix = QtWidgets.QLabel("Color Prefix", self)
+		self.lblCleanUp = QtWidgets.QLabel("Clean Up Afterwards?", self)	
 			
 		self.updateDataFolderLbl()
 		
 		#LineEdits
-		self.qleName = QtGui.QLineEdit("")
-		self.qleRecoverIdent = QtGui.QLineEdit(str(self.recoverIdent))
-		self.qlePreIdent = QtGui.QLineEdit(str(self.preIdent))
-		self.qleBleachIdent = QtGui.QLineEdit(str(self.bleachIdent))
+		self.qleName = QtWidgets.QLineEdit("")
+		self.qleRecoverIdent = QtWidgets.QLineEdit(str(self.recoverIdent))
+		self.qlePreIdent = QtWidgets.QLineEdit(str(self.preIdent))
+		self.qleBleachIdent = QtWidgets.QLineEdit(str(self.bleachIdent))
 		
-		self.qleColorPrefix = QtGui.QLineEdit(self.colorPrefix)
+		self.qleColorPrefix = QtWidgets.QLineEdit(self.colorPrefix)
 		
 		self.qleName.editingFinished.connect(self.setName)
 		self.qleRecoverIdent.editingFinished.connect(self.setRecoverIdent)
@@ -348,11 +348,11 @@ class lsmWizard(pyfrp_gui_basics.basicSettingsDialog):
 		
 		
 		#Combo
-		self.comboDataFt = QtGui.QComboBox(self)
+		self.comboDataFt = QtWidgets.QComboBox(self)
 		self.comboDataFt.addItem("lsm")
 		self.comboDataFt.addItem("czi")
 		
-		self.comboNChannel = QtGui.QComboBox(self)
+		self.comboNChannel = QtWidgets.QComboBox(self)
 		self.comboNChannel.addItem("1")
 		self.comboNChannel.addItem("2")
 		self.comboNChannel.addItem("3")
@@ -364,30 +364,30 @@ class lsmWizard(pyfrp_gui_basics.basicSettingsDialog):
 		self.comboNChannel.activated[str].connect(self.setNChannel)   
 		
 		#Checkboxes
-		self.cbCreate = QtGui.QCheckBox('', self)
-		self.connect(self.cbCreate, QtCore.SIGNAL('stateChanged(int)'), self.checkCreate)
+		self.cbCreate = QtWidgets.QCheckBox('', self)
+		self.cbCreate.stateChanged.connect(self.checkCreate)
 		self.cbCreate.setCheckState(2)
 		
-		self.cbCleanUp = QtGui.QCheckBox('', self)
-		self.connect(self.cbCleanUp, QtCore.SIGNAL('stateChanged(int)'), self.checkCleanUp)
+		self.cbCleanUp = QtWidgets.QCheckBox('', self)
+		self.cbCleanUp.stateChanged.connect(self.checkCleanUp)
 		self.cbCleanUp.setCheckState(2)
 		
 		#Buttons
-		self.btnFnDatafolder=QtGui.QPushButton('Change')
-		self.btnFnDatafolder.connect(self.btnFnDatafolder, QtCore.SIGNAL('clicked()'), self.setFnDatafolder)
+		self.btnFnDatafolder=QtWidgets.QPushButton('Change')
+		self.btnFnDatafolder.clicked.connect(self.setFnDatafolder)
 		
-		self.btnFnDestfolder=QtGui.QPushButton('Change')
-		self.btnFnDestfolder.connect(self.btnFnDestfolder, QtCore.SIGNAL('clicked()'), self.setFnDestfolder)
+		self.btnFnDestfolder=QtWidgets.QPushButton('Change')
+		self.btnFnDestfolder.clicked.connect(self.setFnDestfolder)
 		
-		self.btnBuild=QtGui.QPushButton('Build Embryo')
-		self.btnBuild.connect(self.btnBuild, QtCore.SIGNAL('clicked()'), self.buildEmbryo)
+		self.btnBuild=QtWidgets.QPushButton('Build Embryo')
+		self.btnBuild.clicked.connect(self.buildEmbryo)
 		
 		#Layout
-		self.dataFolderGrid = QtGui.QGridLayout()
+		self.dataFolderGrid = QtWidgets.QGridLayout()
 		self.dataFolderGrid.addWidget(self.lblFnDataFolderValue,1,1)
 		self.dataFolderGrid.addWidget(self.btnFnDatafolder,1,2)
 		
-		self.destFolderGrid = QtGui.QGridLayout()
+		self.destFolderGrid = QtWidgets.QGridLayout()
 		self.destFolderGrid.addWidget(self.lblFnDestFolderValue,1,1)
 		self.destFolderGrid.addWidget(self.btnFnDestfolder,1,2)
 		
@@ -475,7 +475,7 @@ class lsmWizard(pyfrp_gui_basics.basicSettingsDialog):
 				
 	def setFnDatafolder(self):
 		
-		folder = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Data Directory",  self.parent.lastopen,))
+		folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Data Directory",  self.parent.lastopen,))
 		if folder=='':
 			return
 		
@@ -501,7 +501,7 @@ class lsmWizard(pyfrp_gui_basics.basicSettingsDialog):
 
 	def setFnDestfolder(self):
 		
-		folder = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Dest Directory",  self.parent.lastopen,))
+		folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Dest Directory",  self.parent.lastopen,))
 		if folder=='':
 			return
 		
@@ -533,7 +533,7 @@ class lsmWizard(pyfrp_gui_basics.basicSettingsDialog):
 	def getEmbryo(self):
 		return self.embryo
 	
-class wizardSelector(QtGui.QDialog):
+class wizardSelector(QtWidgets.QDialog):
 	
 	"""Dialog to select if either use lsmWizard or not."""
 	
@@ -547,13 +547,13 @@ class wizardSelector(QtGui.QDialog):
 		self.useLSM=None
 		
 		#Buttons
-		self.btnUseLSM=QtGui.QPushButton('Create Embryo from Microscope Data')
-		self.btnUseLSM.connect(self.btnUseLSM, QtCore.SIGNAL('clicked()'), self.setUseLSM)
+		self.btnUseLSM=QtWidgets.QPushButton('Create Embryo from Microscope Data')
+		self.btnUseLSM.clicked.connect(self.setUseLSM)
 		
-		self.btnUseSorted=QtGui.QPushButton('Create Embryo from already prepared Data')
-		self.btnUseSorted.connect(self.btnUseSorted, QtCore.SIGNAL('clicked()'), self.setUseSorted)
+		self.btnUseSorted=QtWidgets.QPushButton('Create Embryo from already prepared Data')
+		self.btnUseSorted.clicked.connect(self.setUseSorted)
 			
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.btnUseLSM)
 		self.vbox.addWidget(self.btnUseSorted)
 		

@@ -84,7 +84,7 @@ def simulateReactDiff(simulation,signal=None,embCount=None,showProgress=True,deb
 		simulation (pyfrp.subclasses.pyfrp_simulation.simulation): Simulation object.
 	
 	Keyword Args:
-		signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+		signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 		embCount (int): Counter of counter process if multiple datasets are analyzed. 
 		debug (bool): Print final debugging messages and show debugging plots.
 		showProgress (bool): Show simulation progress. 
@@ -251,7 +251,7 @@ def rerunReactDiff(simulation,signal=None,embCount=None,showProgress=True,debug=
 		simulation (pyfrp.subclasses.pyfrp_simulation.simulation): Simulation object.
 	
 	Keyword Args:
-		signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+		signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 		embCount (int): Counter of counter process if multiple datasets are analyzed. 
 		debug (bool): Print final debugging messages and show debugging plots.
 		showProgress (bool): Show simulation progress. 

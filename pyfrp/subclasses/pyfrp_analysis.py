@@ -131,7 +131,7 @@ class analysis:
 		data analysis.
 		
 		Keyword Args:
-			signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+			signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 			embCount (int): Counter of counter process if multiple datasets are analyzed. 
 			debug (bool): Print final debugging messages and show debugging plots.
 			debugAll (bool): Print debugging messages and show debugging plots of each step.

@@ -1532,7 +1532,7 @@ class embryo:
 		"""Computes image, extended and mesh indices of all ROIs in embryo's ``ROIs`` list.
 		
 		Keyword Args:
-			signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+			signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 			debug (bool): Print final debugging messages and show debugging plots.
 		
 		Returns:

@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -68,23 +68,23 @@ class geometryDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.ann=0
 		
 		#Labels
-		self.lblTyp = QtGui.QLabel("Typ:", self)
-		self.lblCenter = QtGui.QLabel("Center (px):", self)
-		self.lblFnGeo = QtGui.QLabel("Geo File:", self)
+		self.lblTyp = QtWidgets.QLabel("Typ:", self)
+		self.lblCenter = QtWidgets.QLabel("Center (px):", self)
+		self.lblFnGeo = QtWidgets.QLabel("Geo File:", self)
 		
-		self.lblTypVal = QtGui.QLabel(self.geometry.typ, self)
-		self.lblFnGeoVal = QtGui.QLabel(self.geometry.fnGeo, self)
+		self.lblTypVal = QtWidgets.QLabel(self.geometry.typ, self)
+		self.lblFnGeoVal = QtWidgets.QLabel(self.geometry.fnGeo, self)
 		
 		#LineEdits
 		self.doubleValid=QtGui.QDoubleValidator()
 		
-		self.qleCenterX = QtGui.QLineEdit(str(self.geometry.center[0]))
-		self.qleCenterY = QtGui.QLineEdit(str(self.geometry.center[1]))
+		self.qleCenterX = QtWidgets.QLineEdit(str(self.geometry.center[0]))
+		self.qleCenterY = QtWidgets.QLineEdit(str(self.geometry.center[1]))
 		
 		self.qleCenterX.setValidator(self.doubleValid)
 		self.qleCenterY.setValidator(self.doubleValid)
 		
-		self.centerGrid = QtGui.QGridLayout()
+		self.centerGrid = QtWidgets.QGridLayout()
 		
 		self.centerGrid.addWidget(self.qleCenterX)
 		self.centerGrid.addWidget(self.qleCenterY)
@@ -93,23 +93,23 @@ class geometryDialog(pyfrp_gui_basics.basicCanvasDialog):
 		self.qleCenterY.editingFinished.connect(self.setCenter)
 		
 		#Buttons
-		self.btnFnGeo=QtGui.QPushButton('Change')
-		self.btnFnGeo.connect(self.btnFnGeo, QtCore.SIGNAL('clicked()'), self.setFnGeo)
+		self.btnFnGeo=QtWidgets.QPushButton('Change')
+		self.btnFnGeo.clicked.connect(self.setFnGeo)
 		
-		self.btnGetCenterFromROI=QtGui.QPushButton('Grab from ROI')
-		self.btnGetCenterFromROI.connect(self.btnGetCenterFromROI, QtCore.SIGNAL('clicked()'), self.getCenterFromROI)
+		self.btnGetCenterFromROI=QtWidgets.QPushButton('Grab from ROI')
+		self.btnGetCenterFromROI.clicked.connect(self.getCenterFromROI)
 		
-		self.btnUpdateAll=QtGui.QPushButton('Update optimal All ROI')
-		self.btnUpdateAll.connect(self.btnUpdateAll, QtCore.SIGNAL('clicked()'), self.updateAllROI)
+		self.btnUpdateAll=QtWidgets.QPushButton('Update optimal All ROI')
+		self.btnUpdateAll.clicked.connect(self.updateAllROI)
 		
 		#Checkboxes
-		self.cbAnn = QtGui.QCheckBox('Annotate?', self)
+		self.cbAnn = QtWidgets.QCheckBox('Annotate?', self)
 		self.cbAnn.setCheckState(2*int(self.ann))
 		
-		self.connect(self.cbAnn, QtCore.SIGNAL('stateChanged(int)'), self.setAnnotate)
+		self.cbAnn.stateChanged.connect(self.setAnnotate)
 		
 		#Layout
-		self.fnGeoGrid = QtGui.QGridLayout()
+		self.fnGeoGrid = QtWidgets.QGridLayout()
 		self.fnGeoGrid.addWidget(self.lblFnGeoVal,1,1)
 		self.fnGeoGrid.addWidget(self.btnFnGeo,1,2)
 		
@@ -148,7 +148,7 @@ class geometryDialog(pyfrp_gui_basics.basicCanvasDialog):
 		
 	def setFnGeo(self):
 		mdir=pyfrp_misc_module.getMeshfilesDir()
-		fn = str(QtGui.QFileDialog.getOpenFileName(self, 'Open file', mdir,"*.geo",))
+		fn = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', mdir,"*.geo",))
 		if fn=='':
 			return
 				
@@ -246,14 +246,14 @@ class zebrafishDomeStageDialog(geometryDialog):
 		super(zebrafishDomeStageDialog,self).__init__(geometry,parent)	
 		
 		#Labels
-		self.lblRadius = QtGui.QLabel("Imaging Radius (px):", self)
-		self.lblScale = QtGui.QLabel("Radius Scale:", self)
-		self.lblHeight = QtGui.QLabel("Imaging Height (px):", self)
+		self.lblRadius = QtWidgets.QLabel("Imaging Radius (px):", self)
+		self.lblScale = QtWidgets.QLabel("Radius Scale:", self)
+		self.lblHeight = QtWidgets.QLabel("Imaging Height (px):", self)
 		
 		#LineEdits
-		self.qleRadius = QtGui.QLineEdit(str(self.geometry.imagingRadius))
-		self.qleScale = QtGui.QLineEdit(str(self.geometry.radiusScale))
-		self.qleHeight = QtGui.QLineEdit(str(self.geometry.imagingHeight))
+		self.qleRadius = QtWidgets.QLineEdit(str(self.geometry.imagingRadius))
+		self.qleScale = QtWidgets.QLineEdit(str(self.geometry.radiusScale))
+		self.qleHeight = QtWidgets.QLineEdit(str(self.geometry.imagingHeight))
 		
 		self.qleRadius.setValidator(self.doubleValid)
 		self.qleScale.setValidator(self.doubleValid)
@@ -264,11 +264,11 @@ class zebrafishDomeStageDialog(geometryDialog):
 		self.qleHeight.editingFinished.connect(self.setHeight)
 		
 		#Buttons
-		self.btnRestoreDefaults=QtGui.QPushButton('Restore Defaults')
-		self.btnRestoreDefaults.connect(self.btnRestoreDefaults, QtCore.SIGNAL('clicked()'), self.restoreDefaults)
+		self.btnRestoreDefaults=QtWidgets.QPushButton('Restore Defaults')
+		self.btnRestoreDefaults.clicked.connect(self.restoreDefaults)
 		
-		self.btnGetRadiusFromROI=QtGui.QPushButton('Grab from ROI')
-		self.btnGetRadiusFromROI.connect(self.btnGetRadiusFromROI, QtCore.SIGNAL('clicked()'), self.getRadiusFromROI)
+		self.btnGetRadiusFromROI=QtWidgets.QPushButton('Grab from ROI')
+		self.btnGetRadiusFromROI.clicked.connect(self.getRadiusFromROI)
 		
 		#Layout
 		nRows=self.grid.rowCount()
@@ -337,12 +337,12 @@ class cylinderDialog(geometryDialog):
 		super(cylinderDialog,self).__init__(geometry,parent)	
 		
 		#Labels
-		self.lblRadius = QtGui.QLabel("Radius (px):", self)
-		self.lblHeight = QtGui.QLabel("Height (px):", self)
+		self.lblRadius = QtWidgets.QLabel("Radius (px):", self)
+		self.lblHeight = QtWidgets.QLabel("Height (px):", self)
 		
 		#LineEdits
-		self.qleRadius = QtGui.QLineEdit(str(self.geometry.radius))
-		self.qleHeight = QtGui.QLineEdit(str(self.geometry.height))
+		self.qleRadius = QtWidgets.QLineEdit(str(self.geometry.radius))
+		self.qleHeight = QtWidgets.QLineEdit(str(self.geometry.height))
 		
 		self.qleRadius.setValidator(self.doubleValid)
 		self.qleHeight.setValidator(self.doubleValid)
@@ -401,15 +401,15 @@ class coneDialog(geometryDialog):
 		super(coneDialog,self).__init__(geometry,parent)	
 		
 		#Labels
-		self.lblUpperRadius = QtGui.QLabel("Upper Radius (px):", self)
-		self.lblLowerRadius = QtGui.QLabel("Lower Radius (px):", self)
+		self.lblUpperRadius = QtWidgets.QLabel("Upper Radius (px):", self)
+		self.lblLowerRadius = QtWidgets.QLabel("Lower Radius (px):", self)
 		
-		self.lblHeight = QtGui.QLabel("Height (px):", self)
+		self.lblHeight = QtWidgets.QLabel("Height (px):", self)
 		
 		#LineEdits
-		self.qleUpperRadius = QtGui.QLineEdit(str(self.geometry.upperRadius))
-		self.qleLowerRadius = QtGui.QLineEdit(str(self.geometry.lowerRadius))
-		self.qleHeight = QtGui.QLineEdit(str(self.geometry.height))
+		self.qleUpperRadius = QtWidgets.QLineEdit(str(self.geometry.upperRadius))
+		self.qleLowerRadius = QtWidgets.QLineEdit(str(self.geometry.lowerRadius))
+		self.qleHeight = QtWidgets.QLineEdit(str(self.geometry.height))
 		
 		self.qleUpperRadius.setValidator(self.doubleValid)
 		self.qleLowerRadius.setValidator(self.doubleValid)
@@ -458,12 +458,12 @@ class xenopusBallDialog(geometryDialog):
 		super(xenopusBallDialog,self).__init__(geometry,parent)	
 		
 		#Labels
-		self.lblRadius = QtGui.QLabel("Imaging Radius (px):", self)
-		self.lblHeight = QtGui.QLabel("Imaging Height (px):", self)
+		self.lblRadius = QtWidgets.QLabel("Imaging Radius (px):", self)
+		self.lblHeight = QtWidgets.QLabel("Imaging Height (px):", self)
 			
 		#LineEdits
-		self.qleRadius = QtGui.QLineEdit(str(self.geometry.imagingRadius))
-		self.qleHeight = QtGui.QLineEdit(str(self.geometry.imagingHeight))
+		self.qleRadius = QtWidgets.QLineEdit(str(self.geometry.imagingRadius))
+		self.qleHeight = QtWidgets.QLineEdit(str(self.geometry.imagingHeight))
 		
 		self.qleRadius.setValidator(self.doubleValid)
 		self.qleHeight.setValidator(self.doubleValid)
@@ -472,11 +472,11 @@ class xenopusBallDialog(geometryDialog):
 		self.qleHeight.editingFinished.connect(self.setHeight)
 		
 		#Buttons
-		self.btnRestoreDefaults=QtGui.QPushButton('Restore Defaults')
-		self.btnRestoreDefaults.connect(self.btnRestoreDefaults, QtCore.SIGNAL('clicked()'), self.restoreDefaults)
+		self.btnRestoreDefaults=QtWidgets.QPushButton('Restore Defaults')
+		self.btnRestoreDefaults.clicked.connect(self.restoreDefaults)
 		
-		self.btnGetRadiusFromROI=QtGui.QPushButton('Grab from ROI')
-		self.btnGetRadiusFromROI.connect(self.btnGetRadiusFromROI, QtCore.SIGNAL('clicked()'), self.getRadiusFromROI)
+		self.btnGetRadiusFromROI=QtWidgets.QPushButton('Grab from ROI')
+		self.btnGetRadiusFromROI.clicked.connect(self.getRadiusFromROI)
 		
 		#Layout
 		nRows=self.grid.rowCount()
@@ -532,7 +532,7 @@ class xenopusBallDialog(geometryDialog):
 		self.qleRadius.setText(str(self.geometry.getImagingRadius()))
 		self.setRadius()	
 	
-class geometrySelectDialog(QtGui.QDialog):
+class geometrySelectDialog(QtWidgets.QDialog):
 	
 	def __init__(self,embryo,parent):
 		
@@ -543,10 +543,10 @@ class geometrySelectDialog(QtGui.QDialog):
 		
 		
 		#Labels
-		self.lblTyp = QtGui.QLabel("Geometry Type:", self)
+		self.lblTyp = QtWidgets.QLabel("Geometry Type:", self)
 		
 		#Combo
-		self.comboGeometry = QtGui.QComboBox(self)
+		self.comboGeometry = QtWidgets.QComboBox(self)
 		self.comboGeometry.addItem("zebraFishDomeStage")
 		self.comboGeometry.addItem("cylinder")
 		self.comboGeometry.addItem("xenopusBall")
@@ -561,11 +561,11 @@ class geometrySelectDialog(QtGui.QDialog):
 		self.comboGeometry.activated[str].connect(self.setGeometry)   
 		
 		#Buttons
-		self.btnDone=QtGui.QPushButton('Done')	
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')	
+		self.btnDone.clicked.connect(self.donePressed)
 		
 		#Layout
-		self.grid = QtGui.QGridLayout()
+		self.grid = QtWidgets.QGridLayout()
 		
 		self.grid.addWidget(self.lblTyp,1,1)
 		

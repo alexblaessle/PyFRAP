@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -63,32 +63,32 @@ class analysisDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.nCharDisplayed=50
 		
 		#Labels
-		self.lblFnPreimage = QtGui.QLabel("Pre-Image:", self)
-		self.lblFnFlatten = QtGui.QLabel("Flattening Folder:", self)
-		self.lblFnBkgd = QtGui.QLabel("Background Folder:", self)
+		self.lblFnPreimage = QtWidgets.QLabel("Pre-Image:", self)
+		self.lblFnFlatten = QtWidgets.QLabel("Flattening Folder:", self)
+		self.lblFnBkgd = QtWidgets.QLabel("Background Folder:", self)
 		
-		self.lblMedianRadius = QtGui.QLabel("Median Radius:", self)
-		self.lblGaussianSigma = QtGui.QLabel("Gaussian Sigma:", self)
+		self.lblMedianRadius = QtWidgets.QLabel("Median Radius:", self)
+		self.lblGaussianSigma = QtWidgets.QLabel("Gaussian Sigma:", self)
 		
-		self.lblFnPreimageValue = QtGui.QLabel("", self)
-		self.lblFnFlattenValue = QtGui.QLabel("", self)
-		self.lblFnBkgdValue = QtGui.QLabel("", self)
+		self.lblFnPreimageValue = QtWidgets.QLabel("", self)
+		self.lblFnFlattenValue = QtWidgets.QLabel("", self)
+		self.lblFnBkgdValue = QtWidgets.QLabel("", self)
 		
-		self.lblNPre = QtGui.QLabel("Number of Images used: ", self)
-		self.lblNFlatten = QtGui.QLabel("Number of Images used: ", self)
-		self.lblNBkgd = QtGui.QLabel("Number of Images used: ", self)
+		self.lblNPre = QtWidgets.QLabel("Number of Images used: ", self)
+		self.lblNFlatten = QtWidgets.QLabel("Number of Images used: ", self)
+		self.lblNBkgd = QtWidgets.QLabel("Number of Images used: ", self)
 		
 		self.updateFlattenLbl()
 		self.updatePreImageLbl()
 		self.updateBkgdLbl()
 		
 		#LineEdits
-		self.qleMedianRadius = QtGui.QLineEdit(str(self.analysis.medianRadius))
-		self.qleGaussianSigma = QtGui.QLineEdit(str(self.analysis.gaussianSigma))
+		self.qleMedianRadius = QtWidgets.QLineEdit(str(self.analysis.medianRadius))
+		self.qleGaussianSigma = QtWidgets.QLineEdit(str(self.analysis.gaussianSigma))
 		
-		self.qleNPre = QtGui.QLineEdit(str(self.analysis.nPre))
-		self.qleNFlatten = QtGui.QLineEdit(str(self.analysis.nFlatten))
-		self.qleNBkgd = QtGui.QLineEdit(str(self.analysis.nBkgd))
+		self.qleNPre = QtWidgets.QLineEdit(str(self.analysis.nPre))
+		self.qleNFlatten = QtWidgets.QLineEdit(str(self.analysis.nFlatten))
+		self.qleNBkgd = QtWidgets.QLineEdit(str(self.analysis.nBkgd))
 		
 		self.doubleValid=QtGui.QDoubleValidator()
 		self.intValid=QtGui.QIntValidator()
@@ -108,47 +108,47 @@ class analysisDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.qleNFlatten.editingFinished.connect(self.setNFlatten)
 	
 		#Checkboxes
-		self.cbNorm = QtGui.QCheckBox('Norm by pre-image?', self)
-		self.cbMedian = QtGui.QCheckBox('Apply median filter?', self)
-		self.cbGaussian = QtGui.QCheckBox('Apply gaussian filter?', self)
-		self.cbFlatten = QtGui.QCheckBox('Apply flattening mask?', self)
-		self.cbBkgd = QtGui.QCheckBox('Substract Background mask?', self)
+		self.cbNorm = QtWidgets.QCheckBox('Norm by pre-image?', self)
+		self.cbMedian = QtWidgets.QCheckBox('Apply median filter?', self)
+		self.cbGaussian = QtWidgets.QCheckBox('Apply gaussian filter?', self)
+		self.cbFlatten = QtWidgets.QCheckBox('Apply flattening mask?', self)
+		self.cbBkgd = QtWidgets.QCheckBox('Substract Background mask?', self)
 		
-		self.cbQuad = QtGui.QCheckBox('Flip to quadrant?', self)
-		self.cbFlip = QtGui.QCheckBox('Flip before process?', self)
+		self.cbQuad = QtWidgets.QCheckBox('Flip to quadrant?', self)
+		self.cbFlip = QtWidgets.QCheckBox('Flip before process?', self)
 		
 		self.updateCBs()
 		
-		self.connect(self.cbMedian, QtCore.SIGNAL('stateChanged(int)'), self.checkMedian)
-		self.connect(self.cbGaussian, QtCore.SIGNAL('stateChanged(int)'), self.checkGaussian)
-		self.connect(self.cbFlatten, QtCore.SIGNAL('stateChanged(int)'), self.checkFlatten)
-		self.connect(self.cbNorm, QtCore.SIGNAL('stateChanged(int)'), self.checkNorm)
-		self.connect(self.cbQuad, QtCore.SIGNAL('stateChanged(int)'), self.checkQuad)
-		self.connect(self.cbFlip, QtCore.SIGNAL('stateChanged(int)'), self.checkFlip)
-		self.connect(self.cbBkgd, QtCore.SIGNAL('stateChanged(int)'), self.checkBkgd)
+		self.cbMedian.stateChanged.connect(self.checkMedian)
+		self.cbGaussian.stateChanged.connect(self.checkGaussian)
+		self.cbFlatten.stateChanged.connect(self.checkFlatten)
+		self.cbNorm.stateChanged.connect(self.checkNorm)
+		self.cbQuad.stateChanged.connect(self.checkQuad)
+		self.cbFlip.stateChanged.connect(self.checkFlip)
+		self.cbBkgd.stateChanged.connect(self.checkBkgd)
 		
 		
 		#Buttons
-		self.btnFnPreImage=QtGui.QPushButton('Change')
-		self.btnFnFlatten=QtGui.QPushButton('Change')
-		self.btnFnBkgd=QtGui.QPushButton('Change')
+		self.btnFnPreImage=QtWidgets.QPushButton('Change')
+		self.btnFnFlatten=QtWidgets.QPushButton('Change')
+		self.btnFnBkgd=QtWidgets.QPushButton('Change')
 		
-		self.btnFnPreImage.connect(self.btnFnPreImage, QtCore.SIGNAL('clicked()'), self.setFnPreImage)
-		self.btnFnFlatten.connect(self.btnFnFlatten, QtCore.SIGNAL('clicked()'), self.setFnFlatten)
-		self.btnFnBkgd.connect(self.btnFnBkgd, QtCore.SIGNAL('clicked()'), self.setFnBkgd)
+		self.btnFnPreImage.clicked.connect(self.setFnPreImage)
+		self.btnFnFlatten.clicked.connect(self.setFnFlatten)
+		self.btnFnBkgd.clicked.connect(self.setFnBkgd)
 		
 		#Layout
-		self.preImageGrid = QtGui.QGridLayout()
+		self.preImageGrid = QtWidgets.QGridLayout()
 		self.preImageGrid.addWidget(self.lblFnPreimageValue,1,1)
 		self.preImageGrid.addWidget(self.btnFnPreImage,1,2)
 		self.preImageGrid.setColumnMinimumWidth(1,150)
 		
-		self.flattenGrid = QtGui.QGridLayout()
+		self.flattenGrid = QtWidgets.QGridLayout()
 		self.flattenGrid.addWidget(self.lblFnFlattenValue,1,1)
 		self.flattenGrid.addWidget(self.btnFnFlatten,1,2)
 		self.flattenGrid.setColumnMinimumWidth(1,150)
 		
-		self.bkgdGrid = QtGui.QGridLayout()
+		self.bkgdGrid = QtWidgets.QGridLayout()
 		self.bkgdGrid.addWidget(self.lblFnBkgdValue,1,1)
 		self.bkgdGrid.addWidget(self.btnFnBkgd,1,2)
 		self.bkgdGrid.setColumnMinimumWidth(1,150)
@@ -222,7 +222,7 @@ class analysisDialog(pyfrp_gui_basics.basicSettingsDialog):
 		
 	def setFnPreImage(self):
 		
-		folder = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Preimage Directory",  self.parent.lastopen,))
+		folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Preimage Directory",  self.parent.lastopen,))
 		if folder=='':
 			return
 		
@@ -235,7 +235,7 @@ class analysisDialog(pyfrp_gui_basics.basicSettingsDialog):
 				
 	def setFnFlatten(self):
 		
-		folder = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Flatten Directory",  self.parent.lastopen,))
+		folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Flatten Directory",  self.parent.lastopen,))
 		if folder=='':
 			return
 		
@@ -247,7 +247,7 @@ class analysisDialog(pyfrp_gui_basics.basicSettingsDialog):
 		
 	def setFnBkgd(self):
 		
-		folder = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Background Directory",  self.parent.lastopen,))
+		folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Background Directory",  self.parent.lastopen,))
 		if folder=='':
 			return
 		

@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -62,71 +62,71 @@ class fitSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.fit = fit
 		
 		#Labels
-		self.lblName = QtGui.QLabel("Name:", self)
+		self.lblName = QtWidgets.QLabel("Name:", self)
 		
-		self.lblOptMeth = QtGui.QLabel("Optimization Method:", self)
-		self.lblMaxFun = QtGui.QLabel("Max. Function Calls:", self)
-		self.lblOptTol = QtGui.QLabel("Precision goal:", self)
+		self.lblOptMeth = QtWidgets.QLabel("Optimization Method:", self)
+		self.lblMaxFun = QtWidgets.QLabel("Max. Function Calls:", self)
+		self.lblOptTol = QtWidgets.QLabel("Precision goal:", self)
 		
-		self.lblX0D = QtGui.QLabel("x0(D):", self)
-		self.lblX0Prod = QtGui.QLabel("x0(production):", self)
-		self.lblX0Degr = QtGui.QLabel("x0(degration):", self)
+		self.lblX0D = QtWidgets.QLabel("x0(D):", self)
+		self.lblX0Prod = QtWidgets.QLabel("x0(production):", self)
+		self.lblX0Degr = QtWidgets.QLabel("x0(degration):", self)
 		
-		self.lblBoundsD = QtGui.QLabel("<= D <=", self)
-		self.lblBoundsProd = QtGui.QLabel("<= production <=", self)
-		self.lblBoundsDegr = QtGui.QLabel("<= degration <=", self)
+		self.lblBoundsD = QtWidgets.QLabel("<= D <=", self)
+		self.lblBoundsProd = QtWidgets.QLabel("<= production <=", self)
+		self.lblBoundsDegr = QtWidgets.QLabel("<= degration <=", self)
 		
-		self.lblKinetic = QtGui.QLabel("Kinetic Timescale:", self)
-		self.lblSaveTrack = QtGui.QLabel("Save Track:", self)
+		self.lblKinetic = QtWidgets.QLabel("Kinetic Timescale:", self)
+		self.lblSaveTrack = QtWidgets.QLabel("Save Track:", self)
 		
-		self.lblEquOn = QtGui.QLabel("Equalization:", self)
-		self.lblFitPinned = QtGui.QLabel("Fit Pinned:", self)
+		self.lblEquOn = QtWidgets.QLabel("Equalization:", self)
+		self.lblFitPinned = QtWidgets.QLabel("Fit Pinned:", self)
 		
-		self.lblFitProd = QtGui.QLabel("Fit Production:", self)
-		self.lblFitDegr = QtGui.QLabel("Fit Degradation:", self)
+		self.lblFitProd = QtWidgets.QLabel("Fit Production:", self)
+		self.lblFitDegr = QtWidgets.QLabel("Fit Degradation:", self)
 		
-		self.lblFitCutOffT = QtGui.QLabel("Fit Cut-Off:", self)
-		self.lblCutOffT = QtGui.QLabel("t(Cut-Off):", self)
+		self.lblFitCutOffT = QtWidgets.QLabel("Fit Cut-Off:", self)
+		self.lblCutOffT = QtWidgets.QLabel("t(Cut-Off):", self)
 		
 		boldfont = QtGui.QFont()
 		boldfont.setBold(True)
 		
-		self.lblHeadBounds = QtGui.QLabel("Bounds:", self)
+		self.lblHeadBounds = QtWidgets.QLabel("Bounds:", self)
 		self.lblHeadBounds.setFont(boldfont)
 		
-		self.lblHeadX0 = QtGui.QLabel("Initial Guess:", self)
+		self.lblHeadX0 = QtWidgets.QLabel("Initial Guess:", self)
 		self.lblHeadX0.setFont(boldfont)
 		
-		self.lblHeadGeneral = QtGui.QLabel("General:", self)
+		self.lblHeadGeneral = QtWidgets.QLabel("General:", self)
 		self.lblHeadGeneral.setFont(boldfont)
 		
-		self.lblHeadROI = QtGui.QLabel("ROIs Fitted:", self)
+		self.lblHeadROI = QtWidgets.QLabel("ROIs Fitted:", self)
 		self.lblHeadROI.setFont(boldfont)
 		
-		self.lblHeadOptions = QtGui.QLabel("Fit Options:", self)
+		self.lblHeadOptions = QtWidgets.QLabel("Fit Options:", self)
 		self.lblHeadOptions.setFont(boldfont)
 		
 		#LineEdits
-		self.qleName = QtGui.QLineEdit(self.fit.name)
+		self.qleName = QtWidgets.QLineEdit(self.fit.name)
 		
-		self.qleMaxFun = QtGui.QLineEdit(str(self.fit.maxfun))
-		self.qleOptTol = QtGui.QLineEdit(str(self.fit.optTol))
+		self.qleMaxFun = QtWidgets.QLineEdit(str(self.fit.maxfun))
+		self.qleOptTol = QtWidgets.QLineEdit(str(self.fit.optTol))
 		
-		self.qleX0D = QtGui.QLineEdit(str(self.fit.x0[0]))
-		self.qleX0Prod = QtGui.QLineEdit(str(self.fit.x0[1]))
-		self.qleX0Degr = QtGui.QLineEdit(str(self.fit.x0[2]))
+		self.qleX0D = QtWidgets.QLineEdit(str(self.fit.x0[0]))
+		self.qleX0Prod = QtWidgets.QLineEdit(str(self.fit.x0[1]))
+		self.qleX0Degr = QtWidgets.QLineEdit(str(self.fit.x0[2]))
 		
-		self.qleLBD = QtGui.QLineEdit(str(self.fit.LBD))
-		self.qleLBProd = QtGui.QLineEdit(str(self.fit.LBProd))
-		self.qleLBDegr = QtGui.QLineEdit(str(self.fit.LBDegr))
+		self.qleLBD = QtWidgets.QLineEdit(str(self.fit.LBD))
+		self.qleLBProd = QtWidgets.QLineEdit(str(self.fit.LBProd))
+		self.qleLBDegr = QtWidgets.QLineEdit(str(self.fit.LBDegr))
 		
-		self.qleUBD = QtGui.QLineEdit(str(self.fit.UBD))
-		self.qleUBProd = QtGui.QLineEdit(str(self.fit.UBProd))
-		self.qleUBDegr = QtGui.QLineEdit(str(self.fit.UBDegr))
+		self.qleUBD = QtWidgets.QLineEdit(str(self.fit.UBD))
+		self.qleUBProd = QtWidgets.QLineEdit(str(self.fit.UBProd))
+		self.qleUBDegr = QtWidgets.QLineEdit(str(self.fit.UBDegr))
 		
-		self.qleKinetic = QtGui.QLineEdit(str(self.fit.kineticTimeScale))
+		self.qleKinetic = QtWidgets.QLineEdit(str(self.fit.kineticTimeScale))
 
-		self.qleCutOffT = QtGui.QLineEdit(str(self.fit.cutOffT))
+		self.qleCutOffT = QtWidgets.QLineEdit(str(self.fit.cutOffT))
 		
 		self.doubleValid=QtGui.QDoubleValidator()
 		self.intValid=QtGui.QIntValidator()
@@ -160,7 +160,7 @@ class fitSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.qleCutOffT.editingFinished.connect(self.setCutOffT)
 		
 		#ComboBox
-		self.comboMeth = QtGui.QComboBox(self)
+		self.comboMeth = QtWidgets.QComboBox(self)
 		self.comboMeth.addItem("Constrained Nelder-Mead")
 		self.comboMeth.addItem("TNC")
 		self.comboMeth.addItem("Nelder-Mead")
@@ -175,34 +175,34 @@ class fitSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.comboMeth.activated[str].connect(self.setOptMeth)   
 		
 		#Checkboxes
-		self.cbFitProd = QtGui.QCheckBox('', self)
-		self.cbFitDegr = QtGui.QCheckBox('', self)
-		self.cbFitPinned = QtGui.QCheckBox('', self)
-		self.cbEquOn = QtGui.QCheckBox('', self)
-		self.cbFitCutOffT = QtGui.QCheckBox('', self)
-		self.cbSaveTrack = QtGui.QCheckBox('', self)
+		self.cbFitProd = QtWidgets.QCheckBox('', self)
+		self.cbFitDegr = QtWidgets.QCheckBox('', self)
+		self.cbFitPinned = QtWidgets.QCheckBox('', self)
+		self.cbEquOn = QtWidgets.QCheckBox('', self)
+		self.cbFitCutOffT = QtWidgets.QCheckBox('', self)
+		self.cbSaveTrack = QtWidgets.QCheckBox('', self)
 	
 		self.updateCBs()
 		
-		self.connect(self.cbFitProd, QtCore.SIGNAL('stateChanged(int)'), self.checkFitProd)
-		self.connect(self.cbFitDegr, QtCore.SIGNAL('stateChanged(int)'), self.checkFitDegr)
-		self.connect(self.cbFitPinned, QtCore.SIGNAL('stateChanged(int)'), self.checkFitPinned)
-		self.connect(self.cbFitCutOffT, QtCore.SIGNAL('stateChanged(int)'), self.checkFitCutOffT)
-		self.connect(self.cbEquOn, QtCore.SIGNAL('stateChanged(int)'), self.checkEquOn)
-		self.connect(self.cbSaveTrack, QtCore.SIGNAL('stateChanged(int)'), self.checkSaveTrack)
+		self.cbFitProd.stateChanged.connect(self.checkFitProd)
+		self.cbFitDegr.stateChanged.connect(self.checkFitDegr)
+		self.cbFitPinned.stateChanged.connect(self.checkFitPinned)
+		self.cbFitCutOffT.stateChanged.connect(self.checkFitCutOffT)
+		self.cbEquOn.stateChanged.connect(self.checkEquOn)
+		self.cbSaveTrack.stateChanged.connect(self.checkSaveTrack)
 		
 		#TreeWigget
-		self.ROIList=QtGui.QTreeWidget()
+		self.ROIList=QtWidgets.QTreeWidget()
 		self.ROIList.setHeaderLabels(["Name"])
 		self.ROIList.setColumnWidth(0,100)
 		self.updateROIList()
 		
 		#Buttons
-		self.btnAddROI=QtGui.QPushButton('Add')
-		self.btnDone.connect(self.btnAddROI, QtCore.SIGNAL('clicked()'), self.addROI)
+		self.btnAddROI=QtWidgets.QPushButton('Add')
+		self.btnAddROI.clicked.connect(self.addROI)
 		
-		self.btnRemoveROI=QtGui.QPushButton('Remove')
-		self.btnRemoveROI.connect(self.btnRemoveROI, QtCore.SIGNAL('clicked()'), self.removeROI)
+		self.btnRemoveROI=QtWidgets.QPushButton('Remove')
+		self.btnRemoveROI.clicked.connect(self.removeROI)
 		
 		#Layout	
 		self.grid.addWidget(self.lblHeadGeneral,0,1,1,2,QtCore.Qt.AlignHCenter)
@@ -282,7 +282,7 @@ class fitSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		
 		self.ROIList.clear()
 		for r in self.fit.ROIsFitted:
-			QtGui.QTreeWidgetItem(self.ROIList,[r.name])
+			QtWidgets.QTreeWidgetItem(self.ROIList,[r.name])
 		return self.ROIList
 	
 	def initComboMeth(self):

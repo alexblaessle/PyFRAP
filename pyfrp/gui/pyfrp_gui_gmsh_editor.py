@@ -34,7 +34,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP modules
 from pyfrp.modules.pyfrp_term_module import *
@@ -45,7 +45,7 @@ from pyfrp.modules.pyfrp_term_module import *
 
 
 
-class gmshFileEditor(QtGui.QDialog):
+class gmshFileEditor(QtWidgets.QDialog):
 	
 	def __init__(self,geometry,parent):
 		
@@ -57,33 +57,33 @@ class gmshFileEditor(QtGui.QDialog):
 		self.currFn=None
 		
 		#Buttons
-		self.btnDone=QtGui.QPushButton('Done')	
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')	
+		self.btnDone.clicked.connect(self.donePressed)
 		
-		self.btnNew=QtGui.QPushButton('New')	
-		self.btnNew.connect(self.btnNew, QtCore.SIGNAL('clicked()'), self.newFile)
+		self.btnNew=QtWidgets.QPushButton('New')	
+		self.btnNew.clicked.connect(self.newFile)
 		
-		self.btnOpen=QtGui.QPushButton('Open')	
-		self.btnOpen.connect(self.btnOpen, QtCore.SIGNAL('clicked()'), self.openFile)
+		self.btnOpen=QtWidgets.QPushButton('Open')	
+		self.btnOpen.clicked.connect(self.openFile)
 		
-		self.btnSave=QtGui.QPushButton('Save')	
-		self.btnSave.connect(self.btnSave, QtCore.SIGNAL('clicked()'), self.saveFile)
+		self.btnSave=QtWidgets.QPushButton('Save')	
+		self.btnSave.clicked.connect(self.saveFile)
 		
-		self.btnSaveAs=QtGui.QPushButton('Save As')	
-		self.btnSaveAs.connect(self.btnSaveAs, QtCore.SIGNAL('clicked()'), self.saveFileAs)
+		self.btnSaveAs=QtWidgets.QPushButton('Save As')	
+		self.btnSaveAs.clicked.connect(self.saveFileAs)
 		
-		self.btnUse=QtGui.QPushButton('Use for geometry')	
-		self.btnUse.connect(self.btnUse, QtCore.SIGNAL('clicked()'), self.useForGeometry)
+		self.btnUse=QtWidgets.QPushButton('Use for geometry')	
+		self.btnUse.clicked.connect(self.useForGeometry)
 		
 		
 		#QTextEdit
-		self.editor = QtGui.QTextEdit()
+		self.editor = QtWidgets.QTextEdit()
 		
 		#QHighLight
 		self.highlighter=gmshHighlighter(self.editor,'Classic')
 		
 		#Layout
-		self.hbox = QtGui.QHBoxLayout()
+		self.hbox = QtWidgets.QHBoxLayout()
 		self.hbox.addWidget(self.btnNew)
 		self.hbox.addWidget(self.btnOpen)
 		self.hbox.addWidget(self.btnSave)
@@ -92,7 +92,7 @@ class gmshFileEditor(QtGui.QDialog):
 		self.hbox.addWidget(self.btnUse)
 		self.hbox.addWidget(self.btnDone)
 		
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.editor)
 		self.vbox.addLayout(self.hbox)
 		
@@ -108,7 +108,7 @@ class gmshFileEditor(QtGui.QDialog):
 	
 	def openFile(self):
 		mdir=pyfrp_misc_module.getMeshfilesDir()
-		fn = str(QtGui.QFileDialog.getOpenFileName(self, 'Open file', mdir,"*.geo",))
+		fn = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', mdir,"*.geo",))
 		if fn=='':
 			return
 		
@@ -126,7 +126,7 @@ class gmshFileEditor(QtGui.QDialog):
 		
 	def saveFileAs(self):
 		mdir=pyfrp_misc_module.getMeshfilesDir()
-		fn=str(QtGui.QFileDialog.getSaveFileName(self, 'Save file', mdir+"newGeo.geo","*.geo",))
+		fn=str(QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', mdir+"newGeo.geo","*.geo",))
 		
 		self.writeFile(fn)
 		
@@ -198,18 +198,18 @@ class gmshHighlighter( QtGui.QSyntaxHighlighter ):
 		super(gmshHighlighter,self).__init__(parent)
 		self.parent = parent
 		
-		mathExpr = QtGui.QTextCharFormat()
-		geomObj = QtGui.QTextCharFormat()
-		delimiter = QtGui.QTextCharFormat()
-		number = QtGui.QTextCharFormat()
-		comment = QtGui.QTextCharFormat()
-		string = QtGui.QTextCharFormat()
-		singleQuotedString = QtGui.QTextCharFormat()
+		mathExpr = QtWidgets.QTextCharFormat()
+		geomObj = QtWidgets.QTextCharFormat()
+		delimiter = QtWidgets.QTextCharFormat()
+		number = QtWidgets.QTextCharFormat()
+		comment = QtWidgets.QTextCharFormat()
+		string = QtWidgets.QTextCharFormat()
+		singleQuotedString = QtWidgets.QTextCharFormat()
 
 		self.highlightingRules = []
 		
 		# Math Expr
-		brush = QtGui.QBrush( QtCore.Qt.darkBlue, QtCore.Qt.SolidPattern )
+		brush = QtWidgets.QBrush( QtCore.Qt.darkBlue, QtCore.Qt.SolidPattern )
 		mathExpr.setForeground( brush )
 		mathExpr.setFontWeight( QtGui.QFont.Bold )
 		keywords = QtCore.QStringList( [ "Sqrt","Cos","Sin","Arcos","Arsin","Abs"] )
@@ -219,7 +219,7 @@ class gmshHighlighter( QtGui.QSyntaxHighlighter ):
 			self.highlightingRules.append( rule )
 			
 		# GeomObjects
-		brush = QtGui.QBrush( QtCore.Qt.green, QtCore.Qt.SolidPattern )
+		brush = QtWidgets.QBrush( QtCore.Qt.green, QtCore.Qt.SolidPattern )
 		geomObj.setForeground( brush )
 		geomObj.setFontWeight( QtGui.QFont.Bold )
 		keywords = QtCore.QStringList( [ "Point","Circle","Line","Surface","Volume","Line Loop","Surface Loop","Ruled Surface"] )
@@ -229,7 +229,7 @@ class gmshHighlighter( QtGui.QSyntaxHighlighter ):
 			self.highlightingRules.append( rule )	
 		
 		# delimiter
-		brush = QtGui.QBrush( QtCore.Qt.gray, QtCore.Qt.SolidPattern )
+		brush = QtWidgets.QBrush( QtCore.Qt.gray, QtCore.Qt.SolidPattern )
 		pattern = QtCore.QRegExp( "[\)\(]+|[\{\}]+|[][]+" )
 		delimiter.setForeground( brush )
 		delimiter.setFontWeight( QtGui.QFont.Bold )
@@ -237,7 +237,7 @@ class gmshHighlighter( QtGui.QSyntaxHighlighter ):
 		self.highlightingRules.append( rule )
 
 		# number
-		brush = QtGui.QBrush( QtCore.Qt.magenta, QtCore.Qt.SolidPattern )
+		brush = QtWidgets.QBrush( QtCore.Qt.magenta, QtCore.Qt.SolidPattern )
 		pattern = QtCore.QRegExp( "[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?" )
 		pattern.setMinimal( True )
 		number.setForeground( brush )
@@ -245,14 +245,14 @@ class gmshHighlighter( QtGui.QSyntaxHighlighter ):
 		self.highlightingRules.append( rule )
 
 		# comment
-		brush = QtGui.QBrush( QtCore.Qt.blue, QtCore.Qt.SolidPattern )
+		brush = QtWidgets.QBrush( QtCore.Qt.blue, QtCore.Qt.SolidPattern )
 		pattern = QtCore.QRegExp( "//[^\n]*" )
 		comment.setForeground( brush )
 		rule = HighlightingRule( pattern, comment )
 		self.highlightingRules.append( rule )
 
 		# string
-		brush = QtGui.QBrush( QtCore.Qt.red, QtCore.Qt.SolidPattern )
+		brush = QtWidgets.QBrush( QtCore.Qt.red, QtCore.Qt.SolidPattern )
 		pattern = QtCore.QRegExp( "\".*\"" )
 		pattern.setMinimal( True )
 		string.setForeground( brush )

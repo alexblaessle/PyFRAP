@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -65,32 +65,32 @@ class meshSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.nCharDisplayed=50
 		
 		#Labels
-		self.lblVolSizePx = QtGui.QLabel("Element Size (px):", self)
-		self.lblFromFile = QtGui.QLabel("From File?:", self)
-		self.lblFnMesh = QtGui.QLabel("Filename mesh:", self)
+		self.lblVolSizePx = QtWidgets.QLabel("Element Size (px):", self)
+		self.lblFromFile = QtWidgets.QLabel("From File?:", self)
+		self.lblFnMesh = QtWidgets.QLabel("Filename mesh:", self)
 		
-		self.lblFnMeshVal = QtGui.QLabel("", self)
+		self.lblFnMeshVal = QtWidgets.QLabel("", self)
 		self.updateFnMeshLbl()
 		
 		#LineEdits
-		self.qleVolSizePx = QtGui.QLineEdit(str(self.mesh.volSizePx))
+		self.qleVolSizePx = QtWidgets.QLineEdit(str(self.mesh.volSizePx))
 		
 		self.qleVolSizePx.setValidator(self.doubleValid)
 		
 		self.qleVolSizePx.editingFinished.connect(self.setVolSizePx)
 		
 		#CheckBox
-		self.cbFromFile = QtGui.QCheckBox('', self)
+		self.cbFromFile = QtWidgets.QCheckBox('', self)
 		self.updateCBs()
-		self.connect(self.cbFromFile, QtCore.SIGNAL('stateChanged(int)'), self.checkFromFile)
+		self.cbFromFile.stateChanged.connect(self.checkFromFile)
 		
 		#Buttons
-		self.btnFnMesh=QtGui.QPushButton('Change')
+		self.btnFnMesh=QtWidgets.QPushButton('Change')
 		
-		self.btnFnMesh.connect(self.btnFnMesh, QtCore.SIGNAL('clicked()'), self.setFnMesh)
+		self.btnFnMesh.clicked.connect(self.setFnMesh)
 		
 		#Layout
-		self.fnMeshGrid = QtGui.QGridLayout()
+		self.fnMeshGrid = QtWidgets.QGridLayout()
 		self.fnMeshGrid.addWidget(self.lblFnMeshVal,1,1)
 		self.fnMeshGrid.addWidget(self.btnFnMesh,1,2)
 		self.fnMeshGrid.setColumnMinimumWidth(1,150)
@@ -112,7 +112,7 @@ class meshSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		
 	def setFnMesh(self):
 		
-		fn = str(QtGui.QFileDialog.getExistingFile(self, "Select Mesh File",  self.parent.lastopen,"*.msh",))
+		fn = str(QtWidgets.QFileDialog.getExistingFile(self, "Select Mesh File",  self.parent.lastopen,"*.msh",))
 		if fn=='':
 			return
 		
@@ -209,26 +209,26 @@ class basicForceMeshSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.findIdxs=True
 		
 		#Labels
-		self.lblROI = QtGui.QLabel("ROI used:", self)
-		self.lblDebug = QtGui.QLabel("Print debugging output:", self)
-		self.lblFindIdxs = QtGui.QLabel("Update Indices?:", self)
+		self.lblROI = QtWidgets.QLabel("ROI used:", self)
+		self.lblDebug = QtWidgets.QLabel("Print debugging output:", self)
+		self.lblFindIdxs = QtWidgets.QLabel("Update Indices?:", self)
 		
 		#LineEdits
 		self.doubleValid=QtGui.QDoubleValidator()
 		self.intValid=QtGui.QIntValidator()
 		
 		#Combobox
-		self.comboROI = QtGui.QComboBox(self)
+		self.comboROI = QtWidgets.QComboBox(self)
 		self.updateROICombo()
 		
 		self.comboROI.activated[str].connect(self.setROI)   
 		
 		#CheckBox
-		self.cbDebug = QtGui.QCheckBox('', self)
-		self.cbFindIdxs = QtGui.QCheckBox('', self)
+		self.cbDebug = QtWidgets.QCheckBox('', self)
+		self.cbFindIdxs = QtWidgets.QCheckBox('', self)
 		
-		self.connect(self.cbDebug, QtCore.SIGNAL('stateChanged(int)'), self.checkDebug)
-		self.connect(self.cbFindIdxs, QtCore.SIGNAL('stateChanged(int)'), self.checkFindIdxs)
+		self.cbDebug.stateChanged.connect(self.checkDebug)
+		self.cbFindIdxs.stateChanged.connect(self.checkFindIdxs)
 		
 	
 		#Layout	
@@ -274,15 +274,15 @@ class forceMeshSettingsDialog(basicForceMeshSettingsDialog):
 		self.maxCells=100000
 		
 		#Labels
-		self.lblDensity = QtGui.QLabel("Desired Mesh Density:", self)
-		self.lblStepPercentage = QtGui.QLabel("Step Size (%):", self)
-		self.lblMethod = QtGui.QLabel("Method:", self)
-		self.lblMaxCells = QtGui.QLabel("Maximum number of cells:", self)
+		self.lblDensity = QtWidgets.QLabel("Desired Mesh Density:", self)
+		self.lblStepPercentage = QtWidgets.QLabel("Step Size (%):", self)
+		self.lblMethod = QtWidgets.QLabel("Method:", self)
+		self.lblMaxCells = QtWidgets.QLabel("Maximum number of cells:", self)
 		
 		#LineEdits
-		self.qleDensity = QtGui.QLineEdit("0")
-		self.qleMaxCells = QtGui.QLineEdit(str(self.maxCells))
-		self.qleStepPercentage = QtGui.QLineEdit(str(self.stepPercentage))
+		self.qleDensity = QtWidgets.QLineEdit("0")
+		self.qleMaxCells = QtWidgets.QLineEdit(str(self.maxCells))
+		self.qleStepPercentage = QtWidgets.QLineEdit(str(self.stepPercentage))
 	
 		self.qleDensity.setValidator(self.doubleValid)
 		self.qleMaxCells.setValidator(self.intValid)
@@ -293,7 +293,7 @@ class forceMeshSettingsDialog(basicForceMeshSettingsDialog):
 		self.qleStepPercentage.editingFinished.connect(self.setStepPercentage)
 		
 		#Combobox
-		self.comboMethod = QtGui.QComboBox(self)
+		self.comboMethod = QtWidgets.QComboBox(self)
 		self.addItem("refine")
 		self.addWidget("method")
 		
@@ -353,12 +353,12 @@ class refineROIMeshSettingsDialog(basicForceMeshSettingsDialog):
 		self.addZ=15
 		
 		#Labels
-		self.lblFactor = QtGui.QLabel("Factor :", self)
-		self.lblAddZ = QtGui.QLabel("Extend Box Mesh by z(px):", self)
+		self.lblFactor = QtWidgets.QLabel("Factor :", self)
+		self.lblAddZ = QtWidgets.QLabel("Extend Box Mesh by z(px):", self)
 		
 		#LineEdits
-		self.qleFactor = QtGui.QLineEdit(str(self.factor))
-		self.qleAddZ = QtGui.QLineEdit(str(self.addZ))
+		self.qleFactor = QtWidgets.QLineEdit(str(self.factor))
+		self.qleAddZ = QtWidgets.QLineEdit(str(self.addZ))
 	
 		self.qleAddZ.setValidator(self.doubleValid)
 		self.qleFactor.setValidator(self.doubleValid)
@@ -542,7 +542,7 @@ class boundaryLayerAroundROISettingsDialog(pyfrp_gui_basics.basicSettingsDialog)
 	
 	def setFnOut(self):
 		
-		fn=QtGui.QFileDialog.getSaveFileName(self, 'Path to boundary layer geo file', self.fnOut,"*.geo",)
+		fn=QtWidgets.QFileDialog.getSaveFileName(self, 'Path to boundary layer geo file', self.fnOut,"*.geo",)
 		self.fnOut=str(fn)
 		
 	def getVals(self):

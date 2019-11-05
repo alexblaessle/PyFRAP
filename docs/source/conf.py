@@ -57,13 +57,13 @@ if os.environ.get('READTHEDOCS', None) == 'True':
 			'scipy','scipy.optimize','scipy.interpolate','scipy.ndimage','scipy.ndimage.interpolation',
 			#Matplotlib (and all submodules)
 			'matplotlib', 'matplotlib.pyplot','matplotlib.axes','mpl_toolkits','mpl_toolkits.mplot3d','matplotlib.collections',
-			'matplotlib.patches','matplotlib.tri','matplotlib.backends','matplotlib.backends.backend_qt4agg',
-			'matplotlib.bakends.backend_qt4agg.FigureCanvasQTAgg','matplotlib.backends.backend_qt4agg.FigureCanvas',
+			'matplotlib.patches','matplotlib.tri','matplotlib.backends','matplotlib.backends.backend_qt5agg',
+			'matplotlib.bakends.backend_qt5agg.FigureCanvasQTAgg','matplotlib.backends.backend_qt5agg.FigureCanvas',
 			'matplotlib.figure','mpl_toolkits.mplot3d.art3d',
 			#Skimage 
 			'skimage','skimage.io','skimage.morphology','scipy.signal','skimage.measure','skimage.filters',
 			#PyQT
-			'PyQt4','PyQt4.QtGui','PyQt4.QtCore',
+			'PyQt5','PyQt5.QtGui','PyQt5.QtCore',
 			#MeshIO
 			'meshio',
 			#VTK

@@ -32,7 +32,7 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #PyFRAP GUI classes
 from . import pyfrp_gui_basics
@@ -62,28 +62,28 @@ class simulationSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.simulation = simulation
 		
 		#Buttons
-		self.btnOptTvec=QtGui.QPushButton('opt. tEnd from D')
-		self.btnOptTvec.connect(self.btnOptTvec, QtCore.SIGNAL('clicked()'), self.getOptTvecSim)
+		self.btnOptTvec=QtWidgets.QPushButton('opt. tEnd from D')
+		self.btnOptTvec.clicked.connect(self.getOptTvecSim)
 		
 		#Labels
-		self.lblD = QtGui.QLabel("D:", self)
-		self.lblProd = QtGui.QLabel("Prod:", self)
-		self.lblDegr = QtGui.QLabel("Degr:", self)
+		self.lblD = QtWidgets.QLabel("D:", self)
+		self.lblProd = QtWidgets.QLabel("Prod:", self)
+		self.lblDegr = QtWidgets.QLabel("Degr:", self)
 		
-		self.lblSteps = QtGui.QLabel("Timesteps:", self)
-		self.lblICmode = QtGui.QLabel("IC Mode:", self)
-		self.lblTimeScale = QtGui.QLabel("Time Scaling:", self)
+		self.lblSteps = QtWidgets.QLabel("Timesteps:", self)
+		self.lblICmode = QtWidgets.QLabel("IC Mode:", self)
+		self.lblTimeScale = QtWidgets.QLabel("Time Scaling:", self)
 		
-		self.lblTEnd = QtGui.QLabel("TEnd:", self) 
+		self.lblTEnd = QtWidgets.QLabel("TEnd:", self) 
 		
 		#LineEdits
-		self.qleD = QtGui.QLineEdit(str(self.simulation.D))
-		self.qleProd = QtGui.QLineEdit(str(self.simulation.prod))
-		self.qleDegr = QtGui.QLineEdit(str(self.simulation.degr))
+		self.qleD = QtWidgets.QLineEdit(str(self.simulation.D))
+		self.qleProd = QtWidgets.QLineEdit(str(self.simulation.prod))
+		self.qleDegr = QtWidgets.QLineEdit(str(self.simulation.degr))
 		
-		self.qleSteps = QtGui.QLineEdit(str(self.simulation.stepsSim))
+		self.qleSteps = QtWidgets.QLineEdit(str(self.simulation.stepsSim))
 		
-		self.qleTEnd = QtGui.QLineEdit(str(self.simulation.tvecSim[-1]))
+		self.qleTEnd = QtWidgets.QLineEdit(str(self.simulation.tvecSim[-1]))
 		
 		self.doubleValid=QtGui.QDoubleValidator()
 		self.intValid=QtGui.QIntValidator()
@@ -102,13 +102,13 @@ class simulationSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.qleTEnd.editingFinished.connect(self.setTEnd)
 		
 		#ComboBox
-		self.comboIC = QtGui.QComboBox(self)
+		self.comboIC = QtWidgets.QComboBox(self)
 		self.comboIC.addItem("By ROI")
 		self.comboIC.addItem("Radial")
 		self.comboIC.addItem("Interpolation")
 		self.comboIC.addItem("Ideal")
 		
-		self.comboTS = QtGui.QComboBox(self)
+		self.comboTS = QtWidgets.QComboBox(self)
 		self.comboTS.addItem("Linear")
 		self.comboTS.addItem("Logarithmic")
 		
@@ -181,7 +181,7 @@ class simulationSettingsDialog(pyfrp_gui_basics.basicSettingsDialog):
 		self.simulation.setTEnd(float(str(self.qleTEnd.text())))
 		
 	def getOptTvecSim(self):
-		maxExp, ok = QtGui.QInputDialog.getDouble(self, "Maximum expected diffusion coefficient","Enter expected diffusion coefficient (px^2/s):", 50, 0)
+		maxExp, ok = QtWidgets.QInputDialog.getDouble(self, "Maximum expected diffusion coefficient","Enter expected diffusion coefficient (px^2/s):", 50, 0)
 		
 		if ok:
 			self.simulation.getOptTvecSim(maxExp)

@@ -33,7 +33,7 @@ custom output inside a Python/bash terminal.
 #===========================================================================================================================================================================
 
 import colorama
-import PyQt4.QtGui as QtGui
+import PyQt5.QtGui as QtGui
 import numpy as np
 import inspect
 

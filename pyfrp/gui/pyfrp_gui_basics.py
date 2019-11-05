@@ -42,12 +42,12 @@ import os, os.path
 from pyfrp.modules.pyfrp_term_module import *
 
 #PyQT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #matplotlib
 import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 """
 Apparently the NavigationToolbar naming has changed in newer matplotlib versions, thus
@@ -55,10 +55,10 @@ we need to test out some cases.
 """
 
 try:
-	from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as  NavigationToolbar
+	from matplotlib.backends.backend_qt5agg import NavigationToolbar2QTAgg as  NavigationToolbar
 except ImportError:
 	try:
-		from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as  NavigationToolbar
+		from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as  NavigationToolbar
 	except ImportError:
 		printWarning("Cannot import NavigationToolbar.")
 		
@@ -68,7 +68,7 @@ from matplotlib.figure import Figure
 #Basic Dialog with space for QLEs/Btns on left hand side and canvas on right hand side
 #===================================================================================================================================
 
-class basicCanvasDialog(QtGui.QDialog):
+class basicCanvasDialog(QtWidgets.QDialog):
 	
 	def __init__(self,parent,xlim=[0,512],ylim=[0,512]):
 		
@@ -89,21 +89,21 @@ class basicCanvasDialog(QtGui.QDialog):
 		#-------------------------------------------------------------------------------------------------------------------
 		
 		#Done button
-		self.btnDone=QtGui.QPushButton('Done')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')
+		self.btnDone.clicked.connect(self.donePressed)
 	
 		#-------------------------------------------------------------------------------------------------------------------
 		#Plot frame
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.plotFrame = QtGui.QWidget()
+		self.plotFrame = QtWidgets.QWidget()
 		self.plotFrame.setMaximumWidth(1)
 		
 		#-------------------------------------------------------------------------------------------------------------------
 		#Layout
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.grid = QtGui.QGridLayout()		
+		self.grid = QtWidgets.QGridLayout()		
 		self.grid.setColumnMinimumWidth(2,200) 
 		
 		#-------------------------------------------------------------------------------------------------------------------
@@ -116,12 +116,12 @@ class basicCanvasDialog(QtGui.QDialog):
 		#Final Layout
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.canvas)
 		self.vbox.addWidget(self.btnDone)
 		
 		#Add everything to Horizontal Box
-		self.hbox = QtGui.QHBoxLayout()
+		self.hbox = QtWidgets.QHBoxLayout()
 		self.hbox.addLayout(self.grid)
 		self.hbox.addLayout(self.vbox)
 		
@@ -205,7 +205,7 @@ class basicCanvasDialog(QtGui.QDialog):
 #Basic Dialog for settings of any kind.
 #===================================================================================================================================
 
-class basicSettingsDialog(QtGui.QDialog):
+class basicSettingsDialog(QtWidgets.QDialog):
 	
 	def __init__(self,parent):
 		
@@ -219,14 +219,14 @@ class basicSettingsDialog(QtGui.QDialog):
 		#-------------------------------------------------------------------------------------------------------------------
 		
 		#Done button
-		self.btnDone=QtGui.QPushButton('Done')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')
+		self.btnDone.clicked.connect(self.donePressed)
 	
 		#-------------------------------------------------------------------------------------------------------------------
 		#Layout
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.grid = QtGui.QGridLayout()		
+		self.grid = QtWidgets.QGridLayout()		
 		self.grid.setColumnMinimumWidth(2,20) 
 		
 		#-------------------------------------------------------------------------------------------------------------------
@@ -240,10 +240,10 @@ class basicSettingsDialog(QtGui.QDialog):
 		#Final Layout
 		#-------------------------------------------------------------------------------------------------------------------
 		
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addLayout(self.grid)
 		
-		self.hbox = QtGui.QHBoxLayout()
+		self.hbox = QtWidgets.QHBoxLayout()
 		self.hbox.addWidget(self.btnDone,stretch=0,alignment=QtCore.Qt.AlignRight)	
 		self.vbox.addLayout(self.hbox)
 			
@@ -259,7 +259,7 @@ class basicSettingsDialog(QtGui.QDialog):
 #Basic Selector for a single item out of a list
 #===================================================================================================================================
 
-class basicSelectorDialog(QtGui.QDialog):
+class basicSelectorDialog(QtWidgets.QDialog):
 	
 	def __init__(self,List,parent):
 		
@@ -269,20 +269,20 @@ class basicSelectorDialog(QtGui.QDialog):
 		self.List=List
 		
 		#Done button
-		self.btnDone=QtGui.QPushButton('Done')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')
+		self.btnDone.clicked.connect(self.donePressed)
 			
 		#QTreeWidget
-		self.ListWidget=QtGui.QTreeWidget()
+		self.ListWidget=QtWidgets.QTreeWidget()
 		self.ListWidget.setColumnWidth(0,100)
 		self.ListWidget.itemClicked.connect(self.itemClicked)
 		self.updateList()
 		
 		#Layout
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.ListWidget)
 		
-		self.hbox = QtGui.QHBoxLayout()
+		self.hbox = QtWidgets.QHBoxLayout()
 		self.hbox.addWidget(self.btnDone,stretch=0,alignment=QtCore.Qt.AlignRight)	
 		self.vbox.addLayout(self.hbox)
 			
@@ -295,7 +295,7 @@ class basicSelectorDialog(QtGui.QDialog):
 		
 		self.ListWidget.clear()
 		for r in self.List:
-			QtGui.QTreeWidgetItem(self.ListWidget,[r])
+			QtWidgets.QTreeWidgetItem(self.ListWidget,[r])
 		return 
 	
 	def itemClicked(self):
@@ -313,13 +313,13 @@ class basicSelectorDialog(QtGui.QDialog):
 #Basic Selector for a list of items out of a list
 #===================================================================================================================================
 
-class listSelectorDialog(QtGui.QDialog):
+class listSelectorDialog(QtWidgets.QDialog):
 	
 	def __init__(self,parent,List,leftTitle="",rightTitle="",itemsRight=[]):
 		super(listSelectorDialog,self).__init__(parent)
 		#print type(self), type(parent)
 		
-		#QtGui.QDialog.__init__()
+		#QtWidgets.QDialog.__init__()
 		
 		
 		self.itemsRight=itemsRight
@@ -328,42 +328,42 @@ class listSelectorDialog(QtGui.QDialog):
 		self.List=List
 		
 		#Buttons
-		self.btnAdd=QtGui.QToolButton()
-		self.btnAdd.connect(self.btnAdd, QtCore.SIGNAL('clicked()'), self.addItem)
+		self.btnAdd=QtWidgets.QToolButton()
+		self.btnAdd.clicked.connect(self.addItem)
 		self.btnAdd.setArrowType(QtCore.Qt.RightArrow)
 		
-		self.btnRemove=QtGui.QToolButton()
-		self.btnRemove.connect(self.btnRemove, QtCore.SIGNAL('clicked()'), self.removeItem)
+		self.btnRemove=QtWidgets.QToolButton()
+		self.btnRemove.clicked.connect(self.removeItem)
 		self.btnRemove.setArrowType(QtCore.Qt.LeftArrow)
 		
-		self.btnDone=QtGui.QPushButton('Done')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')
+		self.btnDone.clicked.connect(self.donePressed)
 		
 		#Left QtreeWidgetItem
-		self.leftList=QtGui.QTreeWidget()
+		self.leftList=QtWidgets.QTreeWidget()
 		self.leftList.setHeaderLabels([leftTitle])
 		self.leftList.setColumnWidth(0,200)
 		self.leftList.setColumnWidth(1,75)
 		self.leftList.itemDoubleClicked.connect(self.addItem)
 		
 		#right QtreeWidgetItem
-		self.rightList=QtGui.QTreeWidget()
+		self.rightList=QtWidgets.QTreeWidget()
 		self.rightList.setHeaderLabels([rightTitle])
 		self.rightList.setColumnWidth(0,200)
 		self.rightList.setColumnWidth(1,75)
 		self.rightList.itemDoubleClicked.connect(self.removeItem)
 		
 		#Layout
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.btnAdd)
 		self.vbox.addWidget(self.btnRemove)
 		
-		self.hbox = QtGui.QHBoxLayout()
+		self.hbox = QtWidgets.QHBoxLayout()
 		self.hbox.addWidget(self.leftList)
 		self.hbox.addLayout(self.vbox)
 		self.hbox.addWidget(self.rightList)
 		
-		self.vbox2 = QtGui.QVBoxLayout()
+		self.vbox2 = QtWidgets.QVBoxLayout()
 		self.vbox2.addLayout(self.hbox)
 		self.vbox2.addWidget(self.btnDone)
 		
@@ -391,12 +391,12 @@ class listSelectorDialog(QtGui.QDialog):
 		self.getListDifference()
 		
 		for item in self.itemsLeft:
-			QtGui.QTreeWidgetItem(self.leftList,[item])
+			QtWidgets.QTreeWidgetItem(self.leftList,[item])
 			
 	def initRightList(self):
 		
 		for item in self.itemsRight:
-			QtGui.QTreeWidgetItem(self.rightList,[item])
+			QtWidgets.QTreeWidgetItem(self.rightList,[item])
 				
 	def addItem(self):
 
@@ -404,7 +404,7 @@ class listSelectorDialog(QtGui.QDialog):
 		self.currentItem=str(self.leftList.currentItem().data(0,0).toString())
 		
 		#Insert new node in right list
-		newNode=QtGui.QTreeWidgetItem(self.rightList,[self.currentItem])
+		newNode=QtWidgets.QTreeWidgetItem(self.rightList,[self.currentItem])
 		
 		#Remove node in left list
 		self.currLeftInd=self.leftList.indexFromItem(self.leftList.currentItem()).row()
@@ -420,7 +420,7 @@ class listSelectorDialog(QtGui.QDialog):
 		self.currentItem=str(self.rightList.currentItem().data(0,0).toString())
 		
 		#Insert new node in left list
-		newNode=QtGui.QTreeWidgetItem(self.leftList,[self.currentItem])
+		newNode=QtWidgets.QTreeWidgetItem(self.leftList,[self.currentItem])
 		
 		#Remove node in right list
 		self.currRightInd=self.rightList.indexFromItem(self.rightList.currentItem()).row()
@@ -451,12 +451,12 @@ class advancedListSelectorDialog(listSelectorDialog):
 		
 		#listSelectorDialog.__init__(parent,List,leftTitle=leftTitle,rightTitle=rightTitle,itemsRight=itemsRight)
 		
-		self.btnUp=QtGui.QToolButton()
-		self.btnUp.connect(self.btnUp, QtCore.SIGNAL('clicked()'), self.upItem)
+		self.btnUp=QtWidgets.QToolButton()
+		self.btnUp.clicked.connect(self.upItem)
 		self.btnUp.setArrowType(QtCore.Qt.UpArrow)
 		
-		self.btnDown=QtGui.QToolButton()
-		self.btnDown.connect(self.btnDown, QtCore.SIGNAL('clicked()'), self.downItem)
+		self.btnDown=QtWidgets.QToolButton()
+		self.btnDown.clicked.connect(self.downItem)
 		self.btnDown.setArrowType(QtCore.Qt.DownArrow)
 		
 		self.vbox.addWidget(self.btnUp)
@@ -504,25 +504,25 @@ class advancedListSelectorDialog(listSelectorDialog):
 #Basic Progress Dialog
 #===================================================================================================================================
 		
-class progressDialog(QtGui.QDialog):
+class progressDialog(QtWidgets.QDialog):
 	
 	def __init__(self,parent):
 		super(progressDialog,self).__init__(parent)
 		
 		#Labels
-		self.lblName = QtGui.QLabel("Something in progress...", self)
+		self.lblName = QtWidgets.QLabel("Something in progress...", self)
 		
 		#Buttons
-		self.btnCancel=QtGui.QPushButton('Cancel')
-		self.btnCancel.connect(self.btnCancel, QtCore.SIGNAL('clicked()'), self.cancel)	
+		self.btnCancel=QtWidgets.QPushButton('Cancel')
+		self.btnCancel.clicked.connect(self.cancel)	
 		
 		#ProgressBar
-		self.progressbar = QtGui.QProgressBar()
+		self.progressbar = QtWidgets.QProgressBar()
 		self.progressbar.setMinimum(1)
 		self.progressbar.setMaximum(100)
 		
 		#Layout
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.lblName)
 		self.vbox.addWidget(self.progressbar)
 		self.vbox.addWidget(self.btnCancel)
@@ -575,20 +575,20 @@ class pyfrpThread(QtCore.QThread):
 #Basic Wait Dialog
 #===================================================================================================================================
 		
-class waitDialog(QtGui.QDialog):
+class waitDialog(QtWidgets.QDialog):
 	
 	def __init__(self,parent):
 		super(waitDialog,self).__init__(parent)
 		
 		#Labels
-		self.lblName = QtGui.QLabel("Something in progress...", self)
+		self.lblName = QtWidgets.QLabel("Something in progress...", self)
 		
 		#Buttons
-		self.btnCancel=QtGui.QPushButton('Cancel')
-		self.btnCancel.connect(self.btnCancel, QtCore.SIGNAL('clicked()'), self.cancel)	
+		self.btnCancel=QtWidgets.QPushButton('Cancel')
+		self.btnCancel.clicked.connect(self.cancel)	
 		
 		#Layout
-		self.vbox = QtGui.QVBoxLayout()
+		self.vbox = QtWidgets.QVBoxLayout()
 		self.vbox.addWidget(self.lblName)
 		self.vbox.addWidget(self.btnCancel)
 		

@@ -32,13 +32,13 @@
 #===========================================================================================================================================================================
 
 #QT
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 #===================================================================================================================================
 #Dialog for select/edit molecule
 #===================================================================================================================================
 	
-class pathDialog(QtGui.QDialog):
+class pathDialog(QtWidgets.QDialog):
 	
 	"""Dialog to modify path settings.
 	
@@ -48,30 +48,30 @@ class pathDialog(QtGui.QDialog):
 	
 	def __init__(self,identifier,path, parent):
 	
-		QtGui.QDialog.__init__(self, parent)
+		QtWidgets.QDialog.__init__(self, parent)
 
 		self.parent=parent
 		self.identifier=identifier
 		self.path=path
 		
 		#Labels
-		self.lblIdentifier=QtGui.QLabel("Identifier:", self)
-		self.lblPath=QtGui.QLabel("Path:", self)
-		self.lblPathVal=QtGui.QLabel(self.path, self)
+		self.lblIdentifier=QtWidgets.QLabel("Identifier:", self)
+		self.lblPath=QtWidgets.QLabel("Path:", self)
+		self.lblPathVal=QtWidgets.QLabel(self.path, self)
 		
 		#QLEs
-		self.qleIdentifier = QtGui.QLineEdit(str(self.identifier))
+		self.qleIdentifier = QtWidgets.QLineEdit(str(self.identifier))
 		self.qleIdentifier.editingFinished.connect(self.setIdentifier)
 		
 		#Button
-		self.btnPath=QtGui.QPushButton('Change')
-		self.btnPath.connect(self.btnPath, QtCore.SIGNAL('clicked()'), self.setPath)
+		self.btnPath=QtWidgets.QPushButton('Change')
+		self.btnPath.clicked.connect(self.setPath)
 		
-		self.btnDone=QtGui.QPushButton('Done')
-		self.btnDone.connect(self.btnDone, QtCore.SIGNAL('clicked()'), self.donePressed)
+		self.btnDone=QtWidgets.QPushButton('Done')
+		self.btnDone.clicked.connect(self.donePressed)
 		
 		#Layout
-		self.grid = QtGui.QGridLayout()		
+		self.grid = QtWidgets.QGridLayout()		
 		self.grid.setColumnMinimumWidth(2,200) 
 		
 		self.grid.addWidget(self.lblIdentifier,1,1)
@@ -98,7 +98,7 @@ class pathDialog(QtGui.QDialog):
 	
 	def setPath(self):
 		
-		fn = str(QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.parent.lastopen,))
+		fn = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.parent.lastopen,))
 		if fn=='':
 			return
 		
