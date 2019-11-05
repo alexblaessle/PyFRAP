@@ -190,7 +190,9 @@ class OverrideInstall(install):
 				gid=os.getgid()
 				
 			#Mode for files (everyone can read/write/execute. This is somewhat an overkill, but 0666 seems somehow not to work.)
-			mode="0777"
+			#mode="0777"
+			mode="0o777"
+			
 			
 			return uid,gid,mode
 			
