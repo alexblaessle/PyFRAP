@@ -56,8 +56,11 @@ import platform
 
 #Bioformats
 #import javabridge
-import bioformats
-
+try:
+	import bioformats
+except:
+	printWarning("Cannot import bioformats")
+	
 #PyFRAP modules
 from . import pyfrp_misc_module
 from . import pyfrp_plot_module
@@ -1883,6 +1886,13 @@ def readBioFormatsMeta(fn):
 	
 	"""
 	
+	# Try reimport
+	try:
+		import bioformats
+	except:
+		print("Cannot import bioformats")
+
+	
 	#Change system encoding to UTF 8
 	imp.reload(sys)  
 	sys.setdefaultencoding('UTF8')
@@ -1922,6 +1932,14 @@ def readBioFormats(fn,debug=True,series=0,channel='all'):
 	"""
 	
 	#javabridge.start_vm(class_path=bioformats.JARS)
+	
+	
+	# Try reimport
+	try:
+		import bioformats
+	except:
+		print("Cannot import bioformats")
+
 	
 	meta=readBioFormatsMeta(fn)
 	
@@ -2041,6 +2059,14 @@ def extractBioFormats(fn,fnOut,debug=True,series=0,channel='all',enc="uint16",sc
 			* fnsLoaded (list): List of filenames that were loaded.
 	
 	"""
+	
+	
+	# Try reimport
+	try:
+		import bioformats
+	except:
+		print("Cannot import bioformats")
+
 	
 	# Read files
 	#try:

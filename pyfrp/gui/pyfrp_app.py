@@ -104,8 +104,15 @@ from mpl_toolkits.mplot3d import Axes3D
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
 # bioformats
-import javabridge
-import bioformats
+
+# Try reimport
+try:
+	import javabridge
+	import bioformats
+
+except:
+	print("Cannot import bioformats")
+
 
 # =====================================================================================================================================
 # Main Simulation window
@@ -705,9 +712,11 @@ class pyfrp(QtWidgets.QMainWindow):
             self.config.consoleHistory = self.console.history
             self.config.backupPathFile()
             self.config.save(fn=fn)
-
-            javabridge.kill_vm()
-
+			try:
+				javabridge.kill_vm()
+			except:
+				printWarning("Wasn't able to kill javabridge")
+				
             event.accept()
         else:
             event.ignore()
@@ -3380,8 +3389,11 @@ def main():
         overwrite_conf = False
 
     # Start javabridge
-    javabridge.start_vm(class_path=bioformats.JARS)
-
+    try:
+		javabridge.start_vm(class_path=bioformats.JARS)
+	except: 
+		printWarning("Not able to start javabridge")
+	
     mainWin = pyfrp(redirect=redirect, overwrite_conf=overwrite_conf)
     mainWin.show()
 
