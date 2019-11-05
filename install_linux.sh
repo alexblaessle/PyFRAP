@@ -7,7 +7,7 @@ sudo apt-get install default-jre
 sudo apt-get install -y python-numpy
 sudo apt-get install -y python-scipy
 sudo apt-get install -y python-matplotlib
-sudo apt-get install -y python-qt4
+sudo apt-get install -y python-qt5
 sudo apt-get install -y python-skimage
 sudo apt-get install -y python-vtk
 
@@ -22,8 +22,8 @@ sudo pip install python-bioformats
 sudo apt-get install openscad
 
 # Clone PyFRAP and install
-cd PyFRAP-master
-sudo python setup.py install
+# cd PyFRAP-master
+# sudo python setup.py install
 
  
 
