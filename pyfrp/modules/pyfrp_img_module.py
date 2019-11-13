@@ -54,18 +54,20 @@ import time
 import os
 import platform
 
-#Bioformats
-#import javabridge
-try:
-	import bioformats
-except:
-	printWarning("Cannot import bioformats")
+
 	
 #PyFRAP modules
 from . import pyfrp_misc_module
 from . import pyfrp_plot_module
 from . import pyfrp_idx_module
 from .pyfrp_term_module import *
+
+#Bioformats
+#import javabridge
+try:
+	import bioformats
+except:
+	printWarning("Cannot import bioformats")
 
 #Image processing
 import skimage

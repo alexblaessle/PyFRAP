@@ -7,7 +7,7 @@ sudo apt-get install default-jre
 sudo apt-get install -y python3-numpy
 sudo apt-get install -y python3-scipy
 sudo apt-get install -y python3-matplotlib
-sudo apt-get install -y python3-qt5
+sudo apt-get install -y python3-pyqt5
 sudo apt-get install -y python3-skimage
 sudo apt-get install -y python3-vtk
 
