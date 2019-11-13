@@ -712,11 +712,11 @@ class pyfrp(QtWidgets.QMainWindow):
             self.config.consoleHistory = self.console.history
             self.config.backupPathFile()
             self.config.save(fn=fn)
-			try:
-				javabridge.kill_vm()
-			except:
-				printWarning("Wasn't able to kill javabridge")
-				
+            try:
+                javabridge.kill_vm()
+            except:
+                printWarning("Wasn't able to kill javabridge")
+            
             event.accept()
         else:
             event.ignore()
@@ -3390,10 +3390,10 @@ def main():
 
     # Start javabridge
     try:
-		javabridge.start_vm(class_path=bioformats.JARS)
-	except: 
-		printWarning("Not able to start javabridge")
-	
+        javabridge.start_vm(class_path=bioformats.JARS)
+    except: 
+        printWarning("Not able to start javabridge")
+    
     mainWin = pyfrp(redirect=redirect, overwrite_conf=overwrite_conf)
     mainWin.show()
 
