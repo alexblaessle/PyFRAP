@@ -1028,31 +1028,43 @@ class pyfrp(QtWidgets.QMainWindow):
 		"""
 
         self.currNode = self.objectBar.currentItem()
-
+        
+        #print(self.currNode.data(0, 0),type(self.currNode.data(0, 0)))
+        
+        nodeStr=self.getNodeStr(self.currNode)
+            
         if self.currNode.parent() == None:
             self.currNodeType = "molecule"
         else:
             if self.currNode.parent().parent() == None:
                 self.currNodeType = "embryo"
-            elif self.currNode.data(0, 0).toString() == "Fits":
+            elif nodeStr == "Fits":
                 self.currNodeType = "fits"
-            elif self.currNode.parent().data(0, 0).toString() == "Fits":
+            elif self.getNodeStr(self.currNode.parent()) == "Fits":
                 self.currNodeType = "fit"
-            elif self.currNode.data(0, 0).toString() == "Simulation":
+            elif nodeStr == "Simulation":
                 self.currNodeType = "simulation"
-            elif self.currNode.data(0, 0).toString() == "Analysis":
+            elif nodeStr == "Analysis":
                 self.currNodeType = "analysis"
-            elif self.currNode.data(0, 0).toString() == "Mesh":
+            elif nodeStr == "Mesh":
                 self.currNodeType = "mesh"
-            elif self.currNode.data(0, 0).toString() == "Geometry":
+            elif nodeStr == "Geometry":
                 self.currNodeType = "geometry"
-            elif self.currNode.data(0, 0).toString() == "ROIs":
+            elif nodeStr == "ROIs":
                 self.currNodeType = "rois"
-            elif self.currNode.parent().data(0, 0).toString() == "ROIs":
+            elif self.getNodeStr(self.currNode.parent()) == "ROIs":
                 self.currNodeType = "roi"
 
         return self.currNode, self.currNodeType
-
+    
+    def getNodeStr(self,node):
+        try:
+            nodeStr=node.data(0, 0).toString()
+        except AttributeError:
+            nodeStr=node.data(0, 0)
+        
+        return nodeStr
+    
     # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Returns Current Object selected in objectBar
 
@@ -1066,7 +1078,10 @@ class pyfrp(QtWidgets.QMainWindow):
 
         # Find corresponding molecule object
         self.getCurrentMolecule()
-
+        
+        # Get node string 
+        nodeStr=self.getNodeStr(self.currNode)
+        
         if self.currNodeType == "molecule":
             self.currObj = self.currMolecule
         else:
@@ -1084,11 +1099,11 @@ class pyfrp(QtWidgets.QMainWindow):
                 self.currObj = currEmbryo.simulation.mesh
             elif self.currNodeType == "fit":
                 self.currObj = currEmbryo.getFitByName(
-                    self.currNode.data(0, 0).toString()
+                    nodeStr
                 )
             elif self.currNodeType == "roi":
                 self.currObj = currEmbryo.getROIByName(
-                    self.currNode.data(0, 0).toString()
+                    nodeStr
                 )
             else:
                 self.currObj = None
