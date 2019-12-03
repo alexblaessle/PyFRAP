@@ -150,7 +150,7 @@ def simulateReactDiff(simulation,signal=None,embCount=None,showProgress=True,deb
 		phi=applyImperfectICs(phi,simulation,simulation.embryo.geometry.getCenter(),100.,simulation.embryo.sliceHeightPx)
 		
 	elif simulation.ICmode==3:
-		phi=applyInterpolatedICs(phi,simulation,debug=False)
+		phi=applyInterpolatedICs(phi,simulation,debug=debug)
 		
 	elif simulation.ICmode==4:
 		phi=applyIdealICs(phi,simulation,bleachedROI=simulation.bleachedROI,valOut=simulation.valOut)
@@ -506,7 +506,10 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 	else:
 		offset=[0,0]
 		ins=pyfrp_idx_module.checkInsideImg(x,y,simulation.embryo.dataResPx,offset=offset)
-		
+	
+	X2, Y2 = np.meshgrid(xInt,yInt)
+	
+	
 	#Convert into indices
 	ind=np.arange(len(x))
 	ind=ind[np.where(ins)[0]]
@@ -527,7 +530,9 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 		ind=np.asarray(ind)
 		ind=ind[np.where(ins)[0]]
 		ind=list(ind)
-		
+	
+
+	
 	#Apply interpolation
 	try:
 		phi.value[ind]=f.ev(x[ind],y[ind])
@@ -536,7 +541,7 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 			printNote("Changed index array to nparray b/c of IndexError.")
 		ind=np.array(ind)
 		phi.value[ind]=f.ev(x[ind],y[ind])
-	
+
 	#Fix negative values if selected
 	if fixNeg:
 		phi=fixNegValues(phi)
@@ -556,9 +561,14 @@ def fixNegValues(phi,minVal=None):
 	
 	"""
 	
+	print(phi.value.shape)
+	print(sum(phi.value>=0))
 	if minVal==None:
-		minVal=min(phi.value[np.where(phi.value>=0)[0]])
-	
+		try:
+			minVal=min(phi.value[np.where(phi.value>=0)[0]])
+		except ValueError:
+			return phi
+		
 	phi.value[np.where(phi.value<0)[0]]=minVal
 	
 	return phi

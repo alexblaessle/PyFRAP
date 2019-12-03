@@ -398,7 +398,7 @@ class simulation(object):
 		"""
 		
 		
-		if self.IC!=None:
+		if self.IC is not None:
 			
 			if ax==None:
 				if typ=='surface':
@@ -409,7 +409,7 @@ class simulation(object):
 			
 			if roi==None:
 		
-				x,y,z=self.getCellCenters()
+				x,y,z=self.mesh.getCellCenters()
 			
 				if vmin==None:
 					vmin=min(self.IC)
@@ -461,7 +461,7 @@ class simulation(object):
 			printError("Unknown plot type "+ typ)
 			return ax
 		
-		if self.ICimg!=None:
+		if self.ICimg is not None:
 			
 			if vmin==None:
 				vmin=min(self.ICimg.flatten())

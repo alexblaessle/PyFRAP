@@ -3662,7 +3662,7 @@ class polyROI(ROI):
 			
 			img=np.nan*np.ones((self.embryo.dataResPx,self.embryo.dataResPx))
 			ax.imshow(img)
-		patch = ptc.Rectangle(self.corners,closed=True,fill=False,linewidth=linewidth,color=color)
+		patch = ptc.Polygon(self.corners,closed=True,fill=False,linewidth=linewidth,color=color)
 		
 		ax.add_patch(patch)
 		return ax
@@ -3696,7 +3696,7 @@ class polyROI(ROI):
 		
 		"""
 		
-		cornersNP=np.array(corners)
+		cornersNP=np.array(self.corners)
 	
 		xmax=cornersNP[:,0].max()
 		xmin=cornersNP[:,0].min()

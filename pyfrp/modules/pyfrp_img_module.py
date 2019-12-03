@@ -395,12 +395,16 @@ def meanExtConc(idxX,idxY,img,concRim,numExt,addRimImg,debug=False):
 	concSum=img[idxX,idxY].sum()
 	concNum=len(idxX)
 	
+	#print('before',concSum,concNum)
+	
 	#Check if I want to add rim
 	if addRimImg:
 		
 		#We assume that the concentration in all extended pixels is equals the concRim and add it numExt times to overall concentration 
 		concSum=concSum+numExt*concRim
 		concNum=concNum+numExt
+	
+	#print(concSum,concNum)
 	
 	#Return final concentration
 	return float(concSum)/float(concNum)
@@ -677,7 +681,7 @@ def getMaxRangeChannel(img,debug=False):
 	
 	return img,ind_max
 
-def loadImg(fn,enc,dtype='float'):
+def loadImg(fn,enc,dtype='float',channel=None,max_range=True,debug=False):
 	
 	"""Loads image from filename fn with encoding enc and returns it as with given dtype.
 
@@ -695,6 +699,13 @@ def loadImg(fn,enc,dtype='float'):
 	#Load image
 	img = skimage.io.imread(fn).astype(enc)
 	
+	# Get channel with max range
+	
+	if max_range:
+		if len(np.shape(img))>2:
+	
+			img,ind_max=getMaxRangeChannel(img,debug=debug)
+
 	#Getting img values
 	img=img.real
 	img=img.astype(dtype)

@@ -286,10 +286,14 @@ def getPolyIdxImg(corners,res,debug=False):
 	#Zip them into coordinate tuples
 	coords = list(zip(*(c.flat for c in g)))
 	
+	
+	
 	#Check which point is inside
 	pts = np.vstack([p for p in coords if poly.contains_point(p, radius=0)])
+	
 
-	indX,indY= pts[0,:],pts[1,:]
+	
+	indX,indY= pts[:,0],pts[:,1]
 	
 	return indX,indY
 		
@@ -465,13 +469,23 @@ def getPolyIdxMesh(corners,mesh,zmin="-inf",zmax="inf",debug=False):
 	#Grabbing cellCenters of mesh
 	x,y,z=mesh.getCellCenters()
 	
+	coords=list(zip(np.array(x),np.array(y)))
+	
 	#Bookkeeping list
-	indPoly=[]
+	#indPoly=[]
+	
+	
+	#coords = list(zip(*(c.flat for c in g)))
+	#Define polygonial patch
+	poly = ptc.Polygon(corners,edgecolor='r',facecolor=(1,0,0,.2),)
+	
+	#Check which point is inside
+	indPoly = [i for i,p in enumerate(coords) if poly.contains_point(p, radius=0)]
 	
 	#Loop through coordinates and check if inside
-	for i in range(len(x)):
-		if checkInsidePoly(x[i],y[i],corners):
-			indPoly.append(i)
+	#for i in range(len(x)):
+		#if checkInsidePoly(x[i],y[i],corners):
+			#indPoly.append(i)
 	
 	#Get indices in Slice
 	indSlice=getSliceIdxMesh(z,zmin,zmax)
@@ -593,7 +607,7 @@ def checkInsidePolyVec(x,y,poly):
 	     
 	return vec
 
-def checkInsidePoly(x,y,poly):
+def checkInsidePolyOld(x,y,poly):
 	
 	"""Checks if coordinate (x,y) is inside polyogn.
 	
@@ -630,6 +644,46 @@ def checkInsidePoly(x,y,poly):
 	
 	return inside
 
+def checkInsidePoly(x,y,poly):
+	
+	"""Checks if coordinate (x,y) is inside polyogn.
+	
+	Adapted from http://www.ariel.com.au/a/python-point-int-poly.html.
+	
+	.. note:: If ``x`` and ``y`` are ``float``, will return ``bool``, otherwise
+	   ``numpy.ndarray`` of booleans.
+	      
+	Args:
+		poly (list): List of (x,y)-coordinates of corners.
+		x (float): x-coordinate.
+		y (float): y-coordinate.
+			
+	Returns:
+		bool: True if inside, otherwise False.
+			
+	"""
+	
+	try:
+		x[0]
+		wasVec=True
+	except:
+		x=[x]
+		y=[y]
+		wasVec=False	
+		
+	coords=list(zip(np.array(x),np.array(y)))
+	
+	#Define polygonial patch
+	poly = ptc.Polygon(poly,edgecolor='r',facecolor=(1,0,0,.2),)
+	
+	#Check which point is inside
+	ret= [poly.contains_point(p, radius=0) for i,p in enumerate(coords)]
+	
+	if not wasVec:
+		ret=ret[0]
+		
+	return ret
+	
 def checkQuad(x,y,res):
 	
 	"""Checks if coordinate (x,y) is inside first quadrant.

@@ -67,13 +67,21 @@ def getContours(img,kernel=(10,10)):
 	#Open to erode small patches
 	thresh = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
 	
+	plt.imshow(thresh)
+	plt.show()
+	
 	#Close little holes
 	thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE,kernel, iterations=4)
+	plt.imshow(thresh)
+	plt.show()
 	
 	#Find contours
 	#contours=skimsr.find_contours(thresh,0)
 
-	thresh=thresh.astype('uint8')
+	#thresh=thresh.astype('uint8')
+	thresh=(thresh/256).astype('uint8')
+	plt.imshow(thresh)
+	plt.show()
 	contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 	
 	areas=[]
