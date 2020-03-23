@@ -670,9 +670,9 @@ class OverrideInstall(install):
 						ident,path=line.decode().split('=')
 						path=path.strip()
 						lineNew=ident+"="+fnPyfrp+exePath
-						fPathNew.write(lineNew+'\n')
+						fPathNew.write(lineNew.decode()+'\n')
 					else:
-						fPathNew.write(line)
+						fPathNew.write(line.decode())
 			
 		#Rename file
 		shutil.move(fn+'_new',fn)
