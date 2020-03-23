@@ -300,7 +300,7 @@ def refineMsh(fn,debug=False):
 	os.system(gmshBin+" -v "+ str(v) + " -refine " + fn)
 	return fn
 
-def runGmsh(fn,fnOut=None,debug=False,redirect=False,fnStout=None,fnSterr=None,volSizeMax=None,dim=3):
+def runGmsh(fn,fnOut=None,debug=False,redirect=False,fnStout=None,fnSterr=None,volSizeMax=None,dim=3,gmshBin=None):
 	
 	"""Runs Gmsh generating mesh from .geo file.
 	
@@ -350,9 +350,10 @@ def runGmsh(fn,fnOut=None,debug=False,redirect=False,fnStout=None,fnSterr=None,v
 			fnOut=pyfrp_misc_module.win2linPath(fnOut)
 	
 	# Add Gmsh to PATH and grab gmshBin location
-	gmshBin=getGmshBin()
-	addGmshToPATHs()
-	
+	if gmshBin is None:
+		gmshBin=getGmshBin()
+		addGmshToPATHs()
+		
 	#Define which command to execute
 	cmd = gmshBin + " -v " + str(v) +" -"+str(dim)+ " -optimize -algo del3d"
 	if volSizeMax!=None:

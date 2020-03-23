@@ -161,7 +161,7 @@ class mesh(object):
 		self.volSizePx=20.
 		self.fnMesh=""
 		
-	def genMesh(self,fnOut=None,debug=False):
+	def genMesh(self,fnOut=None,debug=False,gmshBin=None):
 		
 		"""Main mesh generation function.
 		
@@ -189,7 +189,7 @@ class mesh(object):
 		if self.fromFile:
 			self.fnMesh=pyfrp_misc_module.fixPath(fnOut)
 		
-			pyfrp_gmsh_module.runGmsh(self.simulation.embryo.geometry.fnGeo,fnOut=fnOut,debug=debug,volSizeMax=self.volSizePx,dim=dim)
+			pyfrp_gmsh_module.runGmsh(self.simulation.embryo.geometry.fnGeo,fnOut=fnOut,debug=debug,volSizeMax=self.volSizePx,dim=dim,gmshBin=gmshBin)
 			
 			self.importMeshFromFile(self.fnMesh)
 		else:
