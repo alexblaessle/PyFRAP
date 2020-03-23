@@ -666,7 +666,7 @@ class OverrideInstall(install):
 		with open(fn,'rb') as fPath:
 			with open(fn+"_new",'wb') as fPathNew:
 				for line in fPath:
-					if line.strip().startswith(identifier):
+					if line.decode().strip().startswith(identifier):
 						ident,path=line.split('=')
 						path=path.strip()
 						lineNew=ident+"="+fnPyfrp+exePath
