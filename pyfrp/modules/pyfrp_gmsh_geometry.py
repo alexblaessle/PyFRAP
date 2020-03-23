@@ -111,6 +111,7 @@ class domain:
 		self.volumes=[]
 		self.fields=[]
 		self.bkgdField=None
+		self.ellipses=[]
 		
 		#Some settings for plotting
 		self.annXOffset=3.
@@ -201,6 +202,36 @@ class domain:
 			
 		a=arc(self,vstart,vcenter,vend,newId)
 		self.arcs.append(a)
+		self.edges.append(a)
+		
+		return a
+	
+	def addEllipse(self,vstart,vcenter,vend,vmajor=None,Id=None):
+		
+		"""Adds new :py:class:`pyfrp.modules.pyfrp_gmsh_geometry.ellipse` instance
+		at point ``x`` and appends it to ``edges`` and ``ellipses`` list.
+		
+		Args:
+			vstart (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Start vertex.
+			vcenter (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Center vertex.
+			vend (pyfrp.modules.pyfrp_gmsh_geometry.vertex): End vertex.
+			
+		Keyword Args:
+			vmajor (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Major vertex.
+			Id (int): ID of arc.
+			
+		Returns:
+			pyfrp.modules.pyfrp_gmsh_geometry.ellipse: New ellipse instance.
+		
+		"""
+		
+		newId=self.getNewId(self.edges,Id)
+		
+		if vmajor is None:
+			vmajor=vend
+		
+		a=ellipse(self,vstart,vcenter,vend,vmajor,newId)
+		self.ellipses.append(a)
 		self.edges.append(a)
 		
 		return a
@@ -1774,6 +1805,7 @@ class domain:
 			self.writeElements("vertices",f)
 			self.writeElements("lines",f)
 			self.writeElements("arcs",f)
+			self.writeElements("ellipses",f)
 			self.writeElements("bSplines",f)
 			self.writeElements("lineLoops",f)
 			self.writeElements("ruledSurfaces",f)
@@ -1820,6 +1852,7 @@ class domain:
 		self.incrementIDs(offset,"vertices")
 		self.incrementIDs(offset,"lines")
 		self.incrementIDs(offset,"arcs")
+		self.incrementIDs(offset,"ellipses")
 		self.incrementIDs(offset,"bSplines")
 		self.incrementIDs(offset,"lineLoops")
 		self.incrementIDs(offset,"ruledSurfaces")
@@ -1860,6 +1893,7 @@ class domain:
 		self.setDomainForElementType("vertices")
 		self.setDomainForElementType("lines")
 		self.setDomainForElementType("arcs")
+		self.setDomainForElementType("ellipses")
 		self.setDomainForElementType("bSplines")
 		self.setDomainForElementType("lineLoops")
 		self.setDomainForElementType("ruledSurfaces")
@@ -1937,6 +1971,7 @@ class domain:
 		IDs.append(self.getMaxID("vertices"))
 		IDs.append(self.getMaxID("lines"))
 		IDs.append(self.getMaxID("arcs"))
+		IDs.append(self.getMaxID("ellipses"))
 		IDs.append(self.getMaxID("lineLoops"))
 		IDs.append(self.getMaxID("ruledSurfaces"))
 		IDs.append(self.getMaxID("surfaceLoops"))
@@ -2834,6 +2869,8 @@ class edge(gmshElement):
 				self.domain.arcs.remove(self)
 			if self.typ==2:
 				self.domain.bSplines.remove(self)
+			if selt.typ==3:
+				self.domain.ellipses.remove(self)
 				
 			self.domain.edges.remove(self)
 		except ValueError:
@@ -5816,4 +5853,137 @@ class boundaryLayerField(field):
 		else:
 			setattr(self,name,val)
 	
+	
+class ellipse(edge):
+	
+	"""Ellipse class storing information from gmsh .geo ellipse.
+	
+	.. warning: Experimental
+	
+	Args:
+		domain (pyfrp.modules.pyfrp_gmsh_geometry.domain): Domain arc belongs to.
+		vstart (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Start vertex.
+		vcenter (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Center vertex.
+		vend (pyfrp.modules.pyfrp_gmsh_geometry.vertex): End vertex.
+		vmajor (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Major axis vertex.
+		Id (int): ID of arc.
 		
+	"""		
+	
+	def __init__(self,domain,vstart,vcenter,vend,vmajor,Id):
+		
+		edge.__init__(self,domain,Id,3)
+		
+		self.vcenter=vcenter
+		self.vstart=vstart
+		self.vend=vend
+		self.vmajor=vmajor
+		
+	def writeToFile(self,f):
+		
+		"""Writes ellipse to file.
+		
+		Args:
+			f (file): File to write to.
+			
+		Returns:
+			file: File.
+		
+		"""
+		
+		f.write("Ellipse("+str(self.Id)+")= {" + str(self.vstart.Id) + ","+ str(self.vcenter.Id)+ "," + str(self.vmajor.Id) + "," + str(self.vend.Id) + "};\n" )
+		
+		return f	
+			
+	def getVstart(self):
+		
+		"""Returns start vertex of arc."""
+		
+		return self.vstart
+	
+	def getVend(self):
+		
+		"""Returns end vertex of arc."""
+		
+		return self.vend
+	
+	def getXstart(self):
+		
+		"""Returns start coordinate of arc."""
+		
+		return self.vstart.x
+	
+	def getXend(self):
+		
+		"""Returns end coordinate of arc."""
+		
+		return self.vend.x
+	
+	def getVcenter(self):
+		
+		"""Returns center vertex of arc."""
+		
+		return self.vcenter
+	
+	def getXcenter(self):
+		
+		"""Returns center coordinate of arc."""
+		
+		return self.vcenter.x
+	
+	def getVmajor(self):
+		
+		"""Returns center vertex of arc."""
+		
+		return self.vcenter
+	
+	def getXmajor(self):
+		
+		"""Returns center coordinate of arc."""
+		
+		return self.vmajor.x
+	
+	def getLastVertex(self,orientation):
+		
+		"""Returns last vertex of arc given a orientation.
+		
+		Orientation can be either forward (1), or reverse (-1).
+		
+		Args:
+			orientation (int): Orientation of arc.
+			
+		Returns:
+			pyfrp.pyfrp_gmsh_geometry.vertex: Vertex.
+		
+		"""
+		
+		if orientation==1:
+			return self.getVend()
+		elif orientation==-1:
+			return self.getVstart()
+		else:
+			printError("Cannot return last vertex. Orientation " + str(orientation) + " unknown.")
+			return None
+	
+	def getFirstVertex(self,orientation):
+		
+		"""Returns first vertex of arc given a orientation.
+		
+		Orientation can be either forward (1), or reverse (-1).
+		
+		Args:
+			orientation (int): Orientation of arc.
+			
+		Returns:
+			pyfrp.pyfrp_gmsh_geometry.vertex: Vertex.
+		
+		"""
+		
+		if orientation==-1:
+			return self.getVend()
+		elif orientation==1:
+			return self.getVstart()
+		else:
+			printError("Cannot return first vertex. Orientation " + str(orientation) + " unknown.")
+			return None
+	
