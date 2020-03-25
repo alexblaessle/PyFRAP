@@ -1272,14 +1272,23 @@ def isMergeFile(fn):
 	isMerge=False
 	mergedFiles=[]
 	
-	with open(fn,'rb') as f:
-		
-		for line in f:
-			if line.startswith("Merge"):
-				isMerge=True
-				splitted=line.split('"')
-				mergedFiles.append(splitted[1])
+	try:
+		with open(fn,'rb') as f:
 			
+			for line in f:
+				if line.startswith("Merge"):
+					isMerge=True
+					splitted=line.split('"')
+					mergedFiles.append(splitted[1])
+	except TypeError:
+		with open(fn,'r') as f:
+			
+			for line in f:
+				if line.startswith("Merge"):
+					isMerge=True
+					splitted=line.split('"')
+					mergedFiles.append(splitted[1])
+		
 	return isMerge,mergedFiles	
 
 def genMergeGeoFile(meshFiles,fnGeo):
