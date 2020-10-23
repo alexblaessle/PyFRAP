@@ -664,16 +664,22 @@ class OverrideInstall(install):
 		
 		#Open file and enter new gmsh bin
 		with open(fn,'rb') as fPath:
-			with open(fn+"_new",'wb') as fPathNew:
+			with open(fn+"_new",'w') as fPathNew:
 				for line in fPath:
 					if line.decode().strip().startswith(identifier):
 						ident,path=line.decode().split('=')
 						path=path.strip()
 						lineNew=ident+"="+fnPyfrp+exePath
-						fPathNew.write(lineNew.decode()+'\n')
+						# try:
+						# 	fPathNew.write(lineNew.decode()+'\n')
+						# except AttributeError:
+						lineNew='%s\n'%lineNew
+						fPathNew.write(lineNew)
 					else:
-						fPathNew.write(line.decode())
-			
+						try:
+							fPathNew.write(line.decode())
+						except AttributeError:
+							fPathNew.write(line)
 		#Rename file
 		shutil.move(fn+'_new',fn)
 		
