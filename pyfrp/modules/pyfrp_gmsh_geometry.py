@@ -1229,6 +1229,10 @@ class domain:
 			else:
 				newId=Id
 		
+		if self.checkIdExists(newId,objList):
+			IdList=pyfrp_misc_module.objAttrToList(objList,'Id')
+			newId=max(IdList)+1
+
 		return newId
 		
 	def incrementID(self,objList):
@@ -1640,6 +1644,8 @@ class domain:
 		newId=self.getNewId(self.ruledSurfaces,Id)
 		
 		l=ruledSurface(self,lineLoopID,newId)
+		# if not l.createdSurfaces:
+		l.Id=self.getNewId(self.ruledSurfaces,Id)
 		self.ruledSurfaces.append(l)
 		
 		return l
@@ -4443,6 +4449,7 @@ class ruledSurface(gmshElement):
 	def __init__(self,domain,loopID,ID):
 		
 		gmshElement.__init__(self,domain,ID)
+		self.createdSurfaces=False
 		self.initLineLoop(loopID)
 	
 	def initLineLoop(self,loopID,debug=False,addPoints=False,iterations=2):
@@ -4460,7 +4467,9 @@ class ruledSurface(gmshElement):
 		#Check length
 		if len(self.lineLoop.edges)<=4:
 			return False,[]
-	
+
+		self.createdSurfaces=True
+
 		#Compute normal vector
 		oldNormal=self.getNormal()
 		

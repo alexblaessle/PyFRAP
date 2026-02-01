@@ -617,7 +617,7 @@ def meshToUnstructeredGrid(mesh):
 			points.InsertNextPoint(x[i], y[i],z[i])
 
 	# Insert tetrahedrons
-	verts=mesh._getOrderedCellVertexIDs().T
+	verts=mesh._orderedCellVertexIDs.T
 		
 	cellArray = vtk.vtkCellArray()
 	for j,vert in enumerate(verts):

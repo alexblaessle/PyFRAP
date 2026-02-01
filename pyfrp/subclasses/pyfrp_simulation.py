@@ -569,7 +569,7 @@ class simulation(object):
 		X,Y=np.meshgrid(np.arange(res),np.arange(res))
 		
 		#Get cellcenters
-		x,y,z=self.getCellCenters()
+		x,y,z=self.mesh.getCellCenters()
 		##print x
 		##print y
 		##print z
@@ -1085,7 +1085,7 @@ class simulation(object):
 		"""
 		
 		#Retrieve values
-		x,y,z=self.getCellCenters()
+		x,y,z=self.mesh.getCellCenters()
 	
 		if roi!=None:
 			idxs=roi.meshIdx
@@ -1308,6 +1308,8 @@ class simulation(object):
 		# Import right module from gui submodule
 		from pyfrp.gui import pyfrp_gui_vtk
 		
+		from PyQt5 import QtGui, QtCore, QtWidgets
+
 		# Create QApplication
 		if app==None:
 			app = QtWidgets.QApplication([])

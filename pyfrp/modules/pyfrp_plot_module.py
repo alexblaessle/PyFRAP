@@ -622,7 +622,7 @@ def redraw(ax):
 	
 	return ax
 
-def plotTS(xvec,yvec,label='',title='',sup='',ax=None,color=None,linewidth=1,legend=True,linestyle='-',show=True,alpha=1.,legLoc=-1):
+def plotTS(xvec,yvec,label='',title='',sup='',ax=None,color=None,linewidth=1,legend=True,linestyle='-',show=True,alpha=1.,legLoc=-1,draw=True):
 	
 	"""Plot timeseries all-in-one function.
 		
@@ -658,7 +658,7 @@ def plotTS(xvec,yvec,label='',title='',sup='',ax=None,color=None,linewidth=1,leg
 	else:
 		ax.set_title(title)
 		
-	ax.plot(xvec,yvec,color=color,label=label,linestyle=linestyle,alpha=alpha)
+	ax.plot(xvec,yvec,color=color,label=label,linestyle=linestyle,alpha=alpha,linewidth=linewidth)
 	
 	if legend:
 		if legLoc==-1:
@@ -666,8 +666,9 @@ def plotTS(xvec,yvec,label='',title='',sup='',ax=None,color=None,linewidth=1,leg
 			ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 		else:
 			ax.legend(loc=legLoc)
-		
-	redraw(ax)
+	
+	if draw:
+		redraw(ax)
 	
 	return ax
 

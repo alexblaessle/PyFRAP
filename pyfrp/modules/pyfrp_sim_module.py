@@ -494,7 +494,7 @@ def applyInterpolatedICs(phi,simulation,matchWithMaster=True,debug=False,fixNeg=
 		ICimg=simulation.ICimg.copy()
 	
 	#Generate interpolation function
-	f=interp.RectBivariateSpline(xInt, yInt, ICimg.T, bbox=[None, None, None, None], kx=3, ky=3, s=0)
+	f=interp.RectBivariateSpline(xInt, yInt, ICimg, bbox=[None, None, None, None], kx=3, ky=3, s=0)
 	
 	#Set all values of solution variable to concRim
 	phi.setValue(concRim)

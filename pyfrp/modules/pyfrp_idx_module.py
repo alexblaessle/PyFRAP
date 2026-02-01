@@ -105,7 +105,7 @@ def getCircleIdxImg(center,radius,res,debug=False):
 		for j in range(int(res)):
 			
 			#Check if in circle
-			if checkInsideCircle(i+1,j+1,center,radius):
+			if checkInsideCircle(i,j,center,radius):
 				ind_circ_x.append(i)
 				ind_circ_y.append(j)
 				if debug:
@@ -149,7 +149,7 @@ def getRectangleIdxImg(offset,sidelengthX,sidelengthY,res,debug=False):
 		for j in range(int(res)):
 			
 			#Check if in square
-			if checkInsideRectangle(i+1,j+1,offset,sidelengthX,sidelengthY):
+			if checkInsideRectangle(i,j,offset,sidelengthX,sidelengthY):
 				indX.append(i)
 				indY.append(j)
 				
@@ -189,13 +189,13 @@ def getSquareIdxImg(offset,sidelength,res,debug=False):
 	
 	indX=[]
 	indY=[]
-	
+	indDebug=np.zeros((res,res))
 	#Go through all pixels
 	for i in range(int(res)):
 		for j in range(int(res)):
 			
 			#Check if in square
-			if checkInsideSquare(i+1,j+1,offset,sidelength):
+			if checkInsideSquare(i,j,offset,sidelength):
 				indX.append(i)
 				indY.append(j)
 				
@@ -206,7 +206,7 @@ def getSquareIdxImg(offset,sidelength,res,debug=False):
 		
 		#Create figure
 		fig,axes = pyfrp_plt.make_subplot([1,1],titles=["Square"],sup="getSquareIdxImg debugging output")
-		axes[0].contourf(ind_circ_debug)			
+		axes[0].contourf(indDebug)			
 		
 	return indX,indY
 
@@ -253,7 +253,7 @@ def getAllIdxImg(res,debug=False):
 		
 	return indX,indY
 
-def getPolyIdxImg(corners,res,debug=False):
+def getPolyIdxImg(corners,res,debug=False,swap=True):
 	
 	"""Returns all indices of image that lie within given polygon.
 	
@@ -279,21 +279,20 @@ def getPolyIdxImg(corners,res,debug=False):
 	poly = ptc.Polygon(corners,edgecolor='r',facecolor=(1,0,0,.2),)
 	
 	#Create grid
-	x_int=np.arange(1,res+1,1)
-	y_int=np.arange(1,res+1,1)
+	x_int=np.arange(0,res,1)
+	y_int=np.arange(0,res,1)
 	g = np.meshgrid(x_int, y_int)
 	
 	#Zip them into coordinate tuples
 	coords = list(zip(*(c.flat for c in g)))
 	
-	
-	
 	#Check which point is inside
 	pts = np.vstack([p for p in coords if poly.contains_point(p, radius=0)])
 	
-
-	
 	indX,indY= pts[:,0],pts[:,1]
+	
+	#if swap:
+		#indX,indY=indY,indX
 	
 	return indX,indY
 		
@@ -443,7 +442,7 @@ def getSquareIdxMesh(sidelength,offset,mesh,zmin="-inf",zmax="inf",debug=False):
 	
 	return indFinal
 
-def getPolyIdxMesh(corners,mesh,zmin="-inf",zmax="inf",debug=False):
+def getPolyIdxMesh(corners,mesh,zmin="-inf",zmax="inf",debug=False,swap=True):
 	
 	"""Returns all indices of mesh that lie within given polygon and between ``zmin`` and
 	``zmax``.
@@ -469,10 +468,15 @@ def getPolyIdxMesh(corners,mesh,zmin="-inf",zmax="inf",debug=False):
 	#Grabbing cellCenters of mesh
 	x,y,z=mesh.getCellCenters()
 	
+	#if swap:
+		#coords=list(zip(np.array(y),np.array(x)))
+	#else:
 	coords=list(zip(np.array(x),np.array(y)))
 	
 	#Bookkeeping list
 	#indPoly=[]
+	
+	
 	
 	
 	#coords = list(zip(*(c.flat for c in g)))
@@ -870,17 +874,10 @@ def mask2ind(mask,res):
 	
 	#To bool
 	mask=mask.astype(bool)
-
-	#idx grid
-	x=np.arange(res)
-	y=np.arange(res)	
-	X,Y=np.meshgrid(x,y)
-
-	#Slice idx grid
-	idxX_new=X[mask].flatten().astype(int)
-	idxY_new=Y[mask].flatten().astype(int)
 	
-	return idxX_new, idxY_new
+	ret=np.where(mask>0)
+
+	return ret[0],ret[1]
 
 def getExtendedPixelsSquare(offset,sidelength,res,debug=False):
 	

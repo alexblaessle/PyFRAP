@@ -544,7 +544,7 @@ class fit:
 		
 		return self.DOptPx, self.prodOpt, self.degrOpt, self.DOptMu
 	
-	def plotFit(self,ax=None,legend=True,title=None,show=True):
+	def plotFit(self,ax=None,draw=True,legend=True,title=None,show=True,**kwargs):
 		
 		"""Plots fit, showing the result for all fitted ROIs.
 		
@@ -564,7 +564,7 @@ class fit:
 		"""
 		
 		for r in self.ROIsFitted:
-			ax=r.plotFit(self,ax=ax,legend=legend,title=title,show=show)
+			ax=r.plotFit(self,ax=ax,legend=legend,title=title,show=show,draw=draw,**kwargs)
 			
 		return ax
 	

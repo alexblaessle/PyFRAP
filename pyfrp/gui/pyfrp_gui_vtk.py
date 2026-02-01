@@ -172,10 +172,17 @@ class vtkSimVisualizer(QtWidgets.QMainWindow):
         vals = self.embryo.simulation.vals[idx] / self.embryo.simulation.vals.max()
         vals = 255 * self.cm(vals)
         vals = vals[:, :3]
+        vals = vals.astype(int)
 
         self.initScalarArray()
         for i, val in enumerate(vals):
-            self.scalar.InsertNextTupleValue(val)
+            # print(val,type(val))
+            val=list(val)
+            try:
+                self.scalar.InsertNextTupleValue(val)
+            except AttributeError:
+                self.scalar.InsertNextTypedTuple(val)
+
         self.grid.GetCellData().SetScalars(self.scalar)
         self.grid.Modified()
         self.iren.Render()
@@ -244,7 +251,7 @@ class vtkSimVisualizer(QtWidgets.QMainWindow):
 
         """Sets up tetrahedras describing mesh."""
 
-        verts = self.embryo.simulation.mesh.mesh._getOrderedCellVertexIDs().T
+        verts = self.embryo.simulation.mesh.getOrderedCellVertexIDs().T
 
         cellArray = vtk.vtkCellArray()
         for j, vert in enumerate(verts):
@@ -261,7 +268,7 @@ class vtkSimVisualizer(QtWidgets.QMainWindow):
 
         """Sets up triangles describing mesh."""
 
-        verts = self.embryo.simulation.mesh.mesh._getOrderedCellVertexIDs().T
+        verts = self.embryo.simulation.mesh.getOrderedCellVertexIDs().T
 
         cellArray = vtk.vtkCellArray()
         for j, vert in enumerate(verts):

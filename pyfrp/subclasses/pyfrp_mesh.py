@@ -750,8 +750,8 @@ class mesh(object):
 		
 		#Calculating sidelengths of tetrahedra
 		slsVec=[]
-		for i in range(np.shape(self.mesh._getOrderedCellVertexIDs())[1]):
-			currVert=self.mesh._getOrderedCellVertexIDs()[:,i]
+		for i in range(np.shape(self.getOrderedCellVertexIDs())[1]):
+			currVert=self.getOrderedCellVertexIDs()[:,i]
 			
 			pt1=self.mesh.vertexCoords[:,currVert[0]]
 			pt2=self.mesh.vertexCoords[:,currVert[1]]
@@ -1116,7 +1116,22 @@ class mesh(object):
 		else:
 			z=self.simulation.embryo.sliceHeightPx*np.ones((len(cellCenters[0]),))
 			return cellCenters[0],cellCenters[1],z
+
+
+	def getOrderedCellVertexIDs(self):
 		
+		"""Returns ordered cell vertex IDs.
+		"""
+		
+
+
+		try:
+			ret=self.mesh._getOrderedCellVertexIDs()
+		except AttributeError:
+			ret=self.mesh._orderedCellVertexIDs
+		
+		return ret
+
 	
 	def getCellVolumes(self):
 		

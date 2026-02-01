@@ -780,7 +780,7 @@ class ROI(object):
 		
 		return ax
 	
-	def showMeshIdx2D(self,ax=None):
+	def showMeshIdx2D(self,ax=None,transpose=True):
 		
 		
 		
@@ -793,8 +793,13 @@ class ROI(object):
 		#Somehow need to convert to np array since slicing does not work for fipy variables
 		x=np.asarray(x)[self.meshIdx]
 		y=np.asarray(y)[self.meshIdx]
-	
-		ax.scatter(x,y,c=self.color)
+
+		if transpose:
+			ax.scatter(y,x,c=self.color)
+		
+		else:
+			ax.scatter(x,y,c=self.color)
+		
 		plt.draw()
 		
 		return ax
@@ -831,6 +836,7 @@ class ROI(object):
 		
 		"""
 		
+		
 		if self.embryo.getMasterROIIdx()==None:
 			printWarning("No Master ROI has been defined yet. Will not continue compute ROI indices.")
 			return self.getAllIdxs()
@@ -844,12 +850,12 @@ class ROI(object):
 		
 		startIdx=time.clock()
 		
+		
 		if  type(self) is not customROI:
 			
-			self.computeImgIdx(debug=debug)
+			self.computeImgIdx(debug=debug)	
 			self.matchImgIdx(masterROI)
 			self.computeExtIdx(debug=debug)
-			
 			if self.embryo.simulation!=None:
 				if self.embryo.simulation.mesh.mesh==None:
 					printWarning("Mesh has not been generated, will not compute meshIdxs")
@@ -869,7 +875,7 @@ class ROI(object):
 			if self.embryo.simulation!=None:
 				if self.embryo.simulation.mesh.mesh!=None:
 					self.matchMeshIdx(masterROI)
-		
+	
 		if debug:
 			print('Compute Idxs: ', startIdx-time.clock())
 		
@@ -916,6 +922,14 @@ class ROI(object):
 		"""
 		
 		self.computeImgMask()
+		# r.computeImgMask()
+
+		# fig,axes=plt.subplots(1,2)
+		# fig.show()
+		# axes[0].imshow(self.imgMask)
+		# axes[1].imshow(r.imgMask)
+		# plt.draw()
+
 		self.imgMask=self.imgMask*r.computeImgMask()
 		self.imgIdxX,self.imgIdxY=pyfrp_idx_module.mask2ind(self.imgMask,self.embryo.dataResPx)	
 		return self.imgIdxX,self.imgIdxY
@@ -1033,7 +1047,7 @@ class ROI(object):
 		self.setSimVec([])
 		return self
 	
-	def plotData(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1):
+	def plotData(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1,draw=True):
 		
 		"""Plot data vector of ROI.
 		
@@ -1059,11 +1073,11 @@ class ROI(object):
 			label=self.name + ' simulated'
 		
 		ax = pyfrp_plot_module.plotTS(self.embryo.tvecData,self.dataVec,ax=ax,linewidth=linewidth,color=color,label=self.name + ' data',
-		title="Data",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc)
+		title="Data",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc,draw=draw)
 		
 		return ax
 	
-	def plotDataPinned(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1):
+	def plotDataPinned(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1,draw=True):
 		
 		"""Plot pinned data vector of ROI.
 		
@@ -1089,7 +1103,7 @@ class ROI(object):
 			label=self.name + ' simulated'
 		
 		ax = pyfrp_plot_module.plotTS(self.embryo.tvecData,self.dataVecPinned,ax=ax,linewidth=linewidth,color=color,label=self.name + ' data',
-		title="Data Pinned",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc)
+		title="Data Pinned",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc,draw=draw)
 		
 		return ax
 	
@@ -1507,7 +1521,7 @@ class ROI(object):
 			fit.dataVecsFitted.insert(fit.ROIsFitted.index(self),[])
 			return []
 		
-	def plotFit(self,fit,ax=None,color=None,linewidth=1,legend=True,title=None,linestyles=['-','-.'],show=True):
+	def plotFit(self,fit,ax=None,color=None,linewidth=1,legend=True,title=None,linestyles=['-','-.'],show=True,draw=True):
 		
 		"""Plot fit for ROI.
 		
@@ -1533,10 +1547,10 @@ class ROI(object):
 			title="Fit "+fit.name
 			
 		ax = pyfrp_plot_module.plotTS(fit.tvecFit,self.getFittedVec(fit),ax=ax,linewidth=linewidth,color=color,
-		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[1],legend=legend,show=show)
+		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[1],legend=legend,show=show,draw=draw)
 		
 		ax = pyfrp_plot_module.plotTS(fit.tvecFit,self.getdataVecFitted(fit),ax=ax,linewidth=linewidth,color=color,
-		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[0],legend=legend,show=show)
+		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[0],legend=legend,show=show,draw=draw)
 		
 		return ax
 	
@@ -2891,7 +2905,7 @@ class squareROI(ROI):
 			img=np.nan*np.ones((self.embryo.dataResPx,self.embryo.dataResPx))
 			ax.imshow(img)
 		
-		patch = ptc.Rectangle(self.offset,self.sidelength,self.sidelength,fill=False,linewidth=linewidth,color=color)
+		patch = ptc.Rectangle(np.flip(self.offset),self.sidelength,self.sidelength,fill=False,linewidth=linewidth,color=color)
 		ax.add_patch(patch)
 		return ax
 	
@@ -3662,7 +3676,8 @@ class polyROI(ROI):
 			
 			img=np.nan*np.ones((self.embryo.dataResPx,self.embryo.dataResPx))
 			ax.imshow(img)
-		patch = ptc.Polygon(self.corners,closed=True,fill=False,linewidth=linewidth,color=color)
+		patch = ptc.Polygon(np.flip(self.corners),closed=True,fill=False,linewidth=linewidth,color=color)
+		#patch = ptc.Polygon(self.corners,closed=True,fill=False,linewidth=linewidth,color=color)
 		
 		ax.add_patch(patch)
 		return ax

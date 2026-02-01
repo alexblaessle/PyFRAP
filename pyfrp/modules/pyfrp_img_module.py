@@ -392,6 +392,20 @@ def meanExtConc(idxX,idxY,img,concRim,numExt,addRimImg,debug=False):
 	"""
 	
 	#Adding up concentrations of all selected indices (can't use mean conc since addRimImg could be True)
+	# fig,ax=plt.subplots()
+	# fig.show()
+
+
+	# tmp=img.copy()
+	# # tmp=np.nan*np.ones(img.shape)
+	# # tmp[idxX,idxY]=img[idxX,idxY]
+	# tmp[idxX,idxY]=np.nan
+
+
+	# ax.imshow(tmp,vmin=0)
+	# plt.draw()
+	# input()
+	
 	concSum=img[idxX,idxY].sum()
 	concNum=len(idxX)
 	
@@ -407,7 +421,11 @@ def meanExtConc(idxX,idxY,img,concRim,numExt,addRimImg,debug=False):
 	#print(concSum,concNum)
 	
 	#Return final concentration
-	return float(concSum)/float(concNum)
+	try:
+		ret=float(concSum)/(float(concNum)+1E-5)
+	except ZeroDivisionError:
+		ret=np.nan
+	return ret
 
 
 def getRimConc(ROIs,img,debug=False):

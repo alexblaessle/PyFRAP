@@ -1676,7 +1676,7 @@ class embryo:
 			r.idxs2Full()
 		return self.ROIs
 	
-	def showAllROIBoundaries(self,ax=None,withImg=False,idx=0):
+	def showAllROIBoundaries(self,ax=None,withImg=False,idx=0,**kwargs):
 		
 		"""Shows boundaries of all ROIs in ``ROIs`` list.
 		
@@ -1694,7 +1694,7 @@ class embryo:
 		
 		for r in self.ROIs:
 			if hasattr(r,'showBoundary'):
-				ax=r.showBoundary(ax=ax)
+				ax=r.showBoundary(ax=ax,**kwargs)
 		
 		if withImg:
 			ax=self.showDataImg(ax=ax,idx=idx)
@@ -1770,7 +1770,7 @@ class embryo:
 		return axes
 			
 	
-	def plotAllData(self,ax=None,legend=True):
+	def plotAllData(self,ax=None,legend=True,draw=True,**kwargs):
 		
 		"""Plots all data timeseries for all ROIs in ``ROIs`` list.
 		
@@ -1786,7 +1786,7 @@ class embryo:
 		"""
 		
 		for r in self.ROIs:
-			ax=r.plotData(ax=ax,legend=legend)
+			ax=r.plotData(ax=ax,legend=legend,draw=draw,**kwargs)
 	
 		return ax	
 	
@@ -1813,7 +1813,7 @@ class embryo:
 		
 		return ax	
 	
-	def plotAllDataPinned(self,ax=None,legend=True):
+	def plotAllDataPinned(self,ax=None,legend=True,draw=True,**kwargs):
 	
 		"""Plots all pinned data timeseries for all ROIs in ``ROIs`` list.
 		
@@ -1829,7 +1829,7 @@ class embryo:
 		"""
 		
 		for r in self.ROIs:
-			ax=r.plotDataPinned(ax=ax,legend=legend)
+			ax=r.plotDataPinned(ax=ax,legend=legend,draw=draw,**kwargs)
 		
 		return ax	
 	
