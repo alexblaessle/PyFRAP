@@ -105,7 +105,7 @@ class ROI(object):
 		self.extMask=None
 		
 		#Number of extended pixels
-		self.numExt=None
+		self.numExt=0 # None
 		
 		#Result Dataseries
 		self.dataVec=[]
@@ -780,7 +780,7 @@ class ROI(object):
 		
 		return ax
 	
-	def showMeshIdx2D(self,ax=None):
+	def showMeshIdx2D(self,ax=None,transpose=True):
 		
 		
 		
@@ -793,8 +793,13 @@ class ROI(object):
 		#Somehow need to convert to np array since slicing does not work for fipy variables
 		x=np.asarray(x)[self.meshIdx]
 		y=np.asarray(y)[self.meshIdx]
-	
-		ax.scatter(x,y,c=self.color)
+
+		if transpose:
+			ax.scatter(y,x,c=self.color)
+		
+		else:
+			ax.scatter(x,y,c=self.color)
+		
 		plt.draw()
 		
 		return ax
@@ -831,6 +836,7 @@ class ROI(object):
 		
 		"""
 		
+		
 		if self.embryo.getMasterROIIdx()==None:
 			printWarning("No Master ROI has been defined yet. Will not continue compute ROI indices.")
 			return self.getAllIdxs()
@@ -844,12 +850,12 @@ class ROI(object):
 		
 		startIdx=time.clock()
 		
+		
 		if  type(self) is not customROI:
 			
-			self.computeImgIdx(debug=debug)
+			self.computeImgIdx(debug=debug)	
 			self.matchImgIdx(masterROI)
 			self.computeExtIdx(debug=debug)
-			
 			if self.embryo.simulation!=None:
 				if self.embryo.simulation.mesh.mesh==None:
 					printWarning("Mesh has not been generated, will not compute meshIdxs")
@@ -869,9 +875,9 @@ class ROI(object):
 			if self.embryo.simulation!=None:
 				if self.embryo.simulation.mesh.mesh!=None:
 					self.matchMeshIdx(masterROI)
-		
+	
 		if debug:
-			print 'Compute Idxs: ', startIdx-time.clock()
+			print('Compute Idxs: ', startIdx-time.clock())
 		
 		return self.getAllIdxs()
 	
@@ -916,6 +922,14 @@ class ROI(object):
 		"""
 		
 		self.computeImgMask()
+		# r.computeImgMask()
+
+		# fig,axes=plt.subplots(1,2)
+		# fig.show()
+		# axes[0].imshow(self.imgMask)
+		# axes[1].imshow(r.imgMask)
+		# plt.draw()
+
 		self.imgMask=self.imgMask*r.computeImgMask()
 		self.imgIdxX,self.imgIdxY=pyfrp_idx_module.mask2ind(self.imgMask,self.embryo.dataResPx)	
 		return self.imgIdxX,self.imgIdxY
@@ -1033,7 +1047,7 @@ class ROI(object):
 		self.setSimVec([])
 		return self
 	
-	def plotData(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1):
+	def plotData(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1,draw=True):
 		
 		"""Plot data vector of ROI.
 		
@@ -1059,11 +1073,11 @@ class ROI(object):
 			label=self.name + ' simulated'
 		
 		ax = pyfrp_plot_module.plotTS(self.embryo.tvecData,self.dataVec,ax=ax,linewidth=linewidth,color=color,label=self.name + ' data',
-		title="Data",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc)
+		title="Data",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc,draw=draw)
 		
 		return ax
 	
-	def plotDataPinned(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1):
+	def plotDataPinned(self,ax=None,color=None,linewidth=1,legend=True,linestyle='-',label=None,legLoc=-1,draw=True):
 		
 		"""Plot pinned data vector of ROI.
 		
@@ -1089,7 +1103,7 @@ class ROI(object):
 			label=self.name + ' simulated'
 		
 		ax = pyfrp_plot_module.plotTS(self.embryo.tvecData,self.dataVecPinned,ax=ax,linewidth=linewidth,color=color,label=self.name + ' data',
-		title="Data Pinned",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc)
+		title="Data Pinned",sup=self.name+" data",linestyle=linestyle,legend=legend,legLoc=legLoc,draw=draw)
 		
 		return ax
 	
@@ -1373,7 +1387,7 @@ class ROI(object):
 		
 		"""
 		
-		cvs=self.embryo.simulation.mesh.mesh.getCellVolumes()
+		cvs=self.embryo.simulation.mesh.getCellVolumes()
 		
 		c=pyfrp_integration_module.getAvgConc(phi,cvs,self.meshIdx)
 		
@@ -1507,7 +1521,7 @@ class ROI(object):
 			fit.dataVecsFitted.insert(fit.ROIsFitted.index(self),[])
 			return []
 		
-	def plotFit(self,fit,ax=None,color=None,linewidth=1,legend=True,title=None,linestyles=['-','-.'],show=True):
+	def plotFit(self,fit,ax=None,color=None,linewidth=1,legend=True,title=None,linestyles=['-','-.'],show=True,draw=True):
 		
 		"""Plot fit for ROI.
 		
@@ -1533,10 +1547,10 @@ class ROI(object):
 			title="Fit "+fit.name
 			
 		ax = pyfrp_plot_module.plotTS(fit.tvecFit,self.getFittedVec(fit),ax=ax,linewidth=linewidth,color=color,
-		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[1],legend=legend,show=show)
+		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[1],legend=legend,show=show,draw=draw)
 		
 		ax = pyfrp_plot_module.plotTS(fit.tvecFit,self.getdataVecFitted(fit),ax=ax,linewidth=linewidth,color=color,
-		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[0],legend=legend,show=show)
+		label=self.name + ' ' + fit.name,title=title,sup=self.name+" fitted",linestyle=linestyles[0],legend=legend,show=show,draw=draw)
 		
 		return ax
 	
@@ -1652,8 +1666,8 @@ class ROI(object):
 		zExtend=[zExtend[0]-addZ,zExtend[1]+addZ]
 		
 		if debug:
-			print "Adding Box Field for ROI " + self.name
-			print "Mesh Nodes in ROI before: ", len(self.meshIdx)
+			print("Adding Box Field for ROI " + self.name)
+			print("Mesh Nodes in ROI before: ", len(self.meshIdx))
 			
 		fnOut=self.embryo.simulation.mesh.addBoxField(self.embryo.simulation.mesh.volSizePx/factor,xExtend,yExtend,zExtend,comment=self.name+" field",run=run,fnOut=fnOut)
 	
@@ -1661,7 +1675,7 @@ class ROI(object):
 			self.computeMeshIdx(self.embryo.simulation.mesh)
 		
 		if debug and findIdxs:
-			print "Mesh Nodes in ROI after: ", len(self.meshIdx)
+			print("Mesh Nodes in ROI after: ", len(self.meshIdx))
 			
 		return fnOut
 	
@@ -1737,40 +1751,40 @@ class ROI(object):
 			
 			#Print out current status
 			if debug:
-				print "Iteration ", i, ". "
-				print "Current parameters: addZ = ", addZ, " factor = ", factor 
-				print "Total mesh nodes: ", nNodesAllNew
-				print "Mesh Nodes in ROI before refinement: " , nNodesROI, " and after ", nNodesROINew, "."
+				print("Iteration ", i, ". ")
+				print("Current parameters: addZ = ", addZ, " factor = ", factor) 
+				print("Total mesh nodes: ", nNodesAllNew)
+				print("Mesh Nodes in ROI before refinement: " , nNodesROI, " and after ", nNodesROINew, ".")
 				if ROIReq!=None:
-					print "Mesh Nodes in ROIReq before refinement: " , nNodesROIReq, " and after ", nNodesROIReqNew, "."
+					print("Mesh Nodes in ROIReq before refinement: " , nNodesROIReq, " and after ", nNodesROIReqNew, ".")
 			
 			#Check if nNodes requirement is met
 			if nNodesNew<nNodesReq:
 				if nNodesAllNew==nNodesAll:
 					if debug: 
-						print "nNodesAll did not change, will increase addZ by ",zIncrement,". \n"
+						print("nNodesAll did not change, will increase addZ by ",zIncrement,". \n")
 					addZ=addZ+zIncrement
 					mode=0
 				else:
 					if debug:
-						print "nNodes not large enough yet, will increase factor by ",fIncrement,". \n"
+						print("nNodes not large enough yet, will increase factor by ",fIncrement,". \n")
 					factor=factor+fIncrement
 					mode=1
 			
 			#Check if maximum number of nodes was exceeded
 			elif nNodesNew>nNodesMax:
 				if debug:
-					print "Number of nodes exceeded maximum allowed number", nNodesMax, "."
+					print("Number of nodes exceeded maximum allowed number", nNodesMax, ".")
 				
 				if mode==0:
 					if debug:
-						print "Previously tried to increase addZ. Will try old addZ, but increase factor by " ,fIncrement,". \n"
+						print("Previously tried to increase addZ. Will try old addZ, but increase factor by " ,fIncrement,". \n")
 					addZ=addZ-zIncrement
 					factor=factor+fIncrement
 					mode=1
 				elif mode==1:
 					if debug:
-						print "Previously tried to increase factor. Will try old factor, but increase addZ by " ,zIncrement,". \n"
+						print("Previously tried to increase factor. Will try old factor, but increase addZ by " ,zIncrement,". \n")
 					addZ=addZ+zIncrement
 					factor=factor-fIncrement
 					mode=0
@@ -1790,9 +1804,9 @@ class ROI(object):
 		
 		"""Prints out all attributes of ROI object."""
 		
-		print "ROI ", self.name, " details:"
+		print("ROI ", self.name, " details:")
 		printAllObjAttr(self)
-		print 
+		print() 
 	
 	def plotSimConcProfile(self,phi,ax=None,direction='x',mode='normal',nbins=20,color=None,label=None,legend=False):
 		
@@ -2396,7 +2410,7 @@ class radialROI(ROI):
 		self.center2Mid()
 		
 		if not auto:
-			a=raw_input("Change center of region "+ self.name + " from " + str(oldCenter) + ' to ' + str(self.getCenter()) + ' ? [Y/N]')
+			a=input("Change center of region "+ self.name + " from " + str(oldCenter) + ' to ' + str(self.getCenter()) + ' ? [Y/N]')
 		
 			if a=='N':
 				self.setCenter(oldCenter)
@@ -2891,7 +2905,7 @@ class squareROI(ROI):
 			img=np.nan*np.ones((self.embryo.dataResPx,self.embryo.dataResPx))
 			ax.imshow(img)
 		
-		patch = ptc.Rectangle(self.offset,self.sidelength,self.sidelength,fill=False,linewidth=linewidth,color=color)
+		patch = ptc.Rectangle(np.flip(self.offset),self.sidelength,self.sidelength,fill=False,linewidth=linewidth,color=color)
 		ax.add_patch(patch)
 		return ax
 	
@@ -2907,7 +2921,7 @@ class squareROI(ROI):
 		self.centerOffset()
 		
 		if not auto:
-			a=raw_input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
+			a=input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
 			
 			if a=='N':
 				self.setOffset(oldOffset)
@@ -3294,7 +3308,7 @@ class rectangleROI(ROI):
 		self.centerOffset()
 		
 		if not auto:
-			a=raw_input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
+			a=input("Change offset of region "+ self.name + " from " + str(oldOffset) + ' to ' + str(self.getOffset()) + ' ? [Y/N]')
 			
 			if a=='N':
 				self.setOffset(oldOffset)
@@ -3662,7 +3676,8 @@ class polyROI(ROI):
 			
 			img=np.nan*np.ones((self.embryo.dataResPx,self.embryo.dataResPx))
 			ax.imshow(img)
-		patch = ptc.Rectangle(self.corners,closed=True,fill=False,linewidth=linewidth,color=color)
+		patch = ptc.Polygon(np.flip(self.corners),closed=True,fill=False,linewidth=linewidth,color=color)
+		#patch = ptc.Polygon(self.corners,closed=True,fill=False,linewidth=linewidth,color=color)
 		
 		ax.add_patch(patch)
 		return ax
@@ -3696,7 +3711,7 @@ class polyROI(ROI):
 		
 		"""
 		
-		cornersNP=np.array(corners)
+		cornersNP=np.array(self.corners)
 	
 		xmax=cornersNP[:,0].max()
 		xmin=cornersNP[:,0].min()

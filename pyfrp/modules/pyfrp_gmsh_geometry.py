@@ -56,14 +56,14 @@ import numpy as np
 import string
 
 #PyFRAP modules
-import pyfrp_plot_module
-from pyfrp_term_module import *
-import pyfrp_misc_module
-import pyfrp_gmsh_IO_module
-import pyfrp_idx_module
-import pyfrp_geometry_module
-import pyfrp_IO_module
-import pyfrp_vtk_module
+from . import pyfrp_plot_module
+from .pyfrp_term_module import *
+from . import pyfrp_misc_module
+from . import pyfrp_gmsh_IO_module
+from . import pyfrp_idx_module
+from . import pyfrp_geometry_module
+from . import pyfrp_IO_module
+from . import pyfrp_vtk_module
 
 #Matplotlib
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -111,6 +111,7 @@ class domain:
 		self.volumes=[]
 		self.fields=[]
 		self.bkgdField=None
+		self.ellipses=[]
 		
 		#Some settings for plotting
 		self.annXOffset=3.
@@ -201,6 +202,36 @@ class domain:
 			
 		a=arc(self,vstart,vcenter,vend,newId)
 		self.arcs.append(a)
+		self.edges.append(a)
+		
+		return a
+	
+	def addEllipse(self,vstart,vcenter,vend,vmajor=None,Id=None):
+		
+		"""Adds new :py:class:`pyfrp.modules.pyfrp_gmsh_geometry.ellipse` instance
+		at point ``x`` and appends it to ``edges`` and ``ellipses`` list.
+		
+		Args:
+			vstart (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Start vertex.
+			vcenter (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Center vertex.
+			vend (pyfrp.modules.pyfrp_gmsh_geometry.vertex): End vertex.
+			
+		Keyword Args:
+			vmajor (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Major vertex.
+			Id (int): ID of arc.
+			
+		Returns:
+			pyfrp.modules.pyfrp_gmsh_geometry.ellipse: New ellipse instance.
+		
+		"""
+		
+		newId=self.getNewId(self.edges,Id)
+		
+		if vmajor is None:
+			vmajor=vend
+		
+		a=ellipse(self,vstart,vcenter,vend,vmajor,newId)
+		self.ellipses.append(a)
 		self.edges.append(a)
 		
 		return a
@@ -1198,6 +1229,10 @@ class domain:
 			else:
 				newId=Id
 		
+		if self.checkIdExists(newId,objList):
+			IdList=pyfrp_misc_module.objAttrToList(objList,'Id')
+			newId=max(IdList)+1
+
 		return newId
 		
 	def incrementID(self,objList):
@@ -1609,6 +1644,8 @@ class domain:
 		newId=self.getNewId(self.ruledSurfaces,Id)
 		
 		l=ruledSurface(self,lineLoopID,newId)
+		# if not l.createdSurfaces:
+		l.Id=self.getNewId(self.ruledSurfaces,Id)
 		self.ruledSurfaces.append(l)
 		
 		return l
@@ -1769,11 +1806,12 @@ class domain:
 			
 		"""
 		
-		with open(fn,'wb') as f:
+		with open(fn,'w') as f:
 			
 			self.writeElements("vertices",f)
 			self.writeElements("lines",f)
 			self.writeElements("arcs",f)
+			self.writeElements("ellipses",f)
 			self.writeElements("bSplines",f)
 			self.writeElements("lineLoops",f)
 			self.writeElements("ruledSurfaces",f)
@@ -1820,6 +1858,7 @@ class domain:
 		self.incrementIDs(offset,"vertices")
 		self.incrementIDs(offset,"lines")
 		self.incrementIDs(offset,"arcs")
+		self.incrementIDs(offset,"ellipses")
 		self.incrementIDs(offset,"bSplines")
 		self.incrementIDs(offset,"lineLoops")
 		self.incrementIDs(offset,"ruledSurfaces")
@@ -1860,6 +1899,7 @@ class domain:
 		self.setDomainForElementType("vertices")
 		self.setDomainForElementType("lines")
 		self.setDomainForElementType("arcs")
+		self.setDomainForElementType("ellipses")
 		self.setDomainForElementType("bSplines")
 		self.setDomainForElementType("lineLoops")
 		self.setDomainForElementType("ruledSurfaces")
@@ -1937,6 +1977,7 @@ class domain:
 		IDs.append(self.getMaxID("vertices"))
 		IDs.append(self.getMaxID("lines"))
 		IDs.append(self.getMaxID("arcs"))
+		IDs.append(self.getMaxID("ellipses"))
 		IDs.append(self.getMaxID("lineLoops"))
 		IDs.append(self.getMaxID("ruledSurfaces"))
 		IDs.append(self.getMaxID("surfaceLoops"))
@@ -2097,16 +2138,16 @@ class domain:
 					#Fuse
 					if surface.fuse(sN,debug=debug):
 						if debug:
-							print "Successfully fused ", surface.Id, sN.Id
+							print("Successfully fused ", surface.Id, sN.Id)
 							
 			#Clean up edges
 			self.cleanUpUnusedEdges(debug=debug)
 			
 		#Print some final statistics
 		if debug:
-			print "Surfaces: Before =" , x , " After:" , len(self.ruledSurfaces) 
-			print "lineLoops: Before =" , y , " After:" , len(self.lineLoops) 
-			print "Edges: Before =" , z , " After:" , len(self.edges) 
+			print("Surfaces: Before =" , x , " After:" , len(self.ruledSurfaces)) 
+			print("lineLoops: Before =" , y , " After:" , len(self.lineLoops)) 
+			print("Edges: Before =" , z , " After:" , len(self.edges)) 
 		
 		#raw_input()
 		
@@ -2250,15 +2291,15 @@ class domain:
 		"""
 		
 		edgeIDs=pyfrp_misc_module.objAttrToList(self.edges,'Id')
-		print edgeIDs
+		print(edgeIDs)
 		# Loop through edges
 		for i,e in enumerate(self.edges):
 			for j in range(i+1,len(self.edges)):
-				print i,j,self.edges[i].Id,self.edges[j].Id
+				print(i,j,self.edges[i].Id,self.edges[j].Id)
 				# Check if same ID
 				if self.edges[j].Id==self.edges[i].Id:
 					
-					print "same id",self.edges[j].Id 
+					print("same id",self.edges[j].Id) 
 					
 					# Check if same start/end vertex
 					if (self.edges[j].getFirstVertex()==self.edges[i].getFirstVertex()) and (self.edges[j].getLastVertex()==self.edges[i].getLastVertex()):			
@@ -2834,6 +2875,8 @@ class edge(gmshElement):
 				self.domain.arcs.remove(self)
 			if self.typ==2:
 				self.domain.bSplines.remove(self)
+			if selt.typ==3:
+				self.domain.ellipses.remove(self)
 				
 			self.domain.edges.remove(self)
 		except ValueError:
@@ -3900,7 +3943,7 @@ class lineLoop(gmshElement):
 		ids=np.array(pyfrp_misc_module.objAttrToList(self.edges,"Id"))
 		orients=np.array(self.orientations)
 		
-		print "Line Loop with ID = "+ str(self.Id)+": "+str(ids*orients)
+		print("Line Loop with ID = "+ str(self.Id)+": "+str(ids*orients))
 	
 	def fix(self):
 		
@@ -3935,7 +3978,7 @@ class lineLoop(gmshElement):
 					
 				if j==len(self.edges)-1:
 					printWarning("Could not fix loop with ID" + str(self.Id))
-					print "Edge with ID " +str(lastEdge.Id) + " is not matching with any other edge."
+					print("Edge with ID " +str(lastEdge.Id) + " is not matching with any other edge.")
 					return False
 				
 		self.edges=edgesNew
@@ -3981,12 +4024,12 @@ class lineLoop(gmshElement):
 					b=True
 			
 					if debug:
-						print "Edge with ID " +str(edge1Temp.Id) + " was not matching edge with ID " + str(edge2Temp.Id) + ". \n Fixed this."
+						print("Edge with ID " +str(edge1Temp.Id) + " was not matching edge with ID " + str(edge2Temp.Id) + ". \n Fixed this.")
 				
 					
 				if debug:
 					printWarning("lineLoop with ID " + str(self.Id) + " does not close." )
-					print "Edge with ID " +str(edge1Temp.Id) + " is not matching edge with ID " + str(edge2Temp.Id)
+					print("Edge with ID " +str(edge1Temp.Id) + " is not matching edge with ID " + str(edge2Temp.Id))
 						
 		return b
 	
@@ -4211,7 +4254,7 @@ class lineLoop(gmshElement):
 						if j>0:
 							if loops.sort()!=oldLoops.sort():
 								noSpline=True
-								print "cannot turn into spline because ", edgesSubst[j-1].Id , " and ",edgesSubst[j].Id 
+								print("cannot turn into spline because ", edgesSubst[j-1].Id , " and ",edgesSubst[j].Id) 
 							
 						oldLoops=list(loops)
 						
@@ -4262,7 +4305,7 @@ class lineLoop(gmshElement):
 				loop.edges.insert(idxInsert,sub[1])
 				
 				if debug:
-					print "Substituted edges ", sub[0][0].Id , "-", sub[0][-1].Id, " with spline ", sub[1].Id
+					print("Substituted edges ", sub[0][0].Id , "-", sub[0][-1].Id, " with spline ", sub[1].Id)
 				
 				
 		# Remove edges from domain.
@@ -4406,6 +4449,7 @@ class ruledSurface(gmshElement):
 	def __init__(self,domain,loopID,ID):
 		
 		gmshElement.__init__(self,domain,ID)
+		self.createdSurfaces=False
 		self.initLineLoop(loopID)
 	
 	def initLineLoop(self,loopID,debug=False,addPoints=False,iterations=2):
@@ -4423,7 +4467,9 @@ class ruledSurface(gmshElement):
 		#Check length
 		if len(self.lineLoop.edges)<=4:
 			return False,[]
-	
+
+		self.createdSurfaces=True
+
 		#Compute normal vector
 		oldNormal=self.getNormal()
 		
@@ -4573,12 +4619,12 @@ class ruledSurface(gmshElement):
 				break
 		if idx==None:
 			printError("All points in surface "+str(self.Id) + " seem to be colinear. Will not be able to compute normal.")
-			print self.Id
+			print(self.Id)
 			self.draw(ann=True)
 			
-			print pyfrp_misc_module.objAttrToList(self.lineLoop.getVertices(),'Id')
+			print(pyfrp_misc_module.objAttrToList(self.lineLoop.getVertices(),'Id'))
 			
-			raw_input()
+			input()
 			
 			return np.zeros((3,))
 		
@@ -4804,7 +4850,7 @@ class ruledSurface(gmshElement):
 		vertices=self.lineLoop.getVertices()
 		coords=pyfrp_misc_module.objAttrToList(vertices,'x')
 		coords=np.asarray(coords)
-		coords = zip(coords[:,0], coords[:,1], coords[:,2])
+		coords = list(zip(coords[:,0], coords[:,1], coords[:,2]))
 		coordsNew=[]
 		coordsNew.append(list(coords))	
 		
@@ -5143,7 +5189,7 @@ class field(gmshElement):
 		"""Sets multiple field attributes.
 		"""
 		
-		for key, value in kwargs.iteritems():
+		for key, value in kwargs.items():
 			self.setFieldAttributes(key,value)
 	
 	def getSubElements(self):
@@ -5816,4 +5862,137 @@ class boundaryLayerField(field):
 		else:
 			setattr(self,name,val)
 	
+	
+class ellipse(edge):
+	
+	"""Ellipse class storing information from gmsh .geo ellipse.
+	
+	.. warning: Experimental
+	
+	Args:
+		domain (pyfrp.modules.pyfrp_gmsh_geometry.domain): Domain arc belongs to.
+		vstart (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Start vertex.
+		vcenter (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Center vertex.
+		vend (pyfrp.modules.pyfrp_gmsh_geometry.vertex): End vertex.
+		vmajor (pyfrp.modules.pyfrp_gmsh_geometry.vertex): Major axis vertex.
+		Id (int): ID of arc.
 		
+	"""		
+	
+	def __init__(self,domain,vstart,vcenter,vend,vmajor,Id):
+		
+		edge.__init__(self,domain,Id,3)
+		
+		self.vcenter=vcenter
+		self.vstart=vstart
+		self.vend=vend
+		self.vmajor=vmajor
+		
+	def writeToFile(self,f):
+		
+		"""Writes ellipse to file.
+		
+		Args:
+			f (file): File to write to.
+			
+		Returns:
+			file: File.
+		
+		"""
+		
+		f.write("Ellipse("+str(self.Id)+")= {" + str(self.vstart.Id) + ","+ str(self.vcenter.Id)+ "," + str(self.vmajor.Id) + "," + str(self.vend.Id) + "};\n" )
+		
+		return f	
+			
+	def getVstart(self):
+		
+		"""Returns start vertex of arc."""
+		
+		return self.vstart
+	
+	def getVend(self):
+		
+		"""Returns end vertex of arc."""
+		
+		return self.vend
+	
+	def getXstart(self):
+		
+		"""Returns start coordinate of arc."""
+		
+		return self.vstart.x
+	
+	def getXend(self):
+		
+		"""Returns end coordinate of arc."""
+		
+		return self.vend.x
+	
+	def getVcenter(self):
+		
+		"""Returns center vertex of arc."""
+		
+		return self.vcenter
+	
+	def getXcenter(self):
+		
+		"""Returns center coordinate of arc."""
+		
+		return self.vcenter.x
+	
+	def getVmajor(self):
+		
+		"""Returns center vertex of arc."""
+		
+		return self.vcenter
+	
+	def getXmajor(self):
+		
+		"""Returns center coordinate of arc."""
+		
+		return self.vmajor.x
+	
+	def getLastVertex(self,orientation):
+		
+		"""Returns last vertex of arc given a orientation.
+		
+		Orientation can be either forward (1), or reverse (-1).
+		
+		Args:
+			orientation (int): Orientation of arc.
+			
+		Returns:
+			pyfrp.pyfrp_gmsh_geometry.vertex: Vertex.
+		
+		"""
+		
+		if orientation==1:
+			return self.getVend()
+		elif orientation==-1:
+			return self.getVstart()
+		else:
+			printError("Cannot return last vertex. Orientation " + str(orientation) + " unknown.")
+			return None
+	
+	def getFirstVertex(self,orientation):
+		
+		"""Returns first vertex of arc given a orientation.
+		
+		Orientation can be either forward (1), or reverse (-1).
+		
+		Args:
+			orientation (int): Orientation of arc.
+			
+		Returns:
+			pyfrp.pyfrp_gmsh_geometry.vertex: Vertex.
+		
+		"""
+		
+		if orientation==-1:
+			return self.getVend()
+		elif orientation==1:
+			return self.getVstart()
+		else:
+			printError("Cannot return first vertex. Orientation " + str(orientation) + " unknown.")
+			return None
+	

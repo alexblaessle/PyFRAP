@@ -38,7 +38,7 @@ parser.add_argument('--IC', dest='IC', action='const_store',help='Choose initial
 args = parser.parse_args()
 
 
-print args
+print(args)
 
 # Choose what kind of data is given and what to do with it.
 #inputTypes=[]

@@ -38,13 +38,13 @@ import numpy as np
 import string
 
 #PyFRAP modules
-import pyfrp_plot_module
-from pyfrp_term_module import *
-import pyfrp_misc_module
-import pyfrp_gmsh_IO_module
-import pyfrp_idx_module
-import pyfrp_geometry_module
-import pyfrp_IO_module
+from . import pyfrp_plot_module
+from .pyfrp_term_module import *
+from . import pyfrp_misc_module
+from . import pyfrp_gmsh_IO_module
+from . import pyfrp_idx_module
+from . import pyfrp_geometry_module
+from . import pyfrp_IO_module
 
 #Matplotlib
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection

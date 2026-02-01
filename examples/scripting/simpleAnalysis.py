@@ -104,11 +104,11 @@ fit.printResults()
 stopTime=time.time()
 
 # Print time it took
-print "Analysis done in ", stopTime-starTime , " seconds."
+print("Analysis done in ", stopTime-starTime , " seconds.")
 
 try:
 	emb.save(sys.argv[2])
 except IndexError:
-	print "Did not save embryo, no output given."	
+	print("Did not save embryo, no output given.")
 
-raw_input()
+input()

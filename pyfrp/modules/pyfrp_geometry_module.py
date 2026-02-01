@@ -41,8 +41,8 @@ import numpy as np
 import string
 
 #PyFRAP modules
-from pyfrp_term_module import *
-import pyfrp_misc_module
+from .pyfrp_term_module import *
+from . import pyfrp_misc_module
 
 #===========================================================================================================================================================================
 #Module Functions
@@ -110,16 +110,21 @@ def flipCoordinate(x,destAxis,origAxis='x',debug=False):
 	
 		
 	# Calculate differences between axis
-	axisDiff=abs(string.lowercase.index(destAxis)-string.lowercase.index(origAxis))
-	
+	try:
+		axisDiff=abs(string.lowercase.index(destAxis)-string.lowercase.index(origAxis))
+	except AttributeError:
+		axisDiff=abs(string.ascii_lowercase.index(destAxis)-string.ascii_lowercase.index(origAxis))
+		
+		
+		
 	# Roll
 	xnew=np.roll(x,axisDiff)
 	
 	# Print debugging messages
 	if debug:
-		print "Transforming coordinate " , x, " from axis ", origAxis, " to axis ", destAxis , "."
-		print "axisDiff = ", axisDiff
-		print "xnew = ", xnew
+		print("Transforming coordinate " , x, " from axis ", origAxis, " to axis ", destAxis , ".")
+		print("axisDiff = ", axisDiff)
+		print("xnew = ", xnew)
 	
 	return xnew 
 

@@ -48,8 +48,8 @@ import sys
 import os
 
 #PyFRAP
-import pyfrp_img_module
-from pyfrp_term_module import *
+from . import pyfrp_img_module
+from .pyfrp_term_module import *
 from pyfrp.modules import pyfrp_idx_module
 
 #===========================================================================================================================================================================
@@ -617,7 +617,7 @@ def meshToUnstructeredGrid(mesh):
 			points.InsertNextPoint(x[i], y[i],z[i])
 
 	# Insert tetrahedrons
-	verts=mesh._getOrderedCellVertexIDs().T
+	verts=mesh._orderedCellVertexIDs.T
 		
 	cellArray = vtk.vtkCellArray()
 	for j,vert in enumerate(verts):

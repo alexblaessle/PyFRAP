@@ -253,7 +253,7 @@ def selectDataByOverlapSubSample(d,n,k,thresh,debug=False):
 		
 		if len(dError[idxs].flatten())>0:
 			for i in range(len(idxs[0])):
-				print "Subsamples ", idxs[0][i],idxs[1][i], " generate error ", dError[idxs[0][i],idxs[1][i]]
+				print("Subsamples ", idxs[0][i],idxs[1][i], " generate error ", dError[idxs[0][i],idxs[1][i]])
 			
 	return len(dError[idxs].flatten())>0
 
@@ -611,9 +611,9 @@ def wilcoxonTest(x,y,zero_method='wilcox', correction=False,printOut=True):
 	stat,pval=scipy.stats.wilcoxon(x, y=y, zero_method=zero_method, correction=correction)
 	
 	if printOut:
-		print "Results of Wilcoxon-Test:"
-		print "p-Value: ", pval
-		print "Wilcoxon-Statistics:", stat
+		print("Results of Wilcoxon-Test:")
+		print("p-Value: ", pval)
+		print("Wilcoxon-Statistics:", stat)
 	
 	return stat,pval
 
@@ -641,9 +641,9 @@ def mannWhitneyUTest(x,y,printOut=True):
 	stat,pval=scipy.stats.mannwhitneyu(x, y)
 	
 	if printOut:
-		print "Results of Mann-Whitney-U-Test:"
-		print "p-Value: ", pval
-		print "U-Statistics:", stat
+		print("Results of Mann-Whitney-U-Test:")
+		print("p-Value: ", pval)
+		print("U-Statistics:", stat)
 	
 	return stat,pval
 
@@ -671,9 +671,9 @@ def tTestStandard(x,y,printOut=True):
 	stat,pval=scipy.stats.ttest_ind(x, y, equal_var=True)
 	
 	if printOut:
-		print "Results of Standard t-Test:"
-		print "p-Value: ", pval
-		print "Statistics:", stat
+		print("Results of Standard t-Test:")
+		print("p-Value: ", pval)
+		print("Statistics:", stat)
 		
 	return stat,pval
 	
@@ -701,9 +701,9 @@ def tTestWelch(x,y,printOut=True):
 	stat,pval=scipy.stats.ttest_ind(x, y, equal_var=False)
 	
 	if printOut:
-		print "Results of Welch's t-Test:"
-		print "p-Value: ", pval
-		print "Statistics:", stat	
+		print("Results of Welch's t-Test:")
+		print("p-Value: ", pval)
+		print("Statistics:", stat)	
 	
 	return stat,pval
 	
@@ -730,9 +730,9 @@ def shapiroTest(x,printOut=True):
 	stat,pval=scipy.stats.sharipo(x)
 	
 	if printOut:
-		print "Results of Sharipo-Test:"
-		print "p-Value: ", pval
-		print "Statistics:", stat
+		print("Results of Sharipo-Test:")
+		print("p-Value: ", pval)
+		print("Statistics:", stat)
 	
 	return stat,pval
 

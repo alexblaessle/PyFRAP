@@ -39,9 +39,9 @@ a unconstrained one, making it suitable to Nelder-Mead optimization algorithm.
 import numpy as np
 
 #PyFRAP
-import pyfrp_fit_module 
+from . import pyfrp_fit_module 
 
-from pyfrp_term_module import *
+from .pyfrp_term_module import *
 
 #===========================================================================================================================================================================
 #Module Functions

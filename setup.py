@@ -190,7 +190,9 @@ class OverrideInstall(install):
 				gid=os.getgid()
 				
 			#Mode for files (everyone can read/write/execute. This is somewhat an overkill, but 0666 seems somehow not to work.)
-			mode=0777
+			#mode="0777"
+			mode="0o777"
+			
 			
 			return uid,gid,mode
 			
@@ -662,16 +664,22 @@ class OverrideInstall(install):
 		
 		#Open file and enter new gmsh bin
 		with open(fn,'rb') as fPath:
-			with open(fn+"_new",'wb') as fPathNew:
+			with open(fn+"_new",'w') as fPathNew:
 				for line in fPath:
-					if line.strip().startswith(identifier):
-						ident,path=line.split('=')
+					if line.decode().strip().startswith(identifier):
+						ident,path=line.decode().split('=')
 						path=path.strip()
 						lineNew=ident+"="+fnPyfrp+exePath
-						fPathNew.write(lineNew+'\n')
+						# try:
+						# 	fPathNew.write(lineNew.decode()+'\n')
+						# except AttributeError:
+						lineNew='%s\n'%lineNew
+						fPathNew.write(lineNew)
 					else:
-						fPathNew.write(line)
-			
+						try:
+							fPathNew.write(line.decode())
+						except AttributeError:
+							fPathNew.write(line)
 		#Rename file
 		shutil.move(fn+'_new',fn)
 		
@@ -724,7 +732,7 @@ class OverrideInstall(install):
 
 		try:
 			if not self.silent:
-				log.info("Changing permissions of %s to %s" %(filepath, oct(mode)))
+				log.info("Changing permissions of %s to %s" %(filepath, mode))
 			os.chmod(filepath, mode)
 		except:	
 			if not self.silent:
@@ -767,7 +775,7 @@ class OverrideInstall(install):
 #Check if setup.py is used to build RTD, then don't overwrite install command
 if os.environ.get('READTHEDOCS', None) == 'True':
 	
-	print "Installing on RTD, will not overwrite install command."
+	print("Installing on RTD, will not overwrite install command.")
 	
 	setup(name='pyfrp',
 		version=version,

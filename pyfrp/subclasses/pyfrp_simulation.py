@@ -37,7 +37,7 @@ import numpy as np
 import scipy.interpolate as interp 
 
 #PyFRAP classes
-import pyfrp_mesh
+from . import pyfrp_mesh
 
 #PyFRAP modules
 from pyfrp.modules import pyfrp_plot_module
@@ -229,7 +229,7 @@ class simulation(object):
 		
 		"""
 		
-		if m not in range(5):
+		if m not in list(range(5)):
 			printError("ICmode = " +  m + " is not defined. Not going to change ICmode" )
 			return self.ICmode
 			
@@ -277,7 +277,7 @@ class simulation(object):
 		object to :py:func:`pyfrp.modules.pyfrp_sim_module.simulateReactDiff`.
 		
 		Keyword Args:
-			signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+			signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 			embCount (int): Counter of counter process if multiple datasets are simulated. 
 			debug (bool): Print debugging messages and show debugging plots.
 			showProgress (bool): Print out progress.
@@ -398,7 +398,7 @@ class simulation(object):
 		"""
 		
 		
-		if self.IC!=None:
+		if self.IC is not None:
 			
 			if ax==None:
 				if typ=='surface':
@@ -461,7 +461,7 @@ class simulation(object):
 			printError("Unknown plot type "+ typ)
 			return ax
 		
-		if self.ICimg!=None:
+		if self.ICimg is not None:
 			
 			if vmin==None:
 				vmin=min(self.ICimg.flatten())
@@ -478,7 +478,7 @@ class simulation(object):
 				ax=axes[0]
 				
 			res=self.ICimg.shape[0]
-			if 'quad' in self.embryo.analysis.process.keys():
+			if 'quad' in list(self.embryo.analysis.process.keys()):
 				X,Y=np.meshgrid(np.arange(res,2*res),np.arange(res,2*res))
 			else:
 				X,Y=np.meshgrid(np.arange(res),np.arange(res))
@@ -521,7 +521,7 @@ class simulation(object):
 		center=self.embryo.geometry.getCenter()
 		
 		#Define x/y coordinates of interpolation
-		if 'quad' in self.embryo.analysis.process.keys():
+		if 'quad' in list(self.embryo.analysis.process.keys()):
 			#Shift everything by center to fit with the mesh
 			xInt = np.arange(center[0]+1, center[0]+res+1, 1)
 			yInt = np.arange(center[1]+1, center[1]+res+1, 1)		
@@ -1090,7 +1090,7 @@ class simulation(object):
 		if roi!=None:
 			idxs=roi.meshIdx
 		else:	
-			idxs=range(len(x))
+			idxs=list(range(len(x)))
 		
 		x=np.asarray(x)[idxs]
 		y=np.asarray(y)[idxs]
@@ -1157,7 +1157,7 @@ class simulation(object):
 		See also :py:func:`pyfrp.modules.pyfrp_sim_module.rerunReactDiff`.
 		
 		Keyword Args:
-			signal (PyQt4.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
+			signal (PyQt5.QtCore.pyqtSignal): PyQT signal to send progress to GUI.
 			embCount (int): Counter of counter process if multiple datasets are simulated. 
 			debug (bool): Print debugging messages and show debugging plots.
 			showProgress (bool): Print out progress.
@@ -1196,7 +1196,7 @@ class simulation(object):
 		
 		"""Prints out all attributes of embryo object.""" 
 		
-		print "Simulation of embryo ", self.embryo.name, " Details."
+		print("Simulation of embryo ", self.embryo.name, " Details.")
 		printAllObjAttr(self)
 		
 	def mapOntoImgs(self,tvec=None,roi=None,fnOut="",showProgress=True,method='linear',fillVal=0.,scale=True,enc='uint16',res=None):
@@ -1238,7 +1238,7 @@ class simulation(object):
 		fnOut=pyfrp_misc_module.slashToFn(fnOut)+self.embryo.name+"_sim_"
 		
 		#Output
-		print "Saving ", len(tvec), " images of simulation to ", fnOut
+		print("Saving ", len(tvec), " images of simulation to ", fnOut)
 		
 		#Loop all tvec and build images
 		j=0
@@ -1261,7 +1261,7 @@ class simulation(object):
 				pyfrp_img_module.saveImg(img,fnOut+"t"+enum+".tif",scale=scale,enc=enc)
 				
 				if showProgress:
-					print "Saved for t=", t ," to ", fnOut+"t"+enum+".tif"
+					print("Saved for t=", t ," to ", fnOut+"t"+enum+".tif")
 			
 		return True
 		
@@ -1274,7 +1274,7 @@ class simulation(object):
 		add a cutter that allows to cut through the 3D simulation and display single slices, see also
 		:py:class:`pyfrp.gui.pyfrp_gui_vtk.vtkSimVisualizerCutter`. Cutter only works for 3D simulations.
 		
-		If no application is specified, will launch a new ``QtGui.QApplication``. 
+		If no application is specified, will launch a new ``QtWidgets.QApplication``. 
 		
 		.. note:: Simulation results must be saved in ``simulation`` object via ``saveSim=True``.
 		
@@ -1292,7 +1292,7 @@ class simulation(object):
 	
 		Keyword Args:
 			cut (bool): Visualize with cutter.
-			app (QtGui.QApplication): Some application.
+			app (QtWidgets.QApplication): Some application.
 		
 		"""
 		
@@ -1308,9 +1308,11 @@ class simulation(object):
 		# Import right module from gui submodule
 		from pyfrp.gui import pyfrp_gui_vtk
 		
+		from PyQt5 import QtGui, QtCore, QtWidgets
+
 		# Create QApplication
 		if app==None:
-			app = QtGui.QApplication([])
+			app = QtWidgets.QApplication([])
 		
 		if cut:
 			widget=pyfrp_gui_vtk.vtkSimVisualizerCutter(self.embryo)

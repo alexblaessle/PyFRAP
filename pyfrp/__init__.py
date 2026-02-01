@@ -15,7 +15,7 @@ import platform
 	
 if platform.system() in ["Darwin"]:
 	import matplotlib 
-	matplotlib.use('qt4agg')
+	matplotlib.use('qt5agg')
 
 #Basic PyFRAP modules
 from . import modules

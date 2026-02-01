@@ -64,16 +64,16 @@ def saveToPickle(obj,fn=None):
 	"""
 	
 	cleanUp()
-        if fn==None:
-                if hasattr(obj,"name"):
-                        fn=obj.name+".pk"
-                else:
-                        fn="unnamed"+".pk"
-                
-        with open(fn, 'wb') as output:
-                pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
-        
-        return fn
+	if fn==None:
+		if hasattr(obj,"name"):
+				fn=obj.name+".pk"
+		else:
+				fn="unnamed"+".pk"
+		
+	with open(fn, 'wb') as output: 
+		pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
+	
+	return fn
 
 def loadFromPickle(fn):
 	
@@ -93,14 +93,14 @@ def loadFromPickle(fn):
 	
 	sys.path.append(pyfrp_misc_module.getSubclassesDir()+'/')
 
-        if platform.system() in ["Darwin","Linux"]:
-                filehandler=open(fn, 'r')
-        elif platform.system() in ["Windows"]:
-                filehandler=open(fn, 'rb')
-                
-        loadedFile=pickle.load(filehandler)
-        
-        return loadedFile
+	if platform.system() in ["Darwin","Linux"]:
+			filehandler=open(fn, 'rb')
+	elif platform.system() in ["Windows"]:
+			filehandler=open(fn, 'rb')
+			
+	loadedFile=pickle.load(filehandler)
+	
+	return loadedFile
 
 def loadMolecule(fn,update=True):
 	
@@ -185,7 +185,7 @@ def copyMeshFiles(fn,fnGeo,fnMsh,debug=False):
 	# Create meshfile folder if necessary
 	if 'meshfiles'==os.path.split(fn)[-1]:
 		if debug:
-			print "Folder is already called meshfiles, will leave it as it is."
+			print("Folder is already called meshfiles, will leave it as it is.")
 	else:
 		fn=pyfrp_misc_module.slashToFn(fn)
 		try:
@@ -196,7 +196,7 @@ def copyMeshFiles(fn,fnGeo,fnMsh,debug=False):
 			
 		fn=pyfrp_misc_module.slashToFn(fn+"meshfiles")
 		if debug:
-			print "Created new folder " + fn + " ."
+			print("Created new folder " + fn + " .")
 	
 	# Get list of files we want to copy
 	files=[fnGeo,fnMsh]
